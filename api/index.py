@@ -36,7 +36,7 @@ data = {
   #   "model": "gpt-4o-mini"
   # }'
 
-@app.route('/assistants/location-to-airports')
+@app.route('/api/assistants/location-to-airports')
 def create_assistant():
     assistant_data = {
         "instructions": """### Role ###
@@ -73,7 +73,7 @@ def create_assistant():
     return {'assistant_id': assistant_id}
 
 
-@app.route('/locations/<location>/airports')
+@app.route('/api/locations/<location>/airports')
 def airports(location):
     logging.info("location to airports")
     ## create a request to the azure agents endpoint
