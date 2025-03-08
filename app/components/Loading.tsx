@@ -10,6 +10,7 @@ interface LoadingPlaneProps {
 export const LoadingPlane: React.FC<LoadingPlaneProps> = ({
                                                               message = 'Cargando...'
                                                           }) => {
+  console.log(message)
     return (
         <div className="flex flex-col items-center justify-center min-h-[200px] p-8">
             <style jsx>{`

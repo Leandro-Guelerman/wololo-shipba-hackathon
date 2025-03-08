@@ -9,6 +9,7 @@ export default function Home() {
         if (blob) {
             try {
                 const response = await postAudio(blob);
+                console.log(response);
                 console.log('Respuesta de la transcripción:', response);
             } catch (error) {
                 console.error('Error al procesar el audio:', error);
