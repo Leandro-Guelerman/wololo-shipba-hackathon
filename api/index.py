@@ -103,7 +103,11 @@ def parse_message(thread_id, run_id: str):
     ## filter the data by role == assistant
     data = [d for d in data if d['role'] == 'assistant']
     ## get first message
-    return json.loads(data[0]['content'][0]['text']['value'])
+    output = data[0]['content'][0]['text']['value']
+    output.replace("\n", "")
+    output.replace("```json", "")
+    output.replace("```", "")
+    return json.loads(output)
 
 # if __name__ == "__main__":
 #     pass
