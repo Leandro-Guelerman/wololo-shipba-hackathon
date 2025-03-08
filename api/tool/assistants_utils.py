@@ -138,6 +138,8 @@ Determine a destination
  
 - If no departure date an arrival date are provided do not generate those keys in the response
  
+- If only a departure date is provided calculate the arrival date based on the trip duration
+ 
 ### Output ###
  
 Output a json with the following format:
@@ -145,7 +147,7 @@ Output a json with the following format:
 "location", [Miami, USA"],
 "duration": '7"
 "departureDate": "2025-11-02"
-  "arrivalDate": "2025-11-09"
+"arrivalDate": "2025-11-09"
 }
  
 - For the location output cities and countries only
