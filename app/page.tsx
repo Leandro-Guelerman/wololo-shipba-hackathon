@@ -4,7 +4,7 @@ import {LoadingPlane} from "@/app/components/Loading";
 import {postAudio} from "@/app/api/audioApi";
 import {ChatContainer} from "@/app/components/ChatContainer";
 import type {Message} from "@/app/components/ChatContainer";
-import {useEffect, useState, useCallback} from "react";
+import { useState, useCallback} from "react";
 import {initialMessages} from './testData/initialMessages';
 import {conversationMessages} from './testData/conversationMessages';
 import {bookingMessages} from './testData/bookingMessages';
@@ -31,14 +31,6 @@ export default function Home() {
                 )
             );
         }, 500);
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await fetch('https://vercel-test-flask-five.vercel.app/tools/flights');
-            console.log(await result.text());
-        };
-        fetchData();
     }, []);
 
     const handleAudioChange = async (blob: Blob) => {
