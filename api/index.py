@@ -13,6 +13,8 @@ BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 
+# test
+
 headers = {
     "api-key": API_KEY,
     "Content-Type": "application/json"
