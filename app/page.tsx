@@ -13,7 +13,6 @@ export default function Home() {
             try {
                 setIsProcessing(true);
                 const response = await postAudio(blob);
-                console.log(response);
                 console.log('Respuesta de la transcripción:', response);
             } catch (error) {
                 console.error('Error al procesar el audio:', error);
@@ -31,7 +30,8 @@ export default function Home() {
             <div className={'justify-center items-center m-auto'}>
                 <LoadingPlane/>
             </div>
-            <div className="flex flex-col items-center space-y-4 w-full max-w-2xl">
+
+          <div className="flex flex-col items-center space-y-4 w-full max-w-2xl">
                     <div className="self-start ml-4">
                         <ChatLoader />
                     </div>
