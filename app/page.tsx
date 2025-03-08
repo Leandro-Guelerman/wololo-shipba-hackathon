@@ -1,15 +1,18 @@
 'use client'
 import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {LoadingPlane} from "@/app/components/Loading";
+import {postAudio} from "@/app/api/audioApi";
 
 export default function Home() {
 
-    const handleAudioChange = (audio: { blob: Blob; fileName: string } | null) => {
-        if (audio) {
-            console.log('Nuevo audio grabado:', audio.blob);
-            console.log('Nombre del archivo:', audio.fileName);
-        } else {
-            console.log('Audio eliminado');
+    const handleAudioChange = async (blob: Blob) => {
+        if (blob) {
+            try {
+                const response = await postAudio(blob);
+                console.log('Respuesta de la transcripción:', response);
+            } catch (error) {
+                console.error('Error al procesar el audio:', error);
+            }
         }
     };
 
@@ -22,7 +25,7 @@ export default function Home() {
                 <LoadingPlane/>
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-gray-200 p-4 justify-center">
-                <AudioRecorder onAudioRecorded={() => console.log('recorded')}/>
+                <AudioRecorder onAudioRecorded={handleAudioChange}/>
             </div>
         </div>
     );

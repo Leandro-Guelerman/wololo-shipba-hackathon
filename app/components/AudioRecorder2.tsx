@@ -28,24 +28,20 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
     const startRecording = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    channelCount: 1,
+                    sampleRate: 16000,
+                    echoCancellation: true,
+                    noiseSuppression: true
+                } 
+            });
 
-            // Intentar crear el MediaRecorder con codec OGG
-            try {
-                mediaRecorderRef.current = new MediaRecorder(stream, {
-                    mimeType: 'audio/ogg;codecs=opus'
-                });
-            } catch (e) {
-                // Si OGG no es soportado, intentar con WebM
-                try {
-                    mediaRecorderRef.current = new MediaRecorder(stream, {
-                        mimeType: 'audio/webm;codecs=opus'
-                    });
-                } catch (e2) {
-                    // Si ninguno funciona, usar el formato por defecto
-                    mediaRecorderRef.current = new MediaRecorder(stream);
-                }
-            }
+            // Configurar MediaRecorder para usar codec Opus
+            mediaRecorderRef.current = new MediaRecorder(stream, {
+                mimeType: 'audio/webm;codecs=opus',
+                audioBitsPerSecond: 128000
+            });
 
             chunksRef.current = [];
 
@@ -55,7 +51,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
             mediaRecorderRef.current.onstop = () => {
                 const blob = new Blob(chunksRef.current, {
-                    type: mediaRecorderRef.current?.mimeType || 'audio/ogg'
+                    type: 'audio/webm;codecs=opus'
                 });
                 onAudioRecorded(blob);
                 stream.getTracks().forEach(track => track.stop());
