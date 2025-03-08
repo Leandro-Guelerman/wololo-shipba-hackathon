@@ -2,16 +2,18 @@ import json
 import logging
 
 import requests
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
-ASSISTANT_ID="asst_NWA2VJMnoVqXaLYGnYg0DR4g"
+LOCATION_TO_FLAGS_ASSISTANT_ID= "asst_NWA2VJMnoVqXaLYGnYg0DR4g"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
+
+WEATHER_ASSISTANT_ID="asst_1XycN0ou1XDzlRhseZOhN6O4"
 
 # test
 
@@ -26,50 +28,38 @@ data = {
     "model": "gpt-4o-mini"
 }
 
-@app.route('/api/assistants/location-to-airports')
-def create_assistant():
-    assistant_data = {
-        "instructions": """### Role ###
-
-    Airport Finder
-
-    ### Task ###
-
-    You will receive a location your task is to find the airports near the provided location.
-
-    ### Constraints ###
-
-    - If you do not recognize the location output: {error: true}
-
-    ### Output ###
-
-    Output a json with a list of airports that follows the following template:
-
-    {
-
-    "main": {"key": "EZE", "name": "Ezeiza Ministro Pistarini", "international": true}
-
-    "others": [{"key": "AEP", "name": "Aeroparque Jorge Newbery", "international": false}]
-
-    }
-
-     """,
-        "name": "LocationToAirportsAPI",
-        "model": "gpt-4o-mini"
-    }
-
-    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
-    assistant_id = assistant.json()['id']
-    return {'assistant_id': assistant_id}
-
-
 @app.route('/api/locations/<location>/airports')
 def airports(location):
     logging.info("location to airports")
-    thread_id, run_id = post_message(location)
+    thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
     return parse_message(thread_id, run_id)
 
-def post_message(message_input: str):
+@app.route('/api/locations/<location>/duration/<duration>/weather')
+def weather(location, duration):
+    logging.info("location pull weather")
+
+    ## flask get the query params called arrivalDate
+    departure_date = request.args.get('departureDate')
+    arrival_date = request.args.get('arrivalDate')
+
+
+    data = {
+        'location': location,
+        'duration': duration
+    }
+
+    if departure_date is not None:
+        data['departureDate'] = departure_date
+
+    if arrival_date is not None:
+        data['arrivalDate'] = arrival_date
+
+    logging.info(json.dumps(data))
+
+    thread_id, run_id = post_message(WEATHER_ASSISTANT_ID, json.dumps(data))
+    return parse_message(thread_id, run_id)
+
+def post_message(assistant_id: str, message_input: str):
     thread = requests.post(THREADS_ENDPOINT, headers=headers, json={})
     thread_id = thread.json()['id']
     logging.info("thread id: " + thread_id)
@@ -85,7 +75,7 @@ def post_message(message_input: str):
     logging.info("message done")
 
     run = requests.post(runs, headers=headers, json={
-        "assistant_id": ASSISTANT_ID,
+        "assistant_id": assistant_id,
     })
     return thread_id, run.json()['id']
 
