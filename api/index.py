@@ -119,6 +119,7 @@ def parse_message(thread_id, run_id: str):
 
 
     json_output = json.loads(output);
+    logging.info(json_output)
 
     response = make_response(jsonify(json_output))
     response.headers['Access-Control-Allow-Origin'] = '*'
