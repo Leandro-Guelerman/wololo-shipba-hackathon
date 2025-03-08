@@ -108,18 +108,19 @@ def parse_message(thread_id, run_id: str):
     pass
     message = requests.get(messages, headers=headers)
     data = message.json()['data']
-    logging.info("message received: ")
+    logging.info("message received: " + json.dumps(data))
     ## filter the data by role == assistant
     data = [d for d in data if d['role'] == 'assistant']
     ## get first message
     output = data[0]['content'][0]['text']['value']
-    output.replace("\n", "")
-    output.replace("```json", "")
-    output.replace("```", "")
+    output = output.replace("\n", "")
+    output = output.replace("```json", "")
+    output = output.replace("```", "")
+    output = output.replace("'", "\"")
 
-
-    json_output = json.loads(output);
-    logging.info(json_output)
+    logging.info(output)
+    print(output)
+    json_output = json.loads(output)
 
     response = make_response(jsonify(json_output))
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -127,5 +128,5 @@ def parse_message(thread_id, run_id: str):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
 
-# if __name__ == "__main__":
-#     pass
+if __name__ == "__main__":
+    pass
