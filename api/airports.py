@@ -1,10 +1,12 @@
+import json
+
 import requests
-from flask import Flask, request
+from flask import Flask
 
 app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
-ASSISTANT_ID="asst_E3CaEmaLhVuJRxmMqbddaPrb"
+ASSISTANT_ID="asst_NWA2VJMnoVqXaLYGnYg0DR4g"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
@@ -31,10 +33,45 @@ data = {
   #   "model": "gpt-4o-mini"
   # }'
 
+@app.route('/assistants/location-to-airports')
+def create_assistant():
+    assistant_data = {
+        "instructions": """### Role ###
+
+    Airport Finder
+
+    ### Task ###
+
+    You will receive a location your task is to find the airports near the provided location.
+
+    ### Constraints ###
+
+    - If you do not recognize the location output: {error: true}
+
+    ### Output ###
+
+    Output a json with a list of airports that follows the following template:
+
+    {
+
+    "main": {"key": "EZE", "name": "Ezeiza Ministro Pistarini", "international": true}
+
+    "others": [{"key": "AEP", "name": "Aeroparque Jorge Newbery", "international": false}]
+
+    }
+
+     """,
+        "name": "LocationToAirportsAPI",
+        "model": "gpt-4o-mini"
+    }
+
+    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
+    assistant_id = assistant.json()['id']
+    return {'assistant_id': assistant_id}
+
 
 @app.route('/locations/<location>/airports')
 def airports(location):
-
     ## create a request to the azure agents endpoint
     thread = requests.post(THREADS_ENDPOINT, headers=headers, json={})
     thread_id =  thread.json()['id']
@@ -52,18 +89,18 @@ def airports(location):
 
     ## wait for the run to complete
     run_id = run.json()['id']
-    run_status = f"{BASE_URL}/threads/{thread_id}/runs/{run_id}{API_VERSION}"
-    run_status = requests.get(run_status, headers=headers)
+    run_url = f"{BASE_URL}/threads/{thread_id}/runs/{run_id}{API_VERSION}"
+    run_status = requests.get(run_url, headers=headers)
     while run_status.json()['status'] != "completed":
-        run_status = requests.get(run_status.json()['id'], headers=headers)
+        run_status = requests.get(run_url, headers=headers)
 
     message = requests.get(messages, headers=headers)
+    data = message.json()['data']
+    ## filter the data by role == assistant
+    data = [d for d in data if d['role'] == 'assistant']
+    ## get first message
+    return json.loads(data[0]['content'][0]['text']['value'])
 
-    return message.json()
 
-
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
-    pass
+# if __name__ == "__main__":
+#     pass
