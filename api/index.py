@@ -100,7 +100,7 @@ def parse_message(thread_id, run_id: str):
     pass
     message = requests.get(messages, headers=headers)
     data = message.json()['data']
-    logging.info("message received: " + data)
+    logging.info("message received: ")
     ## filter the data by role == assistant
     data = [d for d in data if d['role'] == 'assistant']
     ## get first message
