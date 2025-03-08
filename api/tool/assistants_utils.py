@@ -117,5 +117,51 @@ Based on this input determine best date for a trip on the provided location:
     return {'assistant_id': assistant_id}
 
 
+@app.route('/api/assistants/classifier')
+def create_classifier_assistant():
+    assistant_data = {
+        "instructions": """### Role ###
+ 
+Determine a destination
+ 
+### Task ###
+ 
+- Get a destination from the provided information, this can be a city, place, attraction or activity.
+ 
+- You can also receive a trip duration or dates.
+ 
+- Separate the received dates into departure date and arrival date
+ 
+### Constraints ###
+ 
+- If no trip duration is received assume 10 days
+ 
+- If no departure date an arrival date are provided do not generate those keys in the response
+ 
+### Output ###
+ 
+Output a json with the following format:
+{
+"location", [Miami, USA"],
+"duration": '7"
+"departureDate": "2025-11-02"
+  "arrivalDate": "2025-11-09"
+}
+ 
+- For the location output cities and countries only
+ 
+- If you receive more than one location return an array of locations
+ 
+- If no trip duration is received assume 10 days
+     """,
+        "name": "ClassifierAPI",
+        "model": "gpt-4o-mini"
+    }
+
+    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
+    assistant_id = assistant.json()['id']
+    return {'assistant_id': assistant_id}
+
+
 if __name__ == "__main__":
     pass

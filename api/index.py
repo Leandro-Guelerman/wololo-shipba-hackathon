@@ -14,6 +14,7 @@ ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 
 WEATHER_ASSISTANT_ID="asst_1XycN0ou1XDzlRhseZOhN6O4"
+CLASSIFIER_ASSISTANT_ID="asst_Ws7GxRnRW4AWo5dvGQgUZlV6"
 
 # test
 
@@ -27,6 +28,14 @@ data = {
     "tools": [{"type": "code_interpreter"}],
     "model": "gpt-4o-mini"
 }
+
+@app.route('/api/classifier', methods=["POST"])
+def classifier():
+    logging.info("classifier running")
+    content = request.json
+
+    thread_id, run_id = post_message(CLASSIFIER_ASSISTANT_ID, content['text'])
+    return parse_message(thread_id, run_id)
 
 @app.route('/api/locations/<location>/airports')
 def airports(location):
