@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 from flask import Flask
@@ -72,9 +73,12 @@ def create_assistant():
 
 @app.route('/locations/<location>/airports')
 def airports(location):
+    logging.info("location to airports")
     ## create a request to the azure agents endpoint
     thread = requests.post(THREADS_ENDPOINT, headers=headers, json={})
-    thread_id =  thread.json()['id']
+    thread_id = thread.json()['id']
+
+    logging.info("thread id: " + thread_id)
 
     messages = f"{BASE_URL}/threads/{thread_id}/messages{API_VERSION}"
     runs = f"{BASE_URL}/threads/{thread_id}/runs{API_VERSION}"
@@ -83,19 +87,26 @@ def airports(location):
         "role": "user",
         "content": location
     })
+    logging.info("message done")
+
     run = requests.post(runs, headers=headers, json={
         "assistant_id": ASSISTANT_ID,
     })
+
+    logging.info("run launched")
 
     ## wait for the run to complete
     run_id = run.json()['id']
     run_url = f"{BASE_URL}/threads/{thread_id}/runs/{run_id}{API_VERSION}"
     run_status = requests.get(run_url, headers=headers)
+    logging.info("run run_status: " + run_status)
     while run_status.json()['status'] != "completed":
         run_status = requests.get(run_url, headers=headers)
+        logging.info("run run_status: " + run_status)
 
     message = requests.get(messages, headers=headers)
     data = message.json()['data']
+    logging.info("message received: " + data)
     ## filter the data by role == assistant
     data = [d for d in data if d['role'] == 'assistant']
     ## get first message
