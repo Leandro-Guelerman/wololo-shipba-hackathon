@@ -3,18 +3,10 @@ import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {LoadingPlane} from "@/app/components/Loading";
 import {postAudio} from "@/app/api/audioApi";
 import {ChatLoader} from "@/app/components/ChatLoader";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetch('https://vercel-test-flask-five.vercel.app/tools/flights');
-      console.log(await result.text());
-    };
-    fetchData();
-  }, []);
 
     const handleAudioChange = async (blob: Blob) => {
         if (blob) {
