@@ -1,8 +1,9 @@
 import json
 import logging
 
+import flask
 import requests
-from flask import Flask, request
+from flask import Flask, request, make_response, jsonify
 
 app = Flask(__name__)
 
@@ -42,6 +43,14 @@ def airports(location):
     logging.info("location to airports")
     thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
     return parse_message(thread_id, run_id)
+
+# @app.route('/api/locations/<location>/airports')
+# def flights(location):
+#     logging.info("location to airports")
+#     thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
+#     return parse_message(thread_id, run_id)
+
+
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
 def weather(location, duration):
@@ -107,7 +116,15 @@ def parse_message(thread_id, run_id: str):
     output.replace("\n", "")
     output.replace("```json", "")
     output.replace("```", "")
-    return json.loads(output)
+
+
+    json_output = json.loads(output);
+
+    response = make_response(jsonify(json_output))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 # if __name__ == "__main__":
 #     pass
