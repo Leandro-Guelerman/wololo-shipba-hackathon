@@ -1,11 +1,11 @@
 pre-commit:
   piped: true
   commands:
-#    lint:
-#    priority: 1
-#    glob: '*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx}'
-#    run: |
-#      npm run lint
-#    skip:
-#      - merge
-#      - rebase
+    lint:
+      priority: 1
+      glob: '*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx}'
+      run: |
+        npm run lint
+      skip:
+        - merge
+        - rebase
