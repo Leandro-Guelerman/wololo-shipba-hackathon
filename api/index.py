@@ -3,7 +3,9 @@ import logging
 
 import flask
 import requests
+from fast_flights import get_flights, FlightData, Passengers
 from flask import Flask, request, make_response, jsonify
+from primp import Client
 
 app = Flask(__name__)
 
@@ -44,12 +46,40 @@ def airports(location):
     thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
     return parse_message(thread_id, run_id)
 
-# @app.route('/api/locations/<location>/airports')
-# def flights(location):
-#     logging.info("location to airports")
-#     thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
-#     return parse_message(thread_id, run_id)
+@app.route('/api/flights/<from_airport>/<to_airport>/<date_from>/<date_to>/<passengers>')
+def flights(from_airport, to_airport,date_from,date_to,passengers):
+    logging.info("searching flights")
 
+    flights = get_flights(
+        flight_data=[
+            FlightData(date=date_from, from_airport=from_airport, to_airport=to_airport)
+        ],
+        trip="round-trip",
+        seat="economy",
+        passengers=Passengers(adults=int(passengers), children=0, infants_in_seat=0, infants_on_lap=0),
+        fetch_mode="fallback",
+    )
+
+    ##
+    # flight: [{
+    #     departure: {
+    #         cityName: 'Madrid',
+    #         airport: 'MAD',
+    #         date: '2024-07-15T08:00:00Z'
+    #     },
+    #     arrival: {
+    #         cityName: 'Barcelona',
+    #         airport: 'BCN',
+    #         date: '2024-07-15T09:30:00Z'
+    #     },
+    #     numberOfStops: 2
+    # }]
+
+    response = make_response(jsonify(flights))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
