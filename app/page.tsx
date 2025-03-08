@@ -1,5 +1,6 @@
 'use client'
 import {StandaloneAudioRecorder} from "@/app/components/AudioRecorder";
+import {AudioRecorder} from "@/app/components/AudioRecorder2";
 
 export default function Home() {
 
@@ -13,11 +14,14 @@ export default function Home() {
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px]
+      <div className="grid grid-rows-[20px_1fr_20px]
     items-center
     justify-items-center
     min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <StandaloneAudioRecorder onAudioChange={handleAudioChange}/>
-    </div>
+
+        <div className="absolute bottom-0 left-0 right-0 bg-gray-200 p-4 justify-center">
+          <AudioRecorder onAudioRecorded={() => console.log('recorded')}/>
+        </div>
+      </div>
   );
 }
