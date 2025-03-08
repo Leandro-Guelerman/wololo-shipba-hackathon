@@ -19,14 +19,17 @@ export async function postAudio(audioBlob: Blob) {
 
         // Crear FormData y agregar el archivo de audio
         const formData = new FormData();
-        formData.append('file', audioBlob, 'audio.webm');
-        formData.append('model', 'whisper-1');
-        formData.append('language', 'es');
+        formData.append('audio', audioBlob, 'audio.webm');
+        formData.append('definition', JSON.stringify({
+            "locales": ["es-MX"],
+            "profanityFilterMode": "None",
+            "channels": [0]
+        }));
 
         const response = await fetch(`${ENDPOINT}`, {
             method: "POST",
             headers: {
-                "api-key": API_KEY,
+                "Ocp-Apim-Subscription-Key": API_KEY,
             },
             body: formData
         });
@@ -37,12 +40,13 @@ export async function postAudio(audioBlob: Blob) {
             throw new Error(`Error en la API: ${response.status} - ${errorText}`);
         }
 
-        const data = await response.json();
+        const jsonResponse = await response.json();
+        const data = jsonResponse.combinedPhrases[0].text;
         return NextResponse.json(data);
     } catch (error) {
         console.error('Error en la transcripción:', error);
-        return NextResponse.json({ 
-            error: "Error en la transcripción", 
+        return NextResponse.json({
+            error: "Error en la transcripción",
             details: error instanceof Error ? error.message : 'Unknown error'
         }, { status: 500 });
     }

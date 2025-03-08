@@ -46,14 +46,7 @@ export default function Home() {
             try {
                 setIsProcessing(true);
                 const response = await postAudio(blob);
-
-                // Asegurarnos de que la respuesta sea un objeto con una propiedad text que sea string
-                const responseData = await response.json();
-                console.log('Respuesta de la transcripción:', responseData);
-
-                if (responseData && typeof responseData.text === 'string') {
-                    addMessage(responseData.text);
-                }
+                console.log('Respuesta de la transcripción:', await response.json());
             } catch (error) {
                 console.error('Error al procesar el audio:', error);
                 addMessage("Lo siento, hubo un error al procesar el audio. ¿Podrías intentarlo de nuevo?");
