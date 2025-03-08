@@ -3,19 +3,18 @@ import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {LoadingPlane} from "@/app/components/Loading";
 import {postAudio} from "@/app/api/audioApi";
 import {ChatContainer} from "@/app/components/ChatContainer";
-import {ChatLoader} from "@/app/components/ChatLoader";
 import type {Message} from "@/app/components/ChatContainer";
 import {useEffect, useState, useCallback} from "react";
-import { initialMessages } from './testData/initialMessages';
-import { conversationMessages } from './testData/conversationMessages';
-import { bookingMessages } from './testData/bookingMessages';
+import {initialMessages} from './testData/initialMessages';
+import {conversationMessages} from './testData/conversationMessages';
+import {bookingMessages} from './testData/bookingMessages';
 
 // Combinamos todos los mensajes de prueba
 const additionalTestMessages = [...conversationMessages, ...bookingMessages];
 
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
-    const [messages, setMessages] = useState<Message[]>(initialMessages);
+    const [, setMessages] = useState<Message[]>(initialMessages);
 
     const addMessage = useCallback((content: string | Message['message']) => {
         const newMessage = {
