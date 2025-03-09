@@ -273,9 +273,9 @@ Determine a destination
  
 Output a json with the following format:
 {
-"location", [Miami, United States"],
+"location", ["Miami, United States"],
 "duration": '7"
-"departureLocation: [Buenos Aires, Argentina]"
+"departureLocation: ["Buenos Aires, Argentina"]"
 "departureDate": "2025-11-02"
 "arrivalDate": "2025-11-09"
 }
