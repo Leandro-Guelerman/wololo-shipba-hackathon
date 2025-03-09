@@ -331,14 +331,15 @@ def hotels(location, date_from, date_to):
                     pass
             # price = "$51$51 nightly$136 total1 night with taxes + fees$51Mar 10 – 11"
             ## fallback for usd (prices are not converted even with the currency argument)
-            if price is None:
-                price = price_html.split(" ")[0].split("$")[1]
-                try:
-                    # cached dollar for effiency
-                    price_parsed = float(price) * 1086
-
-                except:
-                    pass
+            if price_parsed is None:
+                for p in price:
+                    price = p.split("$")[1]
+                    try:
+                        # cached dollar for effiency
+                        price_parsed = float(price) * 1086
+                        break
+                    except:
+                        pass
         else:
             price_parsed = float(0)
 
@@ -431,7 +432,13 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
     print("output: ")
     print(output)
     thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
-    return parse_message(thread_id, run_id)
+    response = parse_msg(thread_id, run_id)
+    if response['departure'] is not None:
+        response['departure']['price'] = response['departure']['price'] * 1086
+    if response['return'] is not None:
+        response['return']['price'] = response['return']['price'] * 1086
+
+    return response
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
