@@ -18,4 +18,4 @@ This is a AI Travel Planner that gets real data for Flights, Hotels, Activities 
 
 ## Disclaimer
 
-Sorry for the messy code, we were in a hurry and we started coding using Cursor, so we blame it.
+Sorry for the messy code, we were in a hurry and we started coding using Cursor, so we blame it in the first place.
