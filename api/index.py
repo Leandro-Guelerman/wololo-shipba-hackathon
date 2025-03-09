@@ -248,7 +248,7 @@ def classifier():
             arrival_date = (arrival_date_dt + datetime.timedelta(days=365)).date().isoformat()
             classifier['arrivalDate'] = arrival_date
 
-    if 'departureLocation' in classifier:
+    if 'departureLocation' not in classifier:
         classifier["departureLocation"] = ["Buenos Aires, Argentina"]
 
     return classifier
