@@ -406,6 +406,8 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
 
     if len(departure_flights) > 0:
 
+        departure_flights = [d for d in departure_flights if d['stops'] == 0]
+
         if len(departure_flights) <= 5:
             N = len(departure_flights) - 1
         else:
@@ -423,6 +425,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
             if len(return_flights) > 0:
                 return_flights = return_flights['flights']
 
+                return_flights = [d for d in return_flights if d['stops'] == 0]
                 if len(return_flights) <= 5:
                     N = len(return_flights) - 1
                 else:
