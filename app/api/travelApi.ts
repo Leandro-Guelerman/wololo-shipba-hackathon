@@ -14,7 +14,7 @@ export interface Airport {
     name: string;
 }
 
-interface AirportsResponse {
+export interface AirportsResponse {
     main: Airport;
     others: Airport[];
 }

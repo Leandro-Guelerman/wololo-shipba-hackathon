@@ -3,11 +3,14 @@ import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {LoadingPlane} from "@/app/components/Loading";
 // import {postAudio} from "@/app/api/audioApi";
 import {
-    Airport,
-    ClassifierData,
-    getAirports, getFlightsFromApi,
+    getAirports,
+    getFlightsFromApi,
     getWeatherRecommendation,
     postClassifier,
+} from "@/app/api/mockedApi";
+import {
+    Airport,
+    ClassifierData,
 } from "@/app/api/travelApi";
 import {ChatContainer} from "@/app/components/ChatContainer";
 import type {FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
@@ -21,7 +24,11 @@ import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 // Combinamos todos los mensajes de prueba
 // const additionalTestMessages = [...conversationMessages, ...bookingMessages];
 
+export const ViewStateEnum = 'initialized' | 'processing' | 'restarted'
+
 export default function Home() {
+    const [viewState, setViewState] = useState('');
+
     const [isProcessing, setIsProcessing] = useState(false);
     const [messages, setMessages] = useState<Message[]>(initialMessages);
 
@@ -249,7 +256,9 @@ export default function Home() {
                 className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-20">
                 <div className="max-w-3xl mx-auto">
                     <button className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                        onClick={() => handleTextSubmit('quiero ir a ver un volcan')}>test</button>
+                        onClick={() => handleTextSubmit('quiero ir a ver un volcan')}>
+                        Mocked data 1
+                    </button>
                     <AudioRecorder
                         onAudioRecorded={handleAudioChange}
                         isProcessing={isProcessing}
