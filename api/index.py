@@ -456,20 +456,16 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
 
     print("output: ")
     print(output)
-    try:
-        thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
-        response = parse_msg(thread_id, run_id)
-        if 'departure' in response and response['departure'] is not None:
-            response['departure']['price'] = response['departure']['price'] * 1086
-            response['departure']['airport'] = from_airport
-        if 'return' in response and response['return'] is not None:
-            response['return']['price'] = response['return']['price'] * 1086
-            response['departure']['airport'] = to_airport
+    thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
+    response = parse_msg(thread_id, run_id)
+    if 'departure' in response and response['departure'] is not None:
+        response['departure']['price'] = response['departure']['price'] * 1086
+        response['departure']['airport'] = from_airport
+    if 'return' in response and response['return'] is not None:
+        response['return']['price'] = response['return']['price'] * 1086
+        response['departure']['airport'] = to_airport
 
-
-        return response
-    except:
-        return flights
+    return response
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
