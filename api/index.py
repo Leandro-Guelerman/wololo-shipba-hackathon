@@ -52,41 +52,53 @@ def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected
     pf_data.sampler1 = 28
     pf_data.sampler2 = 2
 
-    departure_flights = pf_data.flights_data.add()
+    departure_flights = PB.FlightDataV2()
     departure_flights.date = date_from
+
+    departure_flight_1 = PB.FlightV2()
+    departure_flight_1.date = date_from
+    departure_flight_1.from_airport = airport_from
+    departure_flight_1.to_airport = airport_to
+    departure_flight_1.airline = flight_selected['flight_codes'][0][0].strip()
+    departure_flight_1.flight_number = flight_selected['flight_codes'][0][1].strip()
+    departure_flights.flights.append(departure_flight_1)
+
     departure_flights.airport_from.sample = 1
     departure_flights.airport_from.path = airport_from
     departure_flights.airport_to.sample = 1
     departure_flights.airport_to.path = airport_to
 
-    if flight_selected is not None:
-        departure_flight_1 = departure_flights.flights.add()
-        departure_flight_1.date = date_from
-        departure_flight_1.from_airport = airport_from
-        departure_flight_1.to_airport = airport_to
-        departure_flight_1.airline =flight_selected['flight_codes'][0][0]
-        departure_flight_1.flight_number = flight_selected['flight_codes'][0][1]
 
-        # return_trip = pf_data.flights_data.add()
-        # return_trip.date = date_to
-        # return_trip.airport_from.sample = 1
-        # return_trip.airport_from.path = airport_from
-        # return_trip.airport_to.sample = 1
-        # return_trip.airport_to.path = airport_to
+
+
+    # pf_data.flights_data.append(departure_flights)
+
+    # return_trip = pf_data.flights_data.add()
+    # return_trip.date = date_to
+    # return_trip.airport_from.sample = 1
+    # return_trip.airport_from.path = airport_from
+    # return_trip.airport_to.sample = 1
+    # return_trip.airport_to.path = airport_to
+    #
+    return_trip = PB.FlightDataV2()
+    return_trip.date = date_to
+
+    return_flight_1 = PB.FlightV2()
+    return_flight_1.date = date_to
+    return_flight_1.from_airport = airport_to
+    return_flight_1.to_airport = airport_from
+    return_flight_1.airline = return_selected['flight_codes'][0][0].strip()
+    return_flight_1.flight_number = return_selected['flight_codes'][0][1].strip()
+    return_trip.flights.append(return_flight_1)
+
+    return_trip.airport_from.sample = 1
+    return_trip.airport_from.path = airport_to
+    return_trip.airport_to.sample = 1
+    return_trip.airport_to.path = airport_from
+
+    pf_data.flights_data.extend([departure_flights,return_trip])
         #
-        return_trip = pf_data.flights_data.add()
-        return_trip.date = date_to
-        return_trip.airport_from.sample = 1
-        return_trip.airport_from.path = airport_to
-        return_trip.airport_to.sample = 1
-        return_trip.airport_to.path = airport_from
-        #
-        return_flight_1 = return_trip.flights.add()
-        return_flight_1.date = date_to
-        return_flight_1.from_airport = airport_to
-        return_flight_1.to_airport = airport_from
-        return_flight_1.airline = return_selected['flight_codes'][0][0]
-        return_flight_1.flight_number = return_selected['flight_codes'][0][1]
+
 
     pf_data.passengers = 1
     pf_data.seat = 1
@@ -140,7 +152,8 @@ def parse_proto(date_from, date_to, airport_from, airport_to, flight_selected) -
 def fetch_civitatis(city, date_from, date_to):
     client = Client(impersonate="chrome_126", verify=False)
 
-    query = "?"
+    ## only entrancees
+    query = "?allowedCategoryIds=5"
 
     if date_from is not None:
         query += f"&fromDate={date_from}"
@@ -149,6 +162,7 @@ def fetch_civitatis(city, date_from, date_to):
 
 
     city = city.lower().split(",")[0]
+    city = city.replace(" ", "-")
 
     res = client.get(f"https://www.civitatis.com/ar/{city}{query}")
 
@@ -164,9 +178,15 @@ def fetch_civitatis(city, date_from, date_to):
             thumbnail_url = "https://civitatis.com"+fl.css_first('div[class="comfort-card__img"]').css_first('img').attributes['data-src']
         except:
             thumbnail_url = "N/A"
-        ratings = fl.css_first('span[class="m-rating--text"]').text(
-            strip=True
-        )
+
+        try:
+            ratings = fl.css_first('span[class="m-rating--text"]').text(
+                strip=True
+            )
+        except:
+            ratings = 8
+
+
         try:
             a = "https://civitatis.com"+ fl.css('a')[1].attributes['href']
         except:
@@ -185,10 +205,7 @@ def fetch_civitatis(city, date_from, date_to):
         activities.append({'name': name, 'href': a, 'thumbnail_url': thumbnail_url, 'price': price, 'ratings': ratings, 'duration': duration})
 
     print(activities)
-
-    sorted_list = sorted(activities, key=lambda x: x['ratings'], reverse=True)
-
-    return sorted_list
+    return activities
 
 @app.route('/api/civitatis/<location>')
 def civitatis(location):
@@ -199,7 +216,11 @@ def civitatis(location):
 
     activities = fetch_civitatis(location, from_date, to_date)
     thread_id, run_id = post_message(ACTIVITIES_ASSISTANT_ID, json.dumps(activities))
-    return parse_message(thread_id, run_id)
+    activities = parse_msg(thread_id, run_id)
+
+
+    sorted_list = sorted(activities, key=lambda x: x['ratings'], reverse=True)
+    return sorted_list
 
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
@@ -209,10 +230,19 @@ def classifier():
     thread_id, run_id = post_message(CLASSIFIER_ASSISTANT_ID, content['text'])
     return parse_message(thread_id, run_id)
 
+def safe_location(location):
+    location = location.replace("á", "a")
+    location = location.replace("é", "e")
+    location = location.replace("í", "i")
+    location = location.replace("ó", "o")
+    location = location.replace("ú", "u")
+    location = location.replace("ñ", "n")
+    return location
+
 @app.route('/api/locations/<location>/airports')
 def airports(location):
     logging.info("location to airports")
-    thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, location)
+    thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, safe_location(location))
     return parse_message(thread_id, run_id)
 
 @app.route('/api/locations/<location_from>/<location_to>/requirements')
@@ -220,15 +250,15 @@ def requirements(location_from,location_to):
     logging.info("location requirements")
 
     thread_id, run_id = post_message(LOCATION_RESTRICTIONS_ID, json.dumps({
-        "departureLocation": location_from,
-        "arrivalLocation": location_to
+        "departureLocation": safe_location(location_from),
+        "arrivalLocation": safe_location(location_to)
     }))
     return parse_message(thread_id, run_id)
 
 @app.route('/api/hotels/<location>/<date_from>/<date_to>')
 def hotels(location, date_from, date_to):
     logging.info("searching hotels")
-    url = f"https://www.google.com/travel/search?q={location}&currency=ARS"
+    url = f"https://www.google.com/travel/search?q={safe_location(location)}&currency=ARS"
     ## TODO use dates in a new damn protobuf
     client = Client(impersonate="chrome_126", verify=False)
     res = client.get(url)
@@ -350,6 +380,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
         for d in departure_flights:
             proto = parse_proto(date_from, date_to, from_airport, to_airport, d)
             tfs = get_tfs(proto)
+            print("searching returns: ")
             res = client.get(f"https://www.google.com/travel/flights?tfs={tfs}")
             return_flights = custom_response_parser(res)
             if len(return_flights) > 0:
@@ -359,6 +390,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
                     tfs = get_tfs(proto)
                     tfu = "EgIIACIA"
                     rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu={tfu}&hl=es-419"
+                    print("urls: ")
                     print(tfs)
                     print(rf['url'])
                     # exit()
@@ -371,6 +403,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
         'flights': departure_flights
     }
 
+    print("output: ")
     print(output)
     thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
     return parse_message(thread_id, run_id)
@@ -386,7 +419,7 @@ def weather(location, duration):
 
 
     data = {
-        'location': location,
+        'location': safe_location(location),
         'duration': duration
     }
 
