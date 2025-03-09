@@ -198,7 +198,7 @@ export default function Home() {
             addMessage(hotelMessage.message);
 
             const activities = await getActivitiesFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)
-            setActivities(activities.slice(0, 3));
+            setActivities(activities.slice(0, 5));
 
             const activitiesMessage = ChatMessageMapper.mapActivities(activities.slice(0, 3));
             addMessage(activitiesMessage.message);
