@@ -18,6 +18,10 @@ Flights and Hotels are being scrapped from Google Flights, Activities are scrapp
 - Python
 - Azure AI Foundry (using GPT-4o and GPT-4o-mini models)
 
+## Demo
+
+You can watch a live demo video [here](https://drive.google.com/file/d/1nhbDfasH0Ye8t_pzzdi2YGB-YNfts3nw/view?usp=drive_link)
+
 ## Team
 - [Gabriel Villoldo](https://github.com/gvillo)
 - [Tomás de Priede](https://github.com/tomiito)
