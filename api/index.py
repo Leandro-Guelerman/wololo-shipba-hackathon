@@ -359,8 +359,6 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
                     tfs = get_tfs(proto)
                     rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu=CmxDalJJV1ZwaVdFMHpja1JXYmpSQlFVZEdkWGRDUnkwdExTMHRMUzB0TFMxalozQmtPVUZCUVVGQlIyWk9UVVpGUm5GWFptRkJFZ1ZCUVRrd054b01DTFNnOWpBUUFob0RRVkpUT0J4dzFmQUYSAggAIgYKATAKATE&hl=es-419"
                     print(tfs)
-                    print(rf['url'])
-                    exit(0)
 
             else:
                 return_flights = []
