@@ -10,7 +10,7 @@ from selectolax.lexbor import LexborHTMLParser
 
 from api.tool.flight_pb import get_tfs, custom_response_parser
 
-from api.tool import flights_return_pb2 as PB
+import api.tool.flights_return_pb2 as PB
 
 if TYPE_CHECKING:
     PB: Any
