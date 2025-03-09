@@ -189,8 +189,8 @@ Based on this input determine best date for a trip on the provided location:
 }}}
  
 ### Output ###
- 
-- Output "provided_dates" and "recommended_dates" as JSON
+- make sure the output is only a json 
+- Output a json with the "provided_dates" and "recommended_dates" as JSON
  
 - If the weather conditions in "provided_dates" and "recommended_dates" are similar only output "provided_dates" as JSON
  
