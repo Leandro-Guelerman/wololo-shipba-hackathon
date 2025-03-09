@@ -142,7 +142,7 @@ export default function Home() {
             year: "numeric"
         }).format(new Date(weatherRecommendation?.recommended_dates?.arrivalDate + "T00:00:00"));
 
-        const newQuery = `🏖️ Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
+        const newQuery = `Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
         resetState();
         addMessage('✨ ¡Bien, vamos a probar de nuevo!');
         setIsRecommended(true)
