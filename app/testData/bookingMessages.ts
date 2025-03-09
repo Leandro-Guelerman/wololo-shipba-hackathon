@@ -7,7 +7,7 @@ export const bookingMessages: Message[] = [
             type: 'itemized',
             mainItems: [
                 {
-                    title: 'Vuelo Madrid-Barcelona (Ida y vuelta)',
+                    title: 'Vuelo Madrid-Barcelona',
                     hasButton: true,
                     buttonText: 'Reservar vuelo',
                     bookingUrl: 'https://iberia.com/vuelos/madrid-barcelona',
@@ -48,4 +48,4 @@ export const bookingMessages: Message[] = [
         },
         isNew: false
     }
-]; 
+];

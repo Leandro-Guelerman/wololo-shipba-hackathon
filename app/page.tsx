@@ -227,7 +227,7 @@ export default function Home() {
     }, [handleTextSubmit]);*/
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white">
+        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white pb-30">
             <Toaster position="top-center" />
             {/* Fondo con avión */}
             <div className="fixed inset-0 pointer-events-none">
