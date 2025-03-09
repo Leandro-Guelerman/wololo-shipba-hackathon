@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 
 import flask
 import requests
@@ -70,7 +71,7 @@ def fetch_civitatis(city, date_from, date_to):
         try:
             a = "https://civitatis.com"+ fl.css('a')[1].attributes['href']
         except:
-            a = "N/A"
+            a = "#"
         price = fl.css_first('span[class="comfort-card__price__text"]').text(
             strip=True
         )
@@ -108,6 +109,60 @@ def airports(location):
     thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
     return parse_message(thread_id, run_id)
 
+@app.route('/api/hotels/<location>/<date_from>/<date_to>')
+def hotels(location, date_from, date_to):
+    logging.info("searching hotels")
+    url = f"https://www.google.com/travel/search?q={location}&currency=ARS"
+    ## TODO use dates in a new damn protobuf
+    client = Client(impersonate="chrome_126", verify=False)
+    res = client.get(url)
+
+    parser = LexborHTMLParser(res.text)
+    activities = []
+
+    for i, fl in enumerate(parser.css('div[class="pjDrrc"]')):
+        # Activity name
+        name = fl.css_first('h2').text(
+            strip=True
+        )
+
+        img = fl.css_first('img').attributes['data-src']
+
+        try:
+            amenities = fl.css_first('div[class="RJM8Kc"]').text(strip=True).split(":")[1].split(",")
+        except:
+            amenities = []
+
+        try:
+            a = "https://www.google.com" + fl.css('a')[1].attributes['href']
+        except:
+            a = "#"
+
+        price_div = fl.css_first('div[class="A9rngd"]')
+        if price_div is not None:
+            price = price_div.text(strip=True)
+            regex = re.compile(r'\d+.\d+')
+            price_parsed = regex.findall(price)[0]
+        else:
+            price_parsed = "0"
+
+
+        # href = fl.css_first('a')
+        activities.append({'name': name, 'price': float(price_parsed.replace(",", "")),
+                           'img': img,
+                           'amenities': amenities,
+                           'href': a})
+
+    print(activities)
+
+    response = make_response(jsonify(activities))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
+
+
 @app.route('/api/flights/<from_airport>/<to_airport>/<date_from>/<date_to>/<passengers>')
 def flights(from_airport, to_airport,date_from,date_to,passengers):
     logging.info("searching flights")
@@ -140,6 +195,8 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
     output = {
         'flights': departure_flights
     }
+
+    ## TODO THE URL
 
     response = make_response(jsonify(output))
     response.headers['Access-Control-Allow-Origin'] = '*'
