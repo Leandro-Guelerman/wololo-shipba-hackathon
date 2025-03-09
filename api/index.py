@@ -370,6 +370,8 @@ def hotels(location, date_from, date_to):
     for i,h in enumerate(hotels):
         h['name'] = json_hotels[i]['name']
         h['amenities'] = json_hotels[i]['amenities']
+        if 'href' in json_hotels[i]:
+            h['href'] = json_hotels[i]['href'].replace("/reviews", "/overview")
     print(hotels)
 
     response = make_response(jsonify(hotels))
