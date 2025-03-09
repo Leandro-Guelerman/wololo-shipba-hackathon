@@ -181,7 +181,10 @@ def hotels(location, date_from, date_to):
             price = price_div.text(strip=True)
             regex = re.compile(r'\d+.\d+')
             price_parsed = regex.findall(price)[0]
-            float(price_parsed.replace(",", ""))
+            try:
+                float(price_parsed.replace(",", ""))
+            except:
+                price_parsed = float(0)
         else:
             price_parsed = float(0)
 
