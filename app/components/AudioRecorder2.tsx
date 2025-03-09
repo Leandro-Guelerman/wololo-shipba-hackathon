@@ -111,7 +111,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                     }
                 >
                     <div className={`absolute inset-2 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center transition-all p-4 duration-500 ${
-                        isRecording ? 'scale-90 rotate-90' : 'scale-100 hover:rotate-[-90deg]'
+                        isRecording ? 'scale-90 rotate-90' : 'scale-100 hover:rotate-[-35deg]'
                     }`}>
                         {isRecording ? (
                             <div className="w-6 h-6 rounded-lg bg-white shadow-inner-lg transition-transform duration-300 ease-in-out" />
