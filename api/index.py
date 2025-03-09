@@ -181,12 +181,13 @@ def hotels(location, date_from, date_to):
             price = price_div.text(strip=True)
             regex = re.compile(r'\d+.\d+')
             price_parsed = regex.findall(price)[0]
+            float(price_parsed.replace(",", ""))
         else:
-            price_parsed = "0"
+            price_parsed = float(0)
 
 
         # href = fl.css_first('a')
-        activities.append({'name': name, 'price': float(price_parsed.replace(",", "")),
+        activities.append({'name': name, 'price': price_parsed,
                            'img': img,
                            'amenities': amenities,
                            'href': a})
