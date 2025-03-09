@@ -42,11 +42,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                     <div className="flex items-center flex-1 min-w-0">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
-
-                                                        <span className="text-sm font-medium text-gray-900">{index === 0 ? message.message?.departureLocation?.split(',')[0] : message.message?.arrivalLocation?.split(',')[0]}</span>
-                                                        <span className="text-xs text-gray-500">({index === 0 ? message.message?.departureAirportData?.key : message.message?.arrivalAirportData?.key})</span>
-                                                    </div>
-                                                    <div className="text-xs text-gray-500">{new Date(segment.departure_time).toLocaleString()}</div>
+                                                  <span className="text-sm font-medium text-gray-900">{index === 0 ? message.message?.departureLocation?.split(',')[0] : message.message?.arrivalLocation?.split(',')[0]}</span>
+                                                  <span className="text-xs text-gray-500">({index === 0 ? message.message?.departureAirportData?.key : message.message?.arrivalAirportData?.key})</span>
+                                              </div>
+                                              <div className="text-xs text-gray-500">{new Date(segment.departure_time).toLocaleString()}</div>
                                         </div>
                                         <div className="flex items-center px-4 flex-col">
                                             {segment.stops > 0 ? (
@@ -164,7 +163,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                             <div className="flex items-center justify-between  rounded-lg">
                                 <div>
                                     <div className="flex items-center gap-4 text-gray-900"><div className="flex gap-2">
-                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio
+                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio&nbsp;
                           {message.message.weather.provided_dates.average_weather}°C
                         </span>
 
@@ -226,7 +225,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                     <div>
                                         <div className="flex items-center gap-4 text-gray-900">
                             <div className="flex gap-2">
-                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio
+                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio&nbsp;
                             {message.message.weather.recommended_dates.average_weather}°C
                           </span>
 
