@@ -12,9 +12,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     if (message.text) {
         return (
             <div className={`flex justify-start mb-4 animate-message-appear`}>
-                <div className="w-full p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
-                    <p className="text-md whitespace-pre-wrap break-words leading-relaxed text-gray-800">
-                        🏝️ {message.text}
+                <div className="w-full p-4 bg-gradient-to-tr  from-blue-700 to-blue-900 shadow-sm rounded-2xl border border-blue-600">
+                    <p className="text-lg whitespace-pre-wrap break-words leading-relaxed text-gray-100">
+                        🏝️&nbsp;&nbsp;{message.text}
                     </p>
                 </div>
             </div>
@@ -24,8 +24,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     // Renderizado para mensaje con ítems o clima
     return (
         <div className={'flex justify-start mb-4 animate-message-appear'}>
-            <div className="w-full bg-white shadow-sm rounded-2xl border border-gray-100 ">
                 {message.message && message.message.type === 'flight' && (
+                  <div className="w-full bg-gradient-to-tr from-blue-700 to-blue-900 shadow-sm rounded-2xl border border-blue-600">
+
                         <div className="space-y-2 p-4">
                             <h3 className='text-lg font-medium text-gray-900'>✈️ Vuelo {message.message.flights?.segments[0].departure.cityName} - {message.message.flights?.segments[0].arrival.cityName} (Ida y vuelta)</h3>
                             {message.message.flights?.segments.map((segment, index) => (
@@ -65,6 +66,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                 </span>
                         </div>
                     </div>
+                  </div>
                 )}
 
                 {message.message && message.message.type === 'activities' && message.message.activities && (
@@ -72,7 +74,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     <h3 className="text-lg font-medium text-gray-900 mb-4">🎯 Actividades recomendadas</h3>
                     <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
                       {message.message.activities.map((activity, index) => (
-                        <div key={index} className="flex-shrink-0 w-72 bg-white rounded-lg border border-gray-100">
+                        <div key={index} className="flex-shrink-0 w-72 bg-gradient-to-tr from-gray-50 to-blue-50 rounded-lg border border-gray-100">
                           <img
                             src={activity.thumbnail_url}
                             alt={activity.name}
@@ -95,16 +97,13 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                 )}
 
               {message.message && message.message.type === 'weather' && message.message.weather && (
-                message.message.weather.provided_dates && message.message.weather.recommended_dates && <div className="p-4 bg-amber-100">
-                    <h3 className="text-md font-medium  text-gray-900 mb-4">
+                message.message.weather.provided_dates && message.message.weather.recommended_dates && <div className="p-4 w-full bg-gradient-to-tr from-amber-400 to-amber-500 rounded-lg border border-amber-400">
+                    <h3 className="text-md font-medium  text-amber-800  mb-4">
                       ⛈️ No es el mejor momento para viajar</h3>
                     <div className="flex flex-col space-y-4">
                       <div className="flex items-center justify-between  rounded-lg">
                         <div>
                           <div className="flex items-center gap-4 text-gray-900">
-                        <span className="text-2xl">
-                          {message.message.weather.provided_dates.average_weather}°C
-                        </span>
                             <div className="flex gap-2">
                               {message.message.weather.provided_dates.weather_hazards.rain_chances === 'high' && <span className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">🌧️ Alta prob. lluvia</span>}
                               {message.message.weather.provided_dates.weather_hazards.temperatures === 'high' && <span className="text-sm px-2 py-1 bg-red-100 text-red-800 rounded">🌡️ Altas temp.</span>}
@@ -115,7 +114,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                       </div>
                     </div>
                   <div>
-                    <p className='text-md font-medium text-gray-900 flex justify-between items-center'>Te proponemos viajar en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })} <button className="px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">✨ Dale! Viajar en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })}</button></p> </div>
+                    <p className='text-md font-medium text-gray-900 flex justify-between items-center'>Te proponemos viajar en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })} <button className="px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">✨ ¡Cambiar a {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })}!</button></p> </div>
                   </div>)}
 
               {message.message && message.message.type === 'weather' && message.message.weather &&
@@ -203,6 +202,5 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                   </div>
                 )}
             </div>
-        </div>
     );
 };

@@ -93,12 +93,12 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                     type="button"
                     onClick={isRecording ? stopRecording : startRecording}
                     disabled={isDisabled}
-                    className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 shadow-lg ${
+                    className={`relative w-20 h-20 rounded-full flex items-center cursor-pointer justify-center transition-all duration-500 shadow-lg ${
                         isDisabled
                             ? 'bg-gray-300 cursor-not-allowed shadow-inner'
                             : isRecording
                                 ? 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 scale-110'
-                                : 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:scale-105'
+                                : 'bg-gradient-to-br from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 hover:scale-105'
                     }`}
                     title={
                         isDisabled
