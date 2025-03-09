@@ -311,12 +311,20 @@ def hotels(location, date_from, date_to):
 
         price_parsed = float(0)
         price_div = fl.css_first('div[class="A9rngd"]')
+        try:
+            print(price_div.text())
+        except:
+            pass
 
         if price_div is not None:
             price_html = price_div.text(strip=True)
             price = price_html.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
             for p in price:
                 try:
+                    try:
+                        print(p)
+                    except:
+                        pass
                     price_parsed = float(p)
                     break
                 except:
