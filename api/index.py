@@ -405,6 +405,13 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
     return_flights = []
 
     if len(departure_flights) > 0:
+
+        if len(departure_flights) <= 5:
+            N = len(departure_flights) - 1
+        else:
+            N = 5
+        departure_flights = departure_flights[:N]
+
         client = Client(impersonate="chrome_126", verify=False)
 
         for d in departure_flights:
@@ -415,6 +422,13 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
             return_flights = custom_response_parser(res)
             if len(return_flights) > 0:
                 return_flights = return_flights['flights']
+
+                if len(return_flights) <= 5:
+                    N = len(return_flights) - 1
+                else:
+                    N = 5
+                return_flights = return_flights[:N]
+
                 for rf in return_flights:
                     proto = parse_rf_proto(date_from, date_to, from_airport, to_airport, d, rf)
                     tfs = get_tfs(proto)
