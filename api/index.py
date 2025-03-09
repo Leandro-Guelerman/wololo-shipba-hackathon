@@ -159,7 +159,7 @@ def fetch_civitatis(city, date_from, date_to):
         # Activity name
         name = fl.css_first('h2').text(
             strip=True
-        )
+        ).replace("'", "")
         try:
             thumbnail_url = "https://civitatis.com"+fl.css_first('div[class="comfort-card__img"]').css_first('img').attributes['data-src']
         except:
@@ -359,6 +359,8 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
                     tfs = get_tfs(proto)
                     rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu=CmxDalJJV1ZwaVdFMHpja1JXYmpSQlFVZEdkWGRDUnkwdExTMHRMUzB0TFMxalozQmtPVUZCUVVGQlIyWk9UVVpGUm5GWFptRkJFZ1ZCUVRrd054b01DTFNnOWpBUUFob0RRVkpUT0J4dzFmQUYSAggAIgYKATAKATE&hl=es-419"
                     print(tfs)
+                    print(rf['url'])
+                    exit()
 
             else:
                 return_flights = []
