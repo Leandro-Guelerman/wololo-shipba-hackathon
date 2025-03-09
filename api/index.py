@@ -188,7 +188,10 @@ def hotels(location, date_from, date_to):
             strip=True
         )
 
-        img = fl.css_first('img').attributes['data-src']
+        try:
+            img = fl.css_first('img').attributes['data-src']
+        except:
+            img = "#"
 
         try:
             amenities = fl.css_first('div[class="RJM8Kc"]').text(strip=True).split(":")[1].split(",")
