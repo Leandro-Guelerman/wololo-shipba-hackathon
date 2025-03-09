@@ -15,7 +15,7 @@ export const BookingContainer: React.FC<BookingContainerProps> = ({
 
 		const totalPrice = messages.reduce((acc, message) => {
 				if (message.message?.type === 'flight') {
-						return acc + (message.message.flights?.departure.price || 0) + (message.message.flights?.return.price || 0);
+						return acc + (message.message.flights?.return.price || 0);
 				}
 				if (message.message?.type === 'hotel') {
 						return acc + (message.message.hotel?.price || 0);

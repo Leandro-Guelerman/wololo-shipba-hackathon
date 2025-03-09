@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import re
@@ -228,7 +229,23 @@ def classifier():
     content = request.json
 
     thread_id, run_id = post_message(CLASSIFIER_ASSISTANT_ID, content['text'])
-    return parse_message(thread_id, run_id)
+    classifier = parse_msg(thread_id, run_id)
+
+    today = datetime.datetime.now()
+    if 'departureDate' in classifier:
+        departure_date = classifier['departureDate']
+        departure_date_dt = datetime.datetime.fromisoformat(departure_date)
+        if departure_date_dt < today:
+            departure_date = (departure_date_dt + datetime.timedelta(days=365)).date().isoformat()
+            classifier['departureDate'] = departure_date
+
+            arrival_date = classifier['arrivalDate']
+            arrival_date_dt = datetime.datetime.fromisoformat(arrival_date)
+
+            arrival_date = (arrival_date_dt + datetime.timedelta(days=365)).date().isoformat()
+            classifier['arrivalDate'] = arrival_date
+
+    return classifier
 
 def safe_location(location):
     location = location.replace("á", "a")
