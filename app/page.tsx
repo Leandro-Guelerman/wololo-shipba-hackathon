@@ -21,6 +21,8 @@ export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [messages, setMessages] = useState<Message[]>(initialMessages);
     const [mainLocation, setMainLocation] = useState<string | undefined>();
+    const [fromLocation, setFromLocation] = useState<string | undefined>();
+
 
     const [, setPromptedText] = useState<string | undefined>();
 
@@ -64,6 +66,7 @@ export default function Home() {
         setDepartureAirport(undefined)
         setArrivalArrivalAirport(undefined)
 
+        setFromLocation(undefined)
         setLocation(undefined)
         setArrivalDate(undefined)
         setDepartureDate(undefined)
@@ -142,7 +145,7 @@ export default function Home() {
             year: "numeric"
         }).format(new Date(weatherRecommendation?.recommended_dates?.arrivalDate + "T00:00:00"));
 
-        const newQuery = `Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
+        const newQuery = `Quiero ir ${fromLocation ? `de ${fromLocation.split(',')[0]} ` : ''} a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
         resetState();
         addMessage('✨ ¡Bien, vamos a probar de nuevo!');
         setIsRecommended(true);
@@ -153,6 +156,7 @@ export default function Home() {
         setPromptedText(text);
         const classifierData = await getClassifierDataFromApi(text);
         const mainLocation = classifierData?.location?.[0];
+        setFromLocation(classifierData?.departureLocation?.[0]);
 
         setMainLocation(mainLocation);
         setIsProcessing(true);
