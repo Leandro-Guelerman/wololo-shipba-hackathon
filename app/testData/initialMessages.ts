@@ -5,6 +5,7 @@ export const initialMessages: Message[] = [
         id: '1',
         text: `🫶 ¡Hola! Vamos a ayudarte a reservar las mejores vacaciones de tu vida. Por favor indicanos a dónde te gustaría viajar.
         
- Por ejemplo: "Quiero ir de Madrid a Londres en noviembre".`,
+"Quiero ir a Puerto Iguazú en septiembre"
+"Quiero ir de Madrid a Londres en noviembre"`,
     }
 ];
