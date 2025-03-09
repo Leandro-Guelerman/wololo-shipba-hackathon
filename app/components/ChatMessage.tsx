@@ -11,9 +11,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
     if (message.text) {
         return (
-            <div className={`flex justify-start mb-4 ${
-                message.isNew ? 'animate-message-appear' : ''
-            }`}>
+            <div className={`flex justify-start mb-4 animate-message-appear`}>
                 <div className="w-full p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
                     <p className="text-md whitespace-pre-wrap break-words leading-relaxed text-gray-800">
                         🏝️ {message.text}
@@ -25,9 +23,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
     // Renderizado para mensaje con ítems o clima
     return (
-        <div className={`flex justify-start mb-4  ${
-            message.isNew ? 'animate-message-appear' : ''
-        }`}>
+        <div className={'flex justify-start mb-4 animate-message-appear'}>
             <div className="w-full bg-white shadow-sm rounded-2xl border border-gray-100 ">
                 {message.message && message.message.type === 'flight' && (
                         <div className="space-y-2 p-4">
