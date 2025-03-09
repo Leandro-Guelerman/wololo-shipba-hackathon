@@ -141,7 +141,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                         </div>
                         <div>
                             <p className='text-md font-medium text-gray-900 flex justify-between items-center'>Es mas conveniente viajar
-                                en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', {month: 'long'})}
+                                en {new Date(message.message.weather.recommended_dates.arrivalDate).toLocaleString('es-ES', {month: 'long'})}
                                 <button
                                     onClick={onRetryWithRecommendedDates}
                                     className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">✨

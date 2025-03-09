@@ -23,25 +23,24 @@ export default function Home() {
 
     const [, setPromptedText] = useState<string | undefined>();
 
-    const [departureAirport, setDepartureAirport] = useState<Airport | undefined>();
-    const [arrivalAirport, setArrivalArrivalAirport] = useState<Airport | undefined>();
+    const [, setDepartureAirport] = useState<Airport | undefined>();
+    const [, setArrivalArrivalAirport] = useState<Airport | undefined>();
 
-    const [location, setLocation] = useState<string | undefined>();
-    const [arrivalDate, setArrivalDate] = useState<string | undefined>();
-    const [departureDate, setDepartureDate] = useState<string | undefined>();
-    const [duration, setDuration] = useState<number | undefined>();
+    const [, setLocation] = useState<string | undefined>();
+    const [, setArrivalDate] = useState<string | undefined>();
+    const [, setDepartureDate] = useState<string | undefined>();
+    const [, setDuration] = useState<number | undefined>();
 
     const [, setHotel] = useState<HotelData | undefined>();
     const [, setActivities] = useState<ActivityData[] | undefined>();
 
     const [weatherRecommendation, setWeatherRecommendation] = useState<WeatherData | undefined>();
 
-    const [flight, setFlight] = useState<FlightData | undefined>();
+    const [, setFlight] = useState<FlightData | undefined>();
 
     const [showBookingDetails, setShowBookingDetails] = useState<boolean>(false);
     const [isRecommended, setIsRecommended] = useState<boolean>(false);
 
-    console.log(departureAirport, arrivalAirport, location, arrivalDate, departureDate, duration, weatherRecommendation, flight);
     const addMessage = useCallback((content: string | Message['message']) => {
         const newMessage = {
             id: Date.now().toString(),
@@ -130,8 +129,21 @@ export default function Home() {
     }
 
     const handleResubmit = async () => {
-        const newQuery = `${mainLocation} ${weatherRecommendation?.recommended_dates?.departureDate} ${weatherRecommendation?.recommended_dates?.arrivalDate}`;
+        const travelDateFromLabel = new Intl.DateTimeFormat("es-ES", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }).format(new Date(weatherRecommendation?.recommended_dates?.departureDate + "T00:00:00"));
+
+        const travelDateToLabel = new Intl.DateTimeFormat("es-ES", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }).format(new Date(weatherRecommendation?.recommended_dates?.arrivalDate + "T00:00:00"));
+
+        const newQuery = `Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
         resetState();
+        addMessage('Bien! Probemos nuevamente con esa recomendación!');
         setIsRecommended(true)
         handleTextSubmit(newQuery);
     }
@@ -227,7 +239,7 @@ export default function Home() {
                 setIsProcessing(true);
                 // const response = await postAudio(blob);
                 // const responseData = await response.json();
-                const responseData = {text: 'quiero ir machu pichu el 10 de enero del 2026'};
+                const responseData = {text: 'quiero ir a nueva york en diciembre'};
 
                 if (responseData && typeof responseData.text === 'string') {
                     await handleTextSubmit(responseData.text);
