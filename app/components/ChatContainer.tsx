@@ -1,6 +1,6 @@
 'use client'
 import {BookingContainer} from "@/app/components/BookingContainer";
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {ChatMessage} from './ChatMessage';
 import {ChatLoader} from './ChatLoader';
 import {Airport} from "@/app/api/travelApi";
@@ -94,7 +94,7 @@ export interface HotelData {
 
 export interface Message {
     id: string;
-    text?: string;
+    text?: string | ReactNode;
     message?: {
         type: 'flight' | 'hotel' | 'activities' | 'weather';
         flights?: FlightData;

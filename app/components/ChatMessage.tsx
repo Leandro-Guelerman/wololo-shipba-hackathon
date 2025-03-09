@@ -14,7 +14,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             <div className={`flex justify-start mb-4 animate-message-appear`}>
                 <div className="w-full p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
                     <p className="text-md whitespace-pre-wrap break-words leading-relaxed text-gray-800">
-                        🏝️ {message.text}
+                      {message.text}
                     </p>
                 </div>
             </div>
