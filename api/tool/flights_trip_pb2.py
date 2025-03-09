@@ -24,19 +24,19 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x66lights_trip.proto\"j\n\x08\x46lightV2\x12\x14\n\x0c\x66rom_airport\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x12\n\nto_airport\x18\x03 \x01(\t\x12\x0f\n\x07\x61irline\x18\x05 \x01(\t\x12\x15\n\rflight_number\x18\x06 \x01(\t\"\x1d\n\rAirportCodeV2\x12\x0c\n\x04path\x18\x02 \x01(\t\"\x82\x01\n\x0c\x46lightDataV2\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x1a\n\x07\x66lights\x18\x04 \x03(\x0b\x32\t.FlightV2\x12$\n\x0c\x61irport_from\x18\r \x01(\x0b\x32\x0e.AirportCodeV2\x12\"\n\nairport_to\x18\x0e \x01(\x0b\x32\x0e.AirportCodeV2\"\x84\x01\n\rRoundTripData\x12#\n\x0c\x66lights_data\x18\x03 \x03(\x0b\x32\r.FlightDataV2\x12 \n\npassengers\x18\x08 \x03(\x0e\x32\x0c.PassengerV2\x12\x15\n\x04seat\x18\t \x01(\x0e\x32\x07.SeatV2\x12\x15\n\x04trip\x18\x13 \x01(\x0e\x32\x07.TripV2*d\n\x06SeatV2\x12\x13\n\x0fUNKNOWN_SEAT_V2\x10\x00\x12\x0e\n\nECONOMY_V2\x10\x01\x12\x16\n\x12PREMIUM_ECONOMY_V2\x10\x02\x12\x0f\n\x0b\x42USINESS_V2\x10\x03\x12\x0c\n\x08\x46IRST_V2\x10\x04*S\n\x06TripV2\x12\x13\n\x0fUNKNOWN_TRIP_V2\x10\x00\x12\x11\n\rROUND_TRIP_V2\x10\x01\x12\x0e\n\nONE_WAY_V2\x10\x02\x12\x11\n\rMULTI_CITY_V2\x10\x03*p\n\x0bPassengerV2\x12\x18\n\x14UNKNOWN_PASSENGER_V2\x10\x00\x12\x0c\n\x08\x41\x44ULT_V2\x10\x01\x12\x0c\n\x08\x43HILD_V2\x10\x02\x12\x15\n\x11INFANT_IN_SEAT_V2\x10\x03\x12\x14\n\x10INFANT_ON_LAP_V2\x10\x04\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x66lights_trip.proto\"j\n\x08\x46lightV2\x12\x14\n\x0c\x66rom_airport\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x12\n\nto_airport\x18\x03 \x01(\t\x12\x0f\n\x07\x61irline\x18\x05 \x01(\t\x12\x15\n\rflight_number\x18\x06 \x01(\t\"\x1d\n\rAirportCodeV2\x12\x0c\n\x04path\x18\x02 \x01(\t\"\x82\x01\n\x0c\x46lightDataV2\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\x1a\n\x07\x66lights\x18\x04 \x03(\x0b\x32\t.FlightV2\x12$\n\x0c\x61irport_from\x18\r \x01(\x0b\x32\x0e.AirportCodeV2\x12\"\n\nairport_to\x18\x0e \x01(\x0b\x32\x0e.AirportCodeV2\"\x84\x01\n\rRoundTripData\x12#\n\x0c\x66lights_data\x18\x03 \x03(\x0b\x32\r.FlightDataV2\x12 \n\npassengers\x18\x08 \x03(\x0e\x32\x0c.PassengerV2\x12\x15\n\x04seat\x18\t \x01(\x0e\x32\x07.SeatV2\x12\x15\n\x04trip\x18\x13 \x01(\x0e\x32\x07.TripV2\"\xa7\x01\n\x0cSelectedData\x12#\n\x0c\x66lights_data\x18\x03 \x03(\x0b\x32\r.FlightDataV2\x12 \n\npassengers\x18\x08 \x03(\x0e\x32\x0c.PassengerV2\x12\x15\n\x04seat\x18\t \x01(\x0e\x32\x07.SeatV2\x12\x15\n\x04trip\x18\x13 \x01(\x0e\x32\x07.TripV2\x12\"\n\x0breturn_data\x18Q \x03(\x0b\x32\r.FlightDataV2*d\n\x06SeatV2\x12\x13\n\x0fUNKNOWN_SEAT_V2\x10\x00\x12\x0e\n\nECONOMY_V2\x10\x01\x12\x16\n\x12PREMIUM_ECONOMY_V2\x10\x02\x12\x0f\n\x0b\x42USINESS_V2\x10\x03\x12\x0c\n\x08\x46IRST_V2\x10\x04*S\n\x06TripV2\x12\x13\n\x0fUNKNOWN_TRIP_V2\x10\x00\x12\x11\n\rROUND_TRIP_V2\x10\x01\x12\x0e\n\nONE_WAY_V2\x10\x02\x12\x11\n\rMULTI_CITY_V2\x10\x03*p\n\x0bPassengerV2\x12\x18\n\x14UNKNOWN_PASSENGER_V2\x10\x00\x12\x0c\n\x08\x41\x44ULT_V2\x10\x01\x12\x0c\n\x08\x43HILD_V2\x10\x02\x12\x15\n\x11INFANT_IN_SEAT_V2\x10\x03\x12\x14\n\x10INFANT_ON_LAP_V2\x10\x04\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'flights_trip_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_SEATV2']._serialized_start=429
-  _globals['_SEATV2']._serialized_end=529
-  _globals['_TRIPV2']._serialized_start=531
-  _globals['_TRIPV2']._serialized_end=614
-  _globals['_PASSENGERV2']._serialized_start=616
-  _globals['_PASSENGERV2']._serialized_end=728
+  _globals['_SEATV2']._serialized_start=599
+  _globals['_SEATV2']._serialized_end=699
+  _globals['_TRIPV2']._serialized_start=701
+  _globals['_TRIPV2']._serialized_end=784
+  _globals['_PASSENGERV2']._serialized_start=786
+  _globals['_PASSENGERV2']._serialized_end=898
   _globals['_FLIGHTV2']._serialized_start=22
   _globals['_FLIGHTV2']._serialized_end=128
   _globals['_AIRPORTCODEV2']._serialized_start=130
@@ -45,4 +45,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_FLIGHTDATAV2']._serialized_end=292
   _globals['_ROUNDTRIPDATA']._serialized_start=295
   _globals['_ROUNDTRIPDATA']._serialized_end=427
+  _globals['_SELECTEDDATA']._serialized_start=430
+  _globals['_SELECTEDDATA']._serialized_end=597
 # @@protoc_insertion_point(module_scope)

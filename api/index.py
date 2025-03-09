@@ -21,7 +21,7 @@ app = Flask(__name__)
 API_VERSION="?api-version=2024-12-01-preview"
 LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
 LOCATION_RESTRICTIONS_ID="asst_p796twbeakiJHYtx2DtCe8Be"
-BEST_FLIGHT_ID="asst_CMUL2VRQ9TE8p6rFRPfHKetG"
+BEST_FLIGHT_ID="asst_2yBmLV6yfwQtgjWFbHebOaDl"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
@@ -29,8 +29,8 @@ THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
 WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
-CLASSIFIER_ASSISTANT_ID="asst_U9WCOr8dTGR8rRxgrWj5K9nc"
-ACTIVITIES_ASSISTANT_ID="asst_yiAiCjxWWKHuHsNln9GT2hUt"
+CLASSIFIER_ASSISTANT_ID="asst_tIKsx7GapFw1e3GQCpZv6XUf"
+ACTIVITIES_ASSISTANT_ID="asst_CrrUWATJ9Z73vcTn1nDpZeS1"
 HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
 # test
@@ -45,6 +45,52 @@ data = {
     "tools": [{"type": "code_interpreter"}],
     "model": "gpt-4o-mini"
 }
+
+def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected, return_selected) -> bytes:
+    round_trip_data = PB.SelectedData()
+
+    departure_flights = round_trip_data.flights_data.add()
+    departure_flights.date = date_from
+    departure_flights.airport_from.path = airport_from
+    departure_flights.airport_to.path = airport_to
+
+    if flight_selected is not None:
+        departure_flight_1 = departure_flights.flights.add()
+        departure_flight_1.date = date_from
+        departure_flight_1.from_airport = airport_from
+        departure_flight_1.to_airport = airport_to
+        departure_flight_1.airline =flight_selected['flight_codes'][0][0]
+        departure_flight_1.flight_number = flight_selected['flight_codes'][0][1]
+
+        # departure_flight_2 = departure_flights.flights.add()
+        # departure_flight_2.date = date_from
+        # departure_flight_2.from_airport = "ATH"
+        # departure_flight_2.to_airport = "RHO"
+        # departure_flight_2.airline = "A3"
+        # departure_flight_2.flight_number = "206"
+
+        # return_flight = round_trip_data.flights_data.add()
+        # return_flight.date = date_to
+        # return_flight.airport_from: airport_to
+        # return_flight.to_airport = airport_from
+
+    return_trip = round_trip_data.return_data.add()
+    return_trip.date = date_to
+    return_trip.airport_from.path = airport_from
+    return_trip.airport_to.path = airport_to
+
+    return_flight_1 = return_trip.flights.add()
+    return_flight_1.date = date_to
+    return_flight_1.from_airport = airport_to
+    return_flight_1.to_airport = airport_from
+    return_flight_1.airline = return_selected['flight_codes'][0][0]
+    return_flight_1.flight_number = return_selected['flight_codes'][0][1]
+
+    round_trip_data.passengers.append(1)
+    round_trip_data.seat = 1
+    round_trip_data.trip = 1
+
+    return round_trip_data.SerializeToString()
 
 def parse_proto(date_from, date_to, airport_from, airport_to, flight_selected) -> bytes:
     round_trip_data = PB.RoundTripData()
@@ -129,7 +175,9 @@ def fetch_civitatis(city, date_from, date_to):
 
     print(activities)
 
-    return activities
+    sorted_list = sorted(activities, key=lambda x: x['ratings'], reverse=True)
+
+    return sorted_list
 
 @app.route('/api/civitatis/<location>')
 def civitatis(location):
@@ -186,7 +234,10 @@ def hotels(location, date_from, date_to):
             strip=True
         )
 
-        img = fl.css_first('img').attributes['data-src']
+        try:
+            img = fl.css_first('img').attributes['data-src']
+        except:
+            img = "#"
 
         try:
             amenities = fl.css_first('div[class="RJM8Kc"]').text(strip=True).split(":")[1].split(",")
@@ -292,6 +343,11 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
             return_flights = custom_response_parser(res)
             if len(return_flights) > 0:
                 return_flights = return_flights['flights']
+                for rf in return_flights:
+                    proto = parse_rf_proto(date_from, date_to, from_airport, to_airport, d, rf)
+                    tfs = get_tfs(proto)
+                    rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu=CmxDalJJV1ZwaVdFMHpja1JXYmpSQlFVZEdkWGRDUnkwdExTMHRMUzB0TFMxalozQmtPVUZCUVVGQlIyWk9UVVpGUm5GWFptRkJFZ1ZCUVRrd054b01DTFNnOWpBUUFob0RRVkpUT0J4dzFmQUYSAggAIgYKATAKATE&hl=es-419"
+
             else:
                 return_flights = []
             d['return'] = return_flights
@@ -299,8 +355,6 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
     output = {
         'flights': departure_flights
     }
-
-    ## TODO THE URL
 
     print(output)
     thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))

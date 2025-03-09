@@ -104,23 +104,31 @@ Determine the best round trip including arrival and return flights
  
 - If no year is provided for arrival time of flights assume the year is 2025
  
-### Output ###
- 
-- Output a json with just one round trip flight based on the analysis performed
- 
 - Format the departure time to be YYYY-MM-DDTHH:mm:ss
  
 - Format the arrival time to be YYYY-MM-DDTHH:mm:ss
  
-- Exclude flight_codes
+### Output ###
  
-- Format the price to only show a round number
+- Return only a JSON with a departure and a return flight based on the analysis performed following this structure:
  
-- Include each flight duration
- 
-- Include number of stops in each flight
- 
-- Include name of the flight company
+"departure": {
+            "arrival_time": "2025-10-01T15:20:00",
+            "departure_time": "2025-10-01T12:25:00",
+            "duration": "2 hr 55 min",
+            "name": "Aerolineas Argentinas",
+            "price": 450907,
+            "stops": 0
+        },
+        "return": {
+            "arrival_time": "2025-10-05T10:35:00",
+            "departure_time": "2025-10-05T07:15:00",
+            "duration": "3 hr 20 min",
+            "name": "British Airways",
+            "url": "https://www.google.com/url"
+            "price": 470083,
+            "stops": 0
+        }
      """,
         "name": "BestFlightFinderAPI",
         "model": "gpt-4o-mini"
@@ -207,7 +215,7 @@ def create_activities_assistant():
  
 - Adjust rating to only show a number from 1 to 10, decimals can be included
  
-- Only show the top ten activities based on rating
+- Only show the top ten activities based on rating arranged from best to worst
  
 - Exclude duplicated activities
  
@@ -273,9 +281,9 @@ Determine a destination
  
 Output a json with the following format:
 {
-"location", [Miami, United States"],
+"location", ["Miami, United States"],
 "duration": '7"
-"departureLocation: [Buenos Aires, Argentina]"
+"departureLocation: ["Buenos Aires, Argentina"]"
 "departureDate": "2025-11-02"
 "arrivalDate": "2025-11-09"
 }
