@@ -226,7 +226,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                     <div>
                                         <div className="flex items-center gap-4 text-gray-900">
                             <div className="flex gap-2">
-                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio 
+                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio
                             {message.message.weather.recommended_dates.average_weather}°C
                           </span>
 

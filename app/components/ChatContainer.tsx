@@ -45,6 +45,7 @@ interface FlightSegment {
     "name": string;
     "price": number;
     "stops": number;
+    "url": string;
 }
 
 export interface FlightData {
@@ -138,7 +139,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                             <ChatLoader/>
                         </div>
                     )}
-                    <BookingContainer messages={conversationMessages} />
+                    {messages && <BookingContainer messages={messages} />}
 
                 <div ref={chatEndRef}/>
                 </div>
