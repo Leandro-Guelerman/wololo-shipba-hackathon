@@ -83,49 +83,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     </div>
                 )}
 
-
-                {/*       {message.message && message.message.type === 'flight' && (
-                        <div className="space-y-2 p-4">
-                            <h3 className='text-lg font-medium text-gray-900'>✈️ Vuelo {message.message.flights?.segments[0].departure.cityName} - {message.message.flights?.segments[0].arrival.cityName} (Ida y vuelta)</h3>
-                            {message.message.flights?.segments.map((segment, index) => (
-                              <div key={index} className="flex items-center gap-4 rounded-lg">
-                                  <div className="flex items-center flex-1 min-w-0">
-                                      <div className="flex-1 min-w-0">
-                                          <div className="flex items-center gap-2">
-                                              <span className="text-sm font-medium text-gray-900">{segment.departure.cityName}</span>
-                                              <span className="text-xs text-gray-500">({segment.departure.airport})</span>
-                                          </div>
-                                          <div className="text-xs text-gray-500">{new Date(segment.departure.date).toLocaleString()}</div>
-                                      </div>
-                                      <div className="flex items-center px-4 flex-col">
-                                          {segment.numberOfStops > 0 && (
-                                            <span className="text-xs text-gray-500 mb-2">
-                {segment.numberOfStops} {segment.numberOfStops === 1 ? 'escala' : 'escalas'}
-            </span>
-                                          )}
-                                          {segment.numberOfStops === 0 && <span className="text-xs text-gray-500 mb-2">Directo</span>}
-                                          <div className="w-16 h-px bg-gray-300 relative">
-                                              {segment.numberOfStops > 0 && (<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300"></div>)}
-                                          </div>
-                                      </div>
-                                      <div className="flex-1 min-w-0 text-right">
-                                          <div className="flex items-center justify-end gap-2">
-                                              <span className="text-sm font-medium text-gray-900">{segment.arrival.cityName}</span>
-                                              <span className="text-xs text-gray-500">({segment.arrival.airport})</span>
-                                          </div>
-                                          <div className="text-xs text-gray-500">{new Date(segment.arrival.date).toLocaleString()}</div>
-                                      </div>
-                                  </div>
-                              </div>
-                            ))}
-                            <div className="pt-2">
-                                <span className="text-lg font-semibold text-gray-900">
-                                    ${message.message.flights?.price}
-                                </span>
-                        </div>
-                    </div>
-                )}
-*/}
                 {message.message && message.message.type === 'activities' && message.message.activities && (
                     <div className="p-4">
                         <h3 className="text-lg font-medium text-gray-900 mb-4">🏔️ Actividades recomendadas</h3>

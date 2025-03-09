@@ -91,8 +91,6 @@ export default function Home() {
         } catch (error) {
             console.error('Error al procesar el texto:', error);
             toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
-        } finally {
-            setIsProcessing(false);
         }
     }
 
@@ -106,8 +104,6 @@ export default function Home() {
         } catch (error) {
             console.error('Error al procesar el texto:', error);
             toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
-        } finally {
-            setIsProcessing(false);
         }
     }
 
@@ -132,9 +128,6 @@ export default function Home() {
             console.error('Error al procesar el texto:', error);
             // toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
             // addMessage('No te entendí. Podrías repetirlo? - Intenta contandome tu destino deseado.');
-
-        } finally {
-            setIsProcessing(false);
         }
     }
 
@@ -226,8 +219,6 @@ export default function Home() {
             return response;
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
-        } finally {
-            setIsProcessing(false);
         }
     }
 
@@ -247,8 +238,6 @@ export default function Home() {
             } catch (error) {
                 console.error('Error al procesar el audio:', error);
                 toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
-            } finally {
-                setIsProcessing(false);
             }
         }
     };
