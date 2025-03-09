@@ -163,7 +163,10 @@ def fetch_civitatis(city, date_from, date_to):
 
 
     city = city.lower().split(",")[0]
+    city = city.replace("%20", " ")
     city = city.replace(" ", "-")
+    print("city" + city)
+
 
     res = client.get(f"https://www.civitatis.com/ar/{city}{query}")
 
@@ -332,7 +335,8 @@ def hotels(location, date_from, date_to):
             # price = "$51$51 nightly$136 total1 night with taxes + fees$51Mar 10 – 11"
             ## fallback for usd (prices are not converted even with the currency argument)
             if price_parsed is None:
-                for p in price:
+                for i,p in enumerate(price):
+                    print(f"price {i} {p}")
                     price = p.split("$")[1]
                     try:
                         # cached dollar for effiency
