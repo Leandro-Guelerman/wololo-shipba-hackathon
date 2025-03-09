@@ -68,11 +68,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                 </span>
                         </div>
 
-                        {/*/!* Separador entre principales y actividades *!/*/}
-                        {/*{message.activities && message.activities.length > 0 && (*/}
-                        {/*    <div className="my-4 border-t border-gray-100" />*/}
-                        {/*)}*/}
-
                         {/*/!* Actividades *!/*/}
                         {/*{message.activities && (*/}
                         {/*    <div className="space-y-4">*/}
@@ -89,6 +84,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                         {/*)}*/}
                     </div>
                 )}
+
+
 
                 {message.message && message.message.type === 'hotel' && message.message.hotel && (
                   <div className="flex flex-col-reverse md:flex-row gap-4">

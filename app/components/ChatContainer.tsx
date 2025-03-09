@@ -7,7 +7,7 @@ export interface Message {
     id: string;
     text?: string;
     message?: {
-        type: 'flight' | 'hotel' | 'activities' | 'recommended_dates';
+        type: 'flight' | 'hotel' | 'activities' | 'weather';
         flights?: {
             segments: [{
                 departure: {
@@ -33,23 +33,36 @@ export interface Message {
             price: number;
         };
         activities?: {
-            title: string;
-            description: string;
-            bookingUrl?: string;
             price: number;
+            duration: string;
+            href: string;
+            name: string;
+            ratings: number;
+            thumbnail_url: string;
         }[];
-        recommended_dates?: {
-            departureDate: string;
-            arrivalDate: string;
-            average_weather: number;
-            weather_hazards: {
-                rain_chances: 'high' | 'low' | 'normal';
-                temperatures: 'high' | 'low' | 'normal';
-                high_winds: boolean;
-            }
-        };
+        weather?: {
+            provided_dates: {
+                "departureDate": string,
+                "arrivalDate": string,
+                "average_weather": number,
+                "weather_hazards": {
+                    rain_chances: 'high' | 'low' | 'medium';
+                    temperatures: 'high' | 'low' | 'medium';
+                    "high_winds": false
+                },
+                recommended_dates?: {
+                    departureDate: string;
+                    arrivalDate: string;
+                    average_weather: number;
+                    weather_hazards: {
+                        rain_chances: 'high' | 'low' | 'medium';
+                        temperatures: 'high' | 'low' | 'medium';
+                        high_winds: boolean;
+                    }
+                };
+            },
+        },
     };
-    isNew: boolean;
 }
 
 interface ChatContainerProps {

@@ -4,7 +4,6 @@ export const conversationMessages: Message[] = [
     {
         id: 'test1',
         text: 'Me gustaría viajar a Barcelona en verano.',
-        isNew: false
     },
     {
         id: 'test2',
@@ -41,7 +40,6 @@ export const conversationMessages: Message[] = [
                 price: 600
             }
         },
-        isNew: true,
     },
     {
         id: 'test3',
@@ -55,24 +53,50 @@ export const conversationMessages: Message[] = [
                 price: 1200
             }
         },
-        isNew: true,
     },
     {
         id: 'test4',
         message: {
-            type: 'recommended_dates',
-            recommended_dates: {
-                arrivalDate: "2025-05-08",
-                average_weather: 18,
-                departureDate: "2025-05-01",
-                weather_hazards: {
-                    high_winds: false,
-                    rain_chances: "normal",
-                    temperatures: "high"
+            type: 'weather',
+            weather: {
+                provided_dates: {
+                    arrivalDate: "2025-05-08",
+                    average_weather: 18,
+                    departureDate: "2025-05-01",
+                    weather_hazards: {
+                        high_winds: false,
+                        rain_chances: "medium",
+                        temperatures: "high"
+                    }
+                },
+                recommended_dates: {
+                    arrivalDate: "2025-05-08",
+                    average_weather: 18,
+                    departureDate: "2025-05-01",
+                    weather_hazards: {
+                        high_winds: false,
+                        rain_chances: "medium",
+                        temperatures: "high"
+                    }
                 }
             }
+
+
         },
-        isNew: true,
     },
+    {
+        id: 'test5',
+        message: {
+            type: 'activities',
+            activities: [{
+                duration: "2 horas",
+                href: "https://civitatis.com/ar/barcelona/free-tour-misterios-leyendas-barrio-gotico/",
+                name: "Free tour de los misterios y leyendas del Barrio Gótico",
+                price: 0,
+                ratings: 9.4,
+                thumbnail_url: "https://civitatis.com/f/espana/barcelona/free-tour-misterios-leyendas-barrio-gotico-list.jpg"
+            }]
+        }
+    }
 
 ];
