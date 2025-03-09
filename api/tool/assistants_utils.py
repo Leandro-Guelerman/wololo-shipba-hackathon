@@ -284,7 +284,7 @@ Determine a destination
 ### Output ###
  
 Output a json with the following format:
-{"location", ["Miami, United States"],"duration": '7", "departureLocation: ["Buenos Aires, Argentina"]", "departureDate": "2025-11-02", "arrivalDate": "2025-11-09"}
+{"location", ["Miami, United States"],"duration": '7", "departureLocation: ["Buenos Aires, Argentina"], "departureDate": "2025-11-02", "arrivalDate": "2025-11-09"}
  
 - Translate only location and departureLocation to Spanish
      """,

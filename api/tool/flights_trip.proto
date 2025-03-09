@@ -61,6 +61,7 @@ message SelectedData {
   repeated FlightDataV2 return_data = 4;
   PassengerV2 passengers = 8;
   SeatV2 seat = 9;
+  uint32 sample1 = 10;
   uint32 trip = 19;
   SampleData sample_data = 142;
   uint32 sample5 = 156;

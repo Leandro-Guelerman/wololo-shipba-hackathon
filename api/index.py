@@ -29,7 +29,7 @@ THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
 WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
-CLASSIFIER_ASSISTANT_ID="asst_I5c2Wa8jb4AZihXYD1FclhTk"
+CLASSIFIER_ASSISTANT_ID="asst_xhH0JS1MxB150kL0PE2mMVok"
 ACTIVITIES_ASSISTANT_ID="asst_CrrUWATJ9Z73vcTn1nDpZeS1"
 HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
@@ -90,7 +90,8 @@ def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected
 
     pf_data.passengers = 1
     pf_data.seat = 1
-    pf_data.trip = 2
+    # pf_data.trip = 1
+    pf_data.sample1 = 1
 
     # pf_data.sample1 = 1
     # pf_data.sample2 = 1
@@ -358,8 +359,8 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
                     tfs = get_tfs(proto)
                     rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu=CmxDalJJV1ZwaVdFMHpja1JXYmpSQlFVZEdkWGRDUnkwdExTMHRMUzB0TFMxalozQmtPVUZCUVVGQlIyWk9UVVpGUm5GWFptRkJFZ1ZCUVRrd054b01DTFNnOWpBUUFob0RRVkpUT0J4dzFmQUYSAggAIgYKATAKATE&hl=es-419"
                     print(tfs)
-                    # print(rf['url'])
-                    # exit(0)
+                    print(rf['url'])
+                    exit(0)
 
             else:
                 return_flights = []
