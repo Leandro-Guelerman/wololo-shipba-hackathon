@@ -29,7 +29,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
     return (
         <div className={'flex justify-start mb-4 animate-message-appear'}>
             <div className="w-full bg-white shadow-sm rounded-2xl border border-gray-100 ">
-
                 {message.message && message.message.type === 'flight' && (
                     <div className="space-y-2 p-4">
                         <h3 className="text-lg font-medium text-gray-900">

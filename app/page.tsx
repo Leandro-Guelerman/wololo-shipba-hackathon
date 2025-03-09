@@ -15,6 +15,7 @@ import {useState, useCallback} from "react";
 import {initialMessages} from './testData/initialMessages';
 import {Toaster, toast} from 'react-hot-toast';
 import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
+import { postAudio } from "./api/audioApi";
 
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -141,9 +142,9 @@ export default function Home() {
             year: "numeric"
         }).format(new Date(weatherRecommendation?.recommended_dates?.arrivalDate + "T00:00:00"));
 
-        const newQuery = `Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
+        const newQuery = `🏖️ Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
         resetState();
-        addMessage('Bien! Probemos nuevamente con esa recomendación!');
+        addMessage('✨ ¡Bien, vamos a probar de nuevo!');
         setIsRecommended(true)
         handleTextSubmit(newQuery);
     }
@@ -237,12 +238,12 @@ export default function Home() {
         if (blob) {
             try {
                 setIsProcessing(true);
-                // const response = await postAudio(blob);
-                // const responseData = await response.json();
-                const responseData = {text: 'quiero ir a nueva york en diciembre'};
+                const response = await postAudio(blob);
+                const responseData = await response.json();
+                // const responseData = {text: 'quiero ir a nueva york en diciembre'};
 
                 if (responseData && typeof responseData.text === 'string') {
-                    await handleTextSubmit(responseData.text);
+                    await handleTextSubmit(`🏖️ ${responseData.text}`);
                 }
             } catch (error) {
                 console.error('Error al procesar el audio:', error);
