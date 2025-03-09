@@ -152,7 +152,8 @@ def parse_proto(date_from, date_to, airport_from, airport_to, flight_selected) -
 def fetch_civitatis(city, date_from, date_to):
     client = Client(impersonate="chrome_126", verify=False)
 
-    query = "?"
+    ## only entrancees
+    query = "?allowedCategoryIds=5"
 
     if date_from is not None:
         query += f"&fromDate={date_from}"
@@ -235,6 +236,7 @@ def safe_location(location):
     location = location.replace("í", "i")
     location = location.replace("ó", "o")
     location = location.replace("ú", "u")
+    location = location.replace("ñ", "n")
     return location
 
 @app.route('/api/locations/<location>/airports')
