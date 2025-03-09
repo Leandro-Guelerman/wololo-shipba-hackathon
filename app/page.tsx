@@ -151,7 +151,7 @@ export default function Home() {
             let flightData: FlightData | undefined;
 
             if (classifierData) {
-                departureAirportData = await getAirportFromApi('ezeiza');
+                departureAirportData = await getAirportFromApi(classifierData.departureLocation?.[0] as string);
                 setDepartureAirport(departureAirportData);
 
                 arrivalAirportData = await getAirportFromApi(classifierData?.location?.[0] as string);

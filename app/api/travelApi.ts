@@ -1,6 +1,7 @@
 import {FlightData, WeatherData } from "../components/ChatContainer";
 
 export interface ClassifierData {
+    departureLocation?: string[];
     location?: string[];
     "arrivalDate"?: string;
     "departureDate"?: string;
@@ -38,7 +39,7 @@ export const postClassifier = async (text: string): Promise<ClassifierData> => {
 
         const data = await result.json();
         console.log('Respuesta del clasificador:', data);
-        
+
         return data;
     } catch (error) {
         console.error('Error en postClassifier:', error);
