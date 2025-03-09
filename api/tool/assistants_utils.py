@@ -129,6 +129,10 @@ Determine the best round trip including arrival and return flights
             "price": 470083,
             "stops": 0
         }
+        
+        
+- Exclude any other information and analysis from the response that is not a JSON
+        
      """,
         "name": "BestFlightFinderAPI",
         "model": "zala-dev-ai"
