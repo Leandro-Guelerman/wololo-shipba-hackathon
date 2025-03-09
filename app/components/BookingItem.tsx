@@ -6,6 +6,7 @@ interface BookingItemProps {
     hasButton?: boolean;
     buttonText?: string;
     bookingUrl?: string;
+    onBooked: () => void;
 }
 
 export const BookingItem: React.FC<BookingItemProps> = ({
@@ -13,6 +14,7 @@ export const BookingItem: React.FC<BookingItemProps> = ({
     hasButton = true,
     buttonText = 'Reservar',
     bookingUrl,
+    onBooked
 }) => {
     const [isBooked, setIsBooked] = useState(false);
 
@@ -20,6 +22,7 @@ export const BookingItem: React.FC<BookingItemProps> = ({
         if (bookingUrl) {
             window.open(bookingUrl, '_blank');
         }
+        onBooked();
         setIsBooked(true);
     };
 
@@ -27,7 +30,7 @@ export const BookingItem: React.FC<BookingItemProps> = ({
         <>
             <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 relative rounded-lg p-2 ${isBooked ? 'bg-green-100' : ''}`}>
                 <div className="flex items-center flex-1">
-                    <span className={`flex items-center justify-center w-4 h-4 rounded-full transition-colors ml-3
+                    <span className={`flex items-center justify-center w-4 h-4 rounded-full transition-colors 
                         ${isBooked 
                             ? `bg-green-200 text-green-700` 
                             : `border-1 rounded-md border-gray-300`}`}
