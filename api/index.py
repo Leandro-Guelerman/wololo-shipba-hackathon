@@ -178,6 +178,7 @@ def hotels(location, date_from, date_to):
 
         price_parsed = float(0)
         price_div = fl.css_first('div[class="A9rngd"]')
+        print(price_div)
         if price_div is not None:
             price = price_div.text(strip=True)
             price = price.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
@@ -197,7 +198,7 @@ def hotels(location, date_from, date_to):
                            'amenities': amenities,
                            'href': a})
 
-    print(activities)
+    # print(activities)
 
     response = make_response(jsonify(activities))
     response.headers['Access-Control-Allow-Origin'] = '*'
