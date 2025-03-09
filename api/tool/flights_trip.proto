@@ -48,3 +48,11 @@ message RoundTripData {
   SeatV2 seat = 9;
   TripV2 trip = 19;
 }
+
+message SelectedData {
+  repeated FlightDataV2 flights_data = 3;
+  repeated PassengerV2 passengers = 8;
+  SeatV2 seat = 9;
+  TripV2 trip = 19;
+  repeated FlightDataV2 return_data = 81;
+}
