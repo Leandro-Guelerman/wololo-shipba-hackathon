@@ -176,9 +176,15 @@ def fetch_civitatis(city, date_from, date_to):
             thumbnail_url = "https://civitatis.com"+fl.css_first('div[class="comfort-card__img"]').css_first('img').attributes['data-src']
         except:
             thumbnail_url = "N/A"
-        ratings = fl.css_first('span[class="m-rating--text"]').text(
-            strip=True
-        )
+
+        try:
+            ratings = fl.css_first('span[class="m-rating--text"]').text(
+                strip=True
+            )
+        except:
+            ratings = 8
+
+
         try:
             a = "https://civitatis.com"+ fl.css('a')[1].attributes['href']
         except:
