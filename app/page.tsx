@@ -70,6 +70,7 @@ export default function Home() {
         setDuration(undefined)
         setWeatherRecommendation(undefined)
         setFlight(undefined)
+        setIsRecommended(false);
 
         setShowBookingDetails(false);
     }
@@ -88,7 +89,6 @@ export default function Home() {
             return response
         } catch (error) {
             console.error('Error al procesar el texto:', error);
-            toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
         }
     }
 
@@ -101,7 +101,7 @@ export default function Home() {
             return mainAirport;
         } catch (error) {
             console.error('Error al procesar el texto:', error);
-            toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
+           // toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
         }
     }
 
@@ -145,7 +145,7 @@ export default function Home() {
         const newQuery = `Quiero ir a ${(mainLocation as string).split(',')[0]} del ${travelDateFromLabel} al ${travelDateToLabel}`;
         resetState();
         addMessage('✨ ¡Bien, vamos a probar de nuevo!');
-        setIsRecommended(true)
+        setIsRecommended(true);
         handleTextSubmit(newQuery);
     }
 
@@ -170,8 +170,20 @@ export default function Home() {
             departureAirportData = await getAirportFromApi(classifierData.departureLocation?.[0] as string);
             setDepartureAirport(departureAirportData);
 
+            if (!departureAirportData) {
+                addMessage('⚠️ No entendimos lo que quisiste decir, ¿podrias repetirlo?.');
+                setIsProcessing(false);
+                return;
+            }
+
             arrivalAirportData = await getAirportFromApi(classifierData?.location?.[0] as string);
             setArrivalArrivalAirport(arrivalAirportData);
+
+            if (!arrivalAirportData) {
+                addMessage('⚠️ No entendimos lo que quisiste decir, ¿podrias repetirlo?.');
+                setIsProcessing(false);
+                return;
+            }
 
             weatherData = await getWeatherFromApi(mainLocation as string, classifierData?.duration as number, classifierData?.departureDate, classifierData?.arrivalDate);
 
@@ -198,18 +210,24 @@ export default function Home() {
             addMessage(flightMessage.message);
 
             const hotelData = await getHotelsFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)
-            setHotel(hotelData);
+            if (hotelData) {
+                setHotel(hotelData);
+            }
 
             const hotelMessage = ChatMessageMapper.mapHotel(hotelData, travelDateFrom as string, travelDateTo as string);
             addMessage(hotelMessage.message);
 
             const activities = await getActivitiesFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)
-            setActivities(activities.slice(0, 5));
+            if (activities && activities.length > 0) {
+                setActivities(activities.slice(0, 5));
 
-            const activitiesMessage = ChatMessageMapper.mapActivities(activities.slice(0, 5));
-            addMessage(activitiesMessage.message);
+                const activitiesMessage = ChatMessageMapper.mapActivities(activities.slice(0, 5));
+                addMessage(activitiesMessage.message);
+            }
 
             setShowBookingDetails(true)
+        } else {
+            addMessage('⚠️ No entendimos lo que quisiste decir, ¿podrias repetirlo?.');
         }
 
         setIsProcessing(false);
@@ -234,7 +252,7 @@ export default function Home() {
 
             return response;
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
+            //toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
         }
     }
 
@@ -254,7 +272,6 @@ export default function Home() {
                 if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
 
                 const responseData = await response.json();
-                console.log(responseData);
 
                 if (responseData) {
                     await handleTextSubmit(responseData);
@@ -265,7 +282,7 @@ export default function Home() {
                 console.error(`Intento ${attempt + 1} fallido:`, error);
 
                 if (attempt === MAX_RETRIES - 1) {
-                    toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
+                    //toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
                 } else {
                     await new Promise(res => setTimeout(res, (2 ** attempt) * 2000));
                 }

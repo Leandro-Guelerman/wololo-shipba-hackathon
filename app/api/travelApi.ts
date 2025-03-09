@@ -38,7 +38,6 @@ export const postClassifier = async (text: string): Promise<ClassifierData> => {
         });
 
         const data = await result.json();
-        console.log('Respuesta del clasificador:', data);
 
         return data;
     } catch (error) {
@@ -52,7 +51,6 @@ export const getAirports = async (location: string): Promise<AirportsResponse> =
         const result = await fetch(`${API_URL}/locations/${location.split(',')[0]}/airports`);
 
         const data = await result.json();
-        console.log('Respuesta de aeropuertos:', data);
 
         if (!data.main || !data.others) {
             throw new Error('La respuesta no tiene el formato esperado de aeropuertos');
