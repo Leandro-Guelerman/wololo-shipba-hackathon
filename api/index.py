@@ -6,6 +6,7 @@ import requests
 from fast_flights import get_flights, FlightData, Passengers
 from flask import Flask, request, make_response, jsonify
 from primp import Client
+from selectolax.lexbor import LexborHTMLParser
 
 app = Flask(__name__)
 
@@ -31,6 +32,64 @@ data = {
     "tools": [{"type": "code_interpreter"}],
     "model": "gpt-4o-mini"
 }
+
+
+def fetch_civitatis(city, date_from, date_to):
+    client = Client(impersonate="chrome_126", verify=False)
+
+    query = "?"
+
+    if date_from is not None:
+        query += f"&fromDate={date_from}"
+    if date_to is not None:
+        query += f"&toDate={date_to}"
+
+
+    city = city.lower().split(",")[0]
+
+    res = client.get(f"https://www.civitatis.com/ar/{city}{query}")
+
+    parser = LexborHTMLParser(res.text)
+    activities = []
+
+    for i, fl in enumerate(parser.css('div[class="o-search-list__item"]')):
+        # Activity name
+        name = fl.css_first('h2').text(
+            strip=True
+        )
+        try:
+            thumbnail_url = "https://civitatis.com"+fl.css_first('div[class="comfort-card__img"]').css_first('img').attributes['data-src']
+        except:
+            thumbnail_url = "N/A"
+        ratings = fl.css_first('span[class="m-rating--text"]').text(
+            strip=True
+        )
+        try:
+            a = "https://civitatis.com"+ fl.css('a')[1].attributes['href']
+        except:
+            a = "N/A"
+        price = fl.css_first('span[class="comfort-card__price__text"]').text(
+            strip=True
+        )
+        try:
+            duration = fl.css_first('div[class="comfort-card__features"]').text().split("\n\t")[2].replace("\t ", "").replace("\t","")
+        except:
+            duration = "N/A"
+        # href = fl.css_first('a')
+        activities.append({'name': name, 'href': a, 'thumbnail_url': thumbnail_url, 'price': price, 'ratings': ratings, 'duration': duration})
+
+    print(activities)
+
+    return activities
+
+@app.route('/api/civitatis/<location>')
+def civitatis(location):
+    logging.info("location to airports")
+
+    from_date = request.args.get('fromDate')
+    to_date = request.args.get('toDate')
+
+    return fetch_civitatis(location,from_date,to_date)
 
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
