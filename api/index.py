@@ -499,26 +499,26 @@ def weather(location, duration):
         departure_date = output['provided_dates']['departureDate']
         departure_date_dt = datetime.datetime.fromisoformat(departure_date)
         if departure_date_dt < today:
-            departure_date = (departure_date_dt + datetime.timedelta(days=365)).date().isoformat()
+            departure_date = (departure_date_dt + datetime.timedelta(days=160)).date().isoformat()
             output['provided_dates']['departureDate'] = departure_date
 
             arrival_date = output['provided_dates']['arrivalDate']
             arrival_date_dt = datetime.datetime.fromisoformat(arrival_date)
 
-            arrival_date = (arrival_date_dt + datetime.timedelta(days=365)).date().isoformat()
+            arrival_date = (arrival_date_dt + datetime.timedelta(days=160)).date().isoformat()
             output['provided_dates']['arrivalDate'] = arrival_date
 
     if 'recommended_dates' in output:
         departure_date = output['recommended_dates']['departureDate']
         departure_date_dt = datetime.datetime.fromisoformat(departure_date)
         if departure_date_dt < today:
-            departure_date = (departure_date_dt + datetime.timedelta(days=365)).date().isoformat()
+            departure_date = (departure_date_dt + datetime.timedelta(days=160)).date().isoformat()
             output['recommended_dates']['departureDate'] = departure_date
 
             arrival_date = output['recommended_dates']['arrivalDate']
             arrival_date_dt = datetime.datetime.fromisoformat(arrival_date)
 
-            arrival_date = (arrival_date_dt + datetime.timedelta(days=365)).date().isoformat()
+            arrival_date = (arrival_date_dt + datetime.timedelta(days=160)).date().isoformat()
             output['recommended_dates']['arrivalDate'] = arrival_date
 
     return output
