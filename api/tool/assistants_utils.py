@@ -271,28 +271,22 @@ Determine a destination
  
 - If no trip duration is received assume 10 days
  
-- If no departure location is recieved assume Buenos Aires, Argentina
+- If no departure location is received assume Buenos Aires, Argentina
  
 - If no departure date an arrival date are provided do not generate those keys in the response
  
 - If only a departure date is provided calculate the arrival date based on the trip duration
  
-### Output ###
- 
-Output a json with the following format:
-{
-"location", ["Miami, United States"],
-"duration": '7"
-"departureLocation: ["Buenos Aires, Argentina"]"
-"departureDate": "2025-11-02"
-"arrivalDate": "2025-11-09"
-}
- 
-- For the location output cities and countries only
+- If an activity or location is provided instead of a city, return the nearest city
  
 - If you receive more than one location return an array of locations
  
-- If no trip duration is received assume 10 days
+### Output ###
+ 
+Output a json with the following format:
+{"location", ["Miami, United States"],"duration": '7", "departureLocation: ["Buenos Aires, Argentina"]", "departureDate": "2025-11-02", "arrivalDate": "2025-11-09"}
+ 
+- Translate only location and departureLocation to Spanish
      """,
         "name": "ClassifierAPI",
         "model": "gpt-4o-mini"
