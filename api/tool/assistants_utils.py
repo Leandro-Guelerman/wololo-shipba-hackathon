@@ -262,30 +262,25 @@ Determine a destination
  
 ### Task ###
  
-- Get a destination from the provided information, this can be a city, place, attraction or activity.
- 
-- You can also receive a trip duration or dates.
- 
+- Get a destination from the provided information, this can be a city, place, attraction or activity. 
+- You can also receive a trip duration or dates. 
 - Separate the received dates into departure date and arrival date
  
 ### Constraints ###
  
-- If no trip duration is received assume 10 days
- 
-- If no departure location is received assume Buenos Aires, Argentina
- 
-- If no departure date an arrival date are provided do not generate those keys in the response
- 
+- If no trip duration is received assume 10 days 
+- If no departure location is received assume Buenos Aires, Argentina 
+- If no departure date an arrival date are provided do not generate those keys in the response 
 - If only a departure date is provided calculate the arrival date based on the trip duration
- 
+- If no year is provided assume the year is 2025
+- If a month is provided assume the departure date is the first day of that month
 - If an activity or location is provided instead of a city, return the nearest city
- 
 - If you receive more than one location return an array of locations
  
 ### Output ###
  
 Output a json with the following format:
-{"location", ["Miami, United States"],"duration": '7", "departureLocation: ["Buenos Aires, Argentina"], "departureDate": "2025-11-02", "arrivalDate": "2025-11-09"}
+{"location": ["Miami, United States"],"duration": "7", "departureLocation": ["Buenos Aires, Argentina"], "departureDate": "2025-11-02", "arrivalDate": "2025-11-09"}
  
 - Translate only location and departureLocation to Spanish
      """,

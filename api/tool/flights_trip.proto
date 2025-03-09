@@ -58,11 +58,11 @@ message SelectedData {
   uint32 sampler1 = 1;
   uint32 sampler2 = 2;
   repeated FlightDataV2 flights_data = 3;
-  repeated FlightDataV2 return_data = 4;
+//  repeated FlightDataV2 return_data = 4;
   PassengerV2 passengers = 8;
   SeatV2 seat = 9;
   uint32 sample1 = 14;
-  uint32 trip = 19;
-  SampleData sample_data = 142;
-  uint32 sample5 = 156;
+//  uint32 trip = 19;
+  SampleData sample_data = 16;
+  uint32 sample5 = 19;
 }

@@ -29,7 +29,7 @@ THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
 WEATHER_ASSISTANT_ID="asst_W2J7BBQc6Ka4yfsbAvY7asUj"
-CLASSIFIER_ASSISTANT_ID="asst_xhH0JS1MxB150kL0PE2mMVok"
+CLASSIFIER_ASSISTANT_ID="asst_fOZFwxdXxdUapIoBVOc0AJbN"
 ACTIVITIES_ASSISTANT_ID="asst_CrrUWATJ9Z73vcTn1nDpZeS1"
 HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
@@ -74,7 +74,7 @@ def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected
         # return_trip.airport_to.sample = 1
         # return_trip.airport_to.path = airport_to
         #
-        return_trip = pf_data.return_data.add()
+        return_trip = pf_data.flights_data.add()
         return_trip.date = date_to
         return_trip.airport_from.sample = 1
         return_trip.airport_from.path = airport_to
