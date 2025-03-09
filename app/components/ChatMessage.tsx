@@ -81,7 +81,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
                         <div className="pt-2">
                             <span
-                                className="text-lg font-semibold text-gray-900">${message.message.flights?.return.price}</span>
+                                className="text-lg font-semibold text-gray-900">${message.message.flights?.return.price.toLocaleString()}</span>
                         </div>
                     </div>
                 )}
@@ -105,7 +105,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                             <span className="text-sm text-gray-500">⏱️ {activity.duration}</span>
                                         </div>
                                         <div className="text-lg font-semibold text-gray-900">
-                                            {activity.price === 0 ? 'Gratis' : `$${activity.price}`}
+                                            {activity.price === 0 ? 'Gratis' : `$${activity.price.toLocaleString()}`}
                                         </div>
                                     </div>
                                 </div>
@@ -226,7 +226,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                             </div>
                             <div className="pt-2">
                             <span className="text-lg font-semibold text-gray-900">
-                                {message.message.hotel.price > 0 ?`${message.message.hotel.price}` : 'Precio a confirmar'}
+                                {message.message.hotel.price > 0 ?`$${message.message.hotel.price.toLocaleString()}` : 'Precio a confirmar'}
                             </span>
                             </div>
                         </div>

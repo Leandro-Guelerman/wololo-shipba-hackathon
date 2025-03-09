@@ -29,7 +29,7 @@ export const BookingContainer: React.FC<BookingContainerProps> = ({
 		return (
 			<>
 				<div className="flex flex-col w-full gap-2 p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
-						<h3 className="text-lg font-medium text-gray-900">💳 ¡Vamos a reservar! Total: ${totalPrice}</h3>
+						<h3 className="text-lg font-medium text-gray-900">💳 ¡Vamos a reservar! Total: ${totalPrice.toLocaleString()}</h3>
 						{messages.filter(l => l.message?.type === 'flight').map((message, index) => (
 								<BookingItem
 										key={index}
