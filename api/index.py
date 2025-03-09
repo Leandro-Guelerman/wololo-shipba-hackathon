@@ -179,10 +179,11 @@ def hotels(location, date_from, date_to):
         price_div = fl.css_first('div[class="A9rngd"]')
         if price_div is not None:
             price = price_div.text(strip=True)
+            logging.info("price found:" + price)
             regex = re.compile(r'\d+.\d+')
             price_parsed = regex.findall(price)[0]
             try:
-                float(price_parsed.replace(",", ""))
+                price_parsed = float(price_parsed.replace(",", ""))
             except:
                 price_parsed = float(0)
         else:
