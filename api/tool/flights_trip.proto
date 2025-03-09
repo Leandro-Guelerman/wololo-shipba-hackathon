@@ -9,6 +9,7 @@ message FlightV2 {
 }
 
 message AirportCodeV2 {
+    uint32 sample = 1;
     string path = 2;
 }
 
@@ -49,10 +50,19 @@ message RoundTripData {
   TripV2 trip = 19;
 }
 
+message SampleData {
+  int64 sample1 = 1;
+}
+
 message SelectedData {
+  uint32 sampler1 = 1;
+  uint32 sampler2 = 2;
   repeated FlightDataV2 flights_data = 3;
-  repeated PassengerV2 passengers = 8;
+//  repeated FlightDataV2 return_data = 4;
+  PassengerV2 passengers = 8;
   SeatV2 seat = 9;
-  TripV2 trip = 19;
-  repeated FlightDataV2 return_data = 81;
+  uint32 sample1 = 14;
+//  uint32 trip = 19;
+  SampleData sample_data = 16;
+  uint32 sample5 = 19;
 }

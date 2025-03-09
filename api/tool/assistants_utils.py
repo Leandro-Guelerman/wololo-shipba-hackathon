@@ -162,6 +162,7 @@ Based on this input determine best date for a trip on the provided location:
  
 - Calculate the best possible dates for the trip depending on the weather conditions at the location. Remember to take into account if the weather would be optimal to perform the most popular activities at the desired location. Generate "recommended_dates" based on this period with the following format:
  
+ {
 "recommended_dates": {
 "departureDate": "2025-11-02",
 "arrivalDate": "2025-11-09",
@@ -170,7 +171,7 @@ Based on this input determine best date for a trip on the provided location:
 "rain_chances": "high | low | medium",
 "temperatures": "high | low | medium",
 "high_winds": true
-}
+}}}
  
 ### Constraints  ###
  
@@ -185,11 +186,11 @@ Based on this input determine best date for a trip on the provided location:
 "rain_chances": "high | low | medium",
 "temperatures": "high | low | medium",
 "high_winds": true
-}
+}}}
  
 ### Output ###
- 
-- Output "provided_dates" and "recommended_dates" as JSON
+- make sure the output is only a json 
+- Output a json with the "provided_dates" and "recommended_dates" as JSON
  
 - If the weather conditions in "provided_dates" and "recommended_dates" are similar only output "provided_dates" as JSON
  
@@ -261,38 +262,27 @@ Determine a destination
  
 ### Task ###
  
-- Get a destination from the provided information, this can be a city, place, attraction or activity.
- 
-- You can also receive a trip duration or dates.
- 
+- Get a destination from the provided information, this can be a city, place, attraction or activity. 
+- You can also receive a trip duration or dates. 
 - Separate the received dates into departure date and arrival date
  
 ### Constraints ###
  
-- If no trip duration is received assume 10 days
- 
-- If no departure location is recieved assume Buenos Aires, Argentina
- 
-- If no departure date an arrival date are provided do not generate those keys in the response
- 
+- If no trip duration is received assume 10 days 
+- If no departure location is received assume Buenos Aires, Argentina 
+- If no departure date an arrival date are provided do not generate those keys in the response 
 - If only a departure date is provided calculate the arrival date based on the trip duration
+- If no year is provided assume the year is 2025
+- If a month is provided assume the departure date is the first day of that month
+- If an activity or location is provided instead of a city, return the nearest city
+- If you receive more than one location return an array of locations
  
 ### Output ###
  
 Output a json with the following format:
-{
-"location", ["Miami, United States"],
-"duration": '7"
-"departureLocation: ["Buenos Aires, Argentina"]"
-"departureDate": "2025-11-02"
-"arrivalDate": "2025-11-09"
-}
+{"location": ["Miami, United States"],"duration": "7", "departureLocation": ["Buenos Aires, Argentina"], "departureDate": "2025-11-02", "arrivalDate": "2025-11-09"}
  
-- For the location output cities and countries only
- 
-- If you receive more than one location return an array of locations
- 
-- If no trip duration is received assume 10 days
+- Translate only location and departureLocation to Spanish
      """,
         "name": "ClassifierAPI",
         "model": "gpt-4o-mini"

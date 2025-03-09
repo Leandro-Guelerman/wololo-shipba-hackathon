@@ -28,8 +28,8 @@ ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
-WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
-CLASSIFIER_ASSISTANT_ID="asst_tIKsx7GapFw1e3GQCpZv6XUf"
+WEATHER_ASSISTANT_ID="asst_ztnj7aefcMzgIvZ3ulbJ5xJV"
+CLASSIFIER_ASSISTANT_ID="asst_fOZFwxdXxdUapIoBVOc0AJbN"
 ACTIVITIES_ASSISTANT_ID="asst_CrrUWATJ9Z73vcTn1nDpZeS1"
 HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
@@ -47,11 +47,16 @@ data = {
 }
 
 def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected, return_selected) -> bytes:
-    round_trip_data = PB.SelectedData()
+    pf_data = PB.SelectedData()
 
-    departure_flights = round_trip_data.flights_data.add()
+    pf_data.sampler1 = 28
+    pf_data.sampler2 = 2
+
+    departure_flights = pf_data.flights_data.add()
     departure_flights.date = date_from
+    departure_flights.airport_from.sample = 1
     departure_flights.airport_from.path = airport_from
+    departure_flights.airport_to.sample = 1
     departure_flights.airport_to.path = airport_to
 
     if flight_selected is not None:
@@ -62,35 +67,41 @@ def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected
         departure_flight_1.airline =flight_selected['flight_codes'][0][0]
         departure_flight_1.flight_number = flight_selected['flight_codes'][0][1]
 
-        # departure_flight_2 = departure_flights.flights.add()
-        # departure_flight_2.date = date_from
-        # departure_flight_2.from_airport = "ATH"
-        # departure_flight_2.to_airport = "RHO"
-        # departure_flight_2.airline = "A3"
-        # departure_flight_2.flight_number = "206"
+        # return_trip = pf_data.flights_data.add()
+        # return_trip.date = date_to
+        # return_trip.airport_from.sample = 1
+        # return_trip.airport_from.path = airport_from
+        # return_trip.airport_to.sample = 1
+        # return_trip.airport_to.path = airport_to
+        #
+        return_trip = pf_data.flights_data.add()
+        return_trip.date = date_to
+        return_trip.airport_from.sample = 1
+        return_trip.airport_from.path = airport_to
+        return_trip.airport_to.sample = 1
+        return_trip.airport_to.path = airport_from
+        #
+        return_flight_1 = return_trip.flights.add()
+        return_flight_1.date = date_to
+        return_flight_1.from_airport = airport_to
+        return_flight_1.to_airport = airport_from
+        return_flight_1.airline = return_selected['flight_codes'][0][0]
+        return_flight_1.flight_number = return_selected['flight_codes'][0][1]
 
-        # return_flight = round_trip_data.flights_data.add()
-        # return_flight.date = date_to
-        # return_flight.airport_from: airport_to
-        # return_flight.to_airport = airport_from
+    pf_data.passengers = 1
+    pf_data.seat = 1
+    # pf_data.trip = 1
+    pf_data.sample1 = 1
 
-    return_trip = round_trip_data.return_data.add()
-    return_trip.date = date_to
-    return_trip.airport_from.path = airport_from
-    return_trip.airport_to.path = airport_to
+    # pf_data.sample1 = 1
+    # pf_data.sample2 = 1
+    # pf_data.sample3 = 1
+    sample_data = PB.SampleData()
+    sample_data.sample1 = -1
+    pf_data.sample_data.CopyFrom(sample_data)
+    pf_data.sample5 = 1
 
-    return_flight_1 = return_trip.flights.add()
-    return_flight_1.date = date_to
-    return_flight_1.from_airport = airport_to
-    return_flight_1.to_airport = airport_from
-    return_flight_1.airline = return_selected['flight_codes'][0][0]
-    return_flight_1.flight_number = return_selected['flight_codes'][0][1]
-
-    round_trip_data.passengers.append(1)
-    round_trip_data.seat = 1
-    round_trip_data.trip = 1
-
-    return round_trip_data.SerializeToString()
+    return pf_data.SerializeToString()
 
 def parse_proto(date_from, date_to, airport_from, airport_to, flight_selected) -> bytes:
     round_trip_data = PB.RoundTripData()
@@ -148,7 +159,7 @@ def fetch_civitatis(city, date_from, date_to):
         # Activity name
         name = fl.css_first('h2').text(
             strip=True
-        )
+        ).replace("'", "")
         try:
             thumbnail_url = "https://civitatis.com"+fl.css_first('div[class="comfort-card__img"]').css_first('img').attributes['data-src']
         except:
@@ -346,7 +357,11 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
                 for rf in return_flights:
                     proto = parse_rf_proto(date_from, date_to, from_airport, to_airport, d, rf)
                     tfs = get_tfs(proto)
-                    rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu=CmxDalJJV1ZwaVdFMHpja1JXYmpSQlFVZEdkWGRDUnkwdExTMHRMUzB0TFMxalozQmtPVUZCUVVGQlIyWk9UVVpGUm5GWFptRkJFZ1ZCUVRrd054b01DTFNnOWpBUUFob0RRVkpUT0J4dzFmQUYSAggAIgYKATAKATE&hl=es-419"
+                    tfu = "EgIIACIA"
+                    rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu={tfu}&hl=es-419"
+                    print(tfs)
+                    print(rf['url'])
+                    # exit()
 
             else:
                 return_flights = []
