@@ -1,6 +1,5 @@
 'use client'
 import {BookingContainer} from "@/app/components/BookingContainer";
-import {conversationMessages} from "@/app/testData/conversationMessages";
 import React from 'react';
 import {ChatMessage} from './ChatMessage';
 import {ChatLoader} from './ChatLoader';
