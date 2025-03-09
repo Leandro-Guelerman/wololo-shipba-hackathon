@@ -1,7 +1,7 @@
 'use client'
 import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {LoadingPlane} from "@/app/components/Loading";
-import {postAudio} from "@/app/api/audioApi";
+// import {postAudio} from "@/app/api/audioApi";
 import {
     Airport,
     ClassifierData,
@@ -12,7 +12,7 @@ import {
 import {ChatContainer} from "@/app/components/ChatContainer";
 import type {FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
 import {useState, useCallback } from "react";
-// import {initialMessages} from './testData/initialMessages';
+import {initialMessages} from './testData/initialMessages';
 // import {conversationMessages} from './testData/conversationMessages';
 // import {bookingMessages} from './testData/bookingMessages';
 import {Toaster, toast} from 'react-hot-toast';
@@ -23,7 +23,7 @@ import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>(initialMessages);
 
     const [departureAirport, setDepartureAirport] = useState<Airport | undefined>();
     const [arrivalAirport, setArrivalArrivalAirport] = useState<Airport | undefined>();
@@ -55,6 +55,19 @@ export default function Home() {
             );
         }, 500);
     }, []);
+
+    const resetState = () => {
+        setMessages(initialMessages);
+        setDepartureAirport(undefined)
+        setArrivalArrivalAirport(undefined)
+
+        setLocation(undefined)
+        setArrivalDate(undefined)
+        setDepartureDate(undefined)
+        setDuration(undefined)
+        setWeatherRecommendation(undefined)
+        setFlight(undefined)
+    }
 
     const getClassifierDataFromApi = async (text: string): Promise<ClassifierData | undefined> => {
         try {
@@ -184,17 +197,17 @@ export default function Home() {
         } finally {
             setIsProcessing(false);
         }
-
     }
 
     const handleAudioChange = async (blob: Blob) => {
+        resetState();
+
         if (blob) {
             try {
                 setIsProcessing(true);
-                const response = await postAudio(blob);
-
-                const responseData = await response.json();
-                console.log('Respuesta de la transcripción:', responseData);
+                // const response = await postAudio(blob);
+                // const responseData = await response.json();
+                const responseData = {text: 'quiero ir a roma' + Math.random()};
 
                 if (responseData && typeof responseData.text === 'string') {
                     await handleTextSubmit(responseData.text);
