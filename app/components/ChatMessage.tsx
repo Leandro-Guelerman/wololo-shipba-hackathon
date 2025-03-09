@@ -96,16 +96,14 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
               {message.message && message.message.type === 'weather' && message.message.weather && (
                 message.message.weather.provided_dates && message.message.weather.recommended_dates && <div className="p-4 bg-amber-100">
-                    <h3 className="text-md font-medium  text-gray-900 mb-4">
+                    <h3 className="text-md font-medium  text-gray-900 mb-1">
                       ⛈️ No es el mejor momento para viajar</h3>
                     <div className="flex flex-col space-y-4">
                       <div className="flex items-center justify-between  rounded-lg">
                         <div>
                           <div className="flex items-center gap-4 text-gray-900">
-                        <span className="text-2xl">
-                          {message.message.weather.provided_dates.average_weather}°C
-                        </span>
                             <div className="flex gap-2">
+                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio {message.message.weather.provided_dates.average_weather}°C</span>
                               {message.message.weather.provided_dates.weather_hazards.rain_chances === 'high' && <span className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">🌧️ Alta prob. lluvia</span>}
                               {message.message.weather.provided_dates.weather_hazards.temperatures === 'high' && <span className="text-sm px-2 py-1 bg-red-100 text-red-800 rounded">🌡️ Altas temp.</span>}
                               {message.message.weather.provided_dates.weather_hazards.high_winds && <span className="text-sm px-2 py-1 bg-yellow-100 text-yellow-800 rounded">💨 Vientos fuertes</span>}
@@ -115,7 +113,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                       </div>
                     </div>
                   <div>
-                    <p className='text-md font-medium text-gray-900 flex justify-between items-center'>Te proponemos viajar en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })} <button className="px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">✨ Dale! Viajar en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })}</button></p> </div>
+                    <p className='text-md font-medium text-gray-900 flex justify-between items-center'>Es mas conveniente viajar en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', { month: 'long' })} <button className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">✨ ¡Dale, cambiar!</button></p> </div>
                   </div>)}
 
               {message.message && message.message.type === 'weather' && message.message.weather &&
@@ -124,24 +122,14 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                   <div className="p-4 bg-green-200">
                     <h3 className="text-lg font-medium text-gray-900 mb-2">🌤️ Encontramos el viaje perfecto ✨</h3>
                     <div className="flex flex-col">
-                    <div className="flex items-center justify-between bg-gray-50 rounded-lg">
-                    <div>
-                    <p className="text-sm text-gray-600 mb-1">
-                  {/*TODO: REVISAR ESTO*/}
-                          {new Date(message?.message?.weather?.provided_dates?.departureDate as string).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} - {new Date(message?.message?.weather?.provided_dates?.arrivalDate as string).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </p>
               <div className="flex items-center gap-4 text-gray-900">
-              <span className="text-2xl">
-                {message?.message?.weather?.provided_dates?.average_weather}°C
-              </span>
                 <div className="flex gap-2">
+                  <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio {message.message.weather.provided_dates.average_weather}°C</span>
                   {message?.message?.weather?.provided_dates?.weather_hazards.rain_chances === 'high' && <span className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">🌧️ Alta prob. lluvia</span>}
                   {message?.message?.weather?.provided_dates?.weather_hazards.temperatures === 'high' && <span className="text-sm px-2 py-1 bg-red-100 text-red-800 rounded">🌡️ Altas temp.</span>}
                   {message?.message?.weather?.provided_dates?.weather_hazards.high_winds && <span className="text-sm px-2 py-1 bg-yellow-100 text-yellow-800 rounded">💨 Vientos fuertes</span>}
                 </div>
               </div>
-            </div>
-          </div>
           </div>
         </div>)}
 
@@ -153,13 +141,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     <div className="flex flex-col">
                       <div className="flex items-center justify-between rounded-lg">
                         <div>
-                          <p className="text-sm text-gray-600 mb-1">
-                            {new Date(message.message.weather.recommended_dates.departureDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} al {new Date(message.message.weather.recommended_dates.arrivalDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} </p>
                           <div className="flex items-center gap-4 text-gray-900">
-                          <span className="text-2xl">
-                            {message.message.weather.recommended_dates.average_weather}°C
-                          </span>
                             <div className="flex gap-2">
+                              <span className="text-sm px-2 py-1 bg-orange-100 text-orange-700 rounded">🌡 Temp. promedio {message.message.weather.recommended_dates.average_weather}°C</span>
                               {message.message.weather.recommended_dates.weather_hazards.rain_chances === 'high' && <span className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">🌧️ Alta prob. lluvia</span>}
                               {message.message.weather.recommended_dates.weather_hazards.temperatures === 'high' && <span className="text-sm px-2 py-1 bg-red-100 text-red-800 rounded">🌡️ Altas temp.</span>}
                               {message.message.weather.recommended_dates.weather_hazards.high_winds && <span className="text-sm px-2 py-1 bg-yellow-100 text-yellow-800 rounded">💨 Vientos fuertes</span>}
