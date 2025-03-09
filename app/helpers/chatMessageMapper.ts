@@ -1,5 +1,5 @@
-import {ActivityData, HotelData, Message} from "@/app/components/ChatContainer";
-import {FlightData, WeatherData} from "@/app/api/travelApi";
+import {ActivityData, FlightData, HotelData, Message, WeatherData} from "@/app/components/ChatContainer";
+import {Airport} from "@/app/api/travelApi";
 
 export default class ChatMessageMapper {
     static mapText(text: string): Message {
@@ -22,12 +22,16 @@ export default class ChatMessageMapper {
         }
     }
 
-    static mapFlight(flightData: FlightData): Message {
+    static mapFlight(flightData: FlightData, departureAirportData?: Airport, arrivalAirportData?: Airport, departureLocation?: string, arrivalLocation?: string): Message {
         return {
             id: Date.now().toString(),
             message: {
                 type: 'flight',
-                flights: flightData
+                flights: flightData,
+                departureAirportData,
+                arrivalAirportData,
+                departureLocation,
+                arrivalLocation
             },
         }
     }
@@ -47,7 +51,7 @@ export default class ChatMessageMapper {
             id: Date.now().toString(),
             message: {
                 type: 'activities',
-                activities: activitiesData
+                activities: activitiesData || []
             }
         }
     }

@@ -1,3 +1,4 @@
+/*
 import {ActivityData, FlightData, HotelData, WeatherData} from "@/app/components/ChatContainer";
 import {AirportsResponse, ClassifierData} from "./travelApi";
 
@@ -144,3 +145,4 @@ export const getActivities = async (
 };
 
 
+*/

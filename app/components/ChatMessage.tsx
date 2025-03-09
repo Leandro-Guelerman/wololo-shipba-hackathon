@@ -30,8 +30,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     <div className="space-y-2 p-4">
                         <h3 className="text-lg font-medium text-gray-900">
                             ✈️
-                            Vuelo {message.message.flights?.departure.name} - {message.message.flights?.return.name} (Ida
-                            y vuelta)
+                            Vuelo {message.message.departureLocation?.split(',')[0]} - {message.message.arrivalLocation?.split(',')[0]}
                         </h3>
 
                         {[message.message.flights?.departure, message.message.flights?.return].map((segment, index) => {
@@ -43,13 +42,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                     <div className="flex items-center flex-1 min-w-0">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
-                                                <span
-                                                    className="text-sm font-medium text-gray-900">{segment.name}</span>
-                                            </div>
-                                            <div
-                                                className="text-xs text-gray-500">{new Date(segment.departure_time).toLocaleString()}</div>
-                                        </div>
 
+                                                        <span className="text-sm font-medium text-gray-900">{index === 0 ? message.message?.departureLocation?.split(',')[0] : message.message?.arrivalLocation?.split(',')[0]}</span>
+                                                        <span className="text-xs text-gray-500">({index === 0 ? message.message?.departureAirportData?.key : message.message?.arrivalAirportData?.key})</span>
+                                                    </div>
+                                                    <div className="text-xs text-gray-500">{new Date(segment.departure_time).toLocaleString()}</div>
+                                        </div>
                                         <div className="flex items-center px-4 flex-col">
                                             {segment.stops > 0 ? (
                                                 <span className="text-xs text-gray-500 mb-2">
@@ -68,11 +66,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
                                         <div className="flex-1 min-w-0 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <span
-                                                    className="text-sm font-medium text-gray-900">{segment.name}</span>
+                                                <span className="text-sm font-medium text-gray-900">{index === 0 ? message.message?.arrivalLocation?.split(',')[0] : message.message?.departureLocation?.split(',')[0]}</span>
+                                                <span className="text-xs text-gray-500">({index === 0 ? message.message?.arrivalAirportData?.key : message.message?.departureAirportData?.key})</span>
                                             </div>
-                                            <div
-                                                className="text-xs text-gray-500">{new Date(segment.arrival_time).toLocaleString()}</div>
+                                            <div className="text-xs text-gray-500">{new Date(segment.arrival_time).toLocaleString()}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +79,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
                         <div className="pt-2">
                             <span
-                                className="text-lg font-semibold text-gray-900">${message.message.flights?.departure.price}</span>
+                                className="text-lg font-semibold text-gray-900">${message.message.flights?.return.price}</span>
                         </div>
                     </div>
                 )}
@@ -134,7 +131,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     <div className="p-4">
                         <h3 className="text-lg font-medium text-gray-900 mb-4">🏔️ Actividades recomendadas</h3>
                         <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
-                            {message.message.activities.map((activity, index) => (
+                            {message.message.activities.map((activity) => (
                                 <div key={activity.name}
                                      className="flex-shrink-0 w-72 bg-white rounded-lg border border-gray-100">
                                     <img

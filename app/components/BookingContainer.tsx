@@ -35,7 +35,7 @@ export const BookingContainer: React.FC<BookingContainerProps> = ({
 										onBooked={() => setBookedCount(bookedCount + 1)}
 								/>
 						))}
-						{messages.filter(l => l.message?.type === 'activities').map((message, index) => (
+						{messages.filter(l => l.message?.type === 'activities').map((message) => (
 								message.message?.activities?.map((activity, index) => (
 										<BookingItem
 												key={index}

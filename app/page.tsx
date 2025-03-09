@@ -1,6 +1,5 @@
 'use client'
 import {AudioRecorder} from "@/app/components/AudioRecorder2";
-import {BookingContainer} from "@/app/components/BookingContainer";
 import {LoadingPlane} from "@/app/components/Loading";
 // import {postAudio} from "@/app/api/audioApi";
 /*import {
@@ -18,26 +17,21 @@ import {
     ClassifierData,
     getHotelsFromApi, getActivitiesFromApi,
 } from "@/app/api/travelApi";
-import {ActivityData, ChatContainer, HotelData} from "@/app/components/ChatContainer";
-import type {ActivityData, FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
-import {conversationMessages} from "@/app/testData/conversationMessages";
-import {useState, useCallback } from "react";
+import {ActivityData, ChatContainer, FlightData, HotelData, Message, WeatherData} from "@/app/components/ChatContainer";
+import {useState, useCallback} from "react";
 import {initialMessages} from './testData/initialMessages';
-// import {conversationMessages} from './testData/conversationMessages';
-// import {bookingMessages} from './testData/bookingMessages';
 import {Toaster, toast} from 'react-hot-toast';
 import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 
 // Combinamos todos los mensajes de prueba
 // const additionalTestMessages = [...conversationMessages, ...bookingMessages];
 
-export const ViewStateEnum = 'initialized' | 'processing' | 'restarted'
-
 export default function Home() {
-    const [viewState, setViewState] = useState('');
-
     const [isProcessing, setIsProcessing] = useState(false);
     const [messages, setMessages] = useState<Message[]>(initialMessages);
+    const [, setMainLocation] = useState<string | undefined>();
+
+    const [, setPromptedText] = useState<string | undefined>();
 
     const [departureAirport, setDepartureAirport] = useState<Airport | undefined>();
     const [arrivalAirport, setArrivalArrivalAirport] = useState<Airport | undefined>();
@@ -47,8 +41,8 @@ export default function Home() {
     const [departureDate, setDepartureDate] = useState<string | undefined>();
     const [duration, setDuration] = useState<number | undefined>();
 
-    const [hotel, setHotel] = useState<HotelData | undefined>();
-    const [activities, setActivities] = useState<ActivityData[] | undefined>();
+    const [, setHotel] = useState<HotelData | undefined>();
+    const [, setActivities] = useState<ActivityData[] | undefined>();
 
     const [weatherRecommendation, setWeatherRecommendation] = useState<WeatherData | undefined>();
 
@@ -145,61 +139,68 @@ export default function Home() {
         } finally {
             setIsProcessing(false);
         }
-
     }
 
+    /*const handleResubmit = async () => {
+        const newQuery = `${mainLocation} ${weatherRecommendation?.recommended_dates?.departureDate} ${weatherRecommendation?.recommended_dates?.arrivalDate}`;
+        resetState();
+        handleTextSubmit(newQuery);
+    }*/
+
     const handleTextSubmit = async (text: string) => {
-            const classifierData = await getClassifierDataFromApi(text);
-            const mainLocation = classifierData?.location?.[0];
+        setPromptedText(text);
+        const classifierData = await getClassifierDataFromApi(text);
+        const mainLocation = classifierData?.location?.[0];
 
-            setIsProcessing(true);
+        setMainLocation(mainLocation);
+        setIsProcessing(true);
 
-            let departureAirportData: Airport | undefined;
-            let arrivalAirportData: Airport | undefined;
-            let weatherData: WeatherData | undefined;
-            let flightData: FlightData | undefined;
-            let hotelData: HotelData | undefined;
+        let departureAirportData: Airport | undefined;
+        let arrivalAirportData: Airport | undefined;
+        let weatherData: WeatherData | undefined;
+        let flightData: FlightData | undefined;
+        // let hotelData: HotelData | undefined;
 
-            if (classifierData) {
-                departureAirportData = await getAirportFromApi(classifierData.departureLocation?.[0] as string);
-                setDepartureAirport(departureAirportData);
+        let travelDateFrom: string | undefined;
+        let travelDateTo: string | undefined;
 
-                arrivalAirportData = await getAirportFromApi(classifierData?.location?.[0] as string);
-                setArrivalArrivalAirport(arrivalAirportData);
+        if (classifierData) {
+            departureAirportData = await getAirportFromApi(classifierData.departureLocation?.[0] as string);
+            setDepartureAirport(departureAirportData);
 
-                if (arrivalAirportData) {
-                    addMessage(`Tu destino: ${mainLocation} / Aeropuerto: ${arrivalAirportData.name}`);
-                }
+            arrivalAirportData = await getAirportFromApi(classifierData?.location?.[0] as string);
+            setArrivalArrivalAirport(arrivalAirportData);
 
-                weatherData = await getWeatherFromApi(mainLocation as string, classifierData?.duration as number, classifierData?.departureDate, classifierData?.arrivalDate);
-                const weatherMessage = ChatMessageMapper.mapWeather(weatherData)
-                addMessage(weatherMessage.message);
+            weatherData = await getWeatherFromApi(mainLocation as string, classifierData?.duration as number, classifierData?.departureDate, classifierData?.arrivalDate);
 
-                if (weatherData?.recommended_dates) {
-                    //TODO: aca hay que seleccionar si los dates vienen del recommended o de donde.
-                    flightData = await handleRequestFlights(
-                        departureAirportData?.key as string,
-                        arrivalAirportData?.key as string,
-                        weatherData.recommended_dates.departureDate,
-                        weatherData.recommended_dates.arrivalDate
-                    );
-                    const flightMessage = ChatMessageMapper.mapFlight(flightData);
-                    addMessage(flightMessage.message);
-                }
+            travelDateFrom = weatherData?.provided_dates?.departureDate as string || weatherData?.recommended_dates?.departureDate as string;
+            travelDateTo = weatherData?.provided_dates?.arrivalDate as string || weatherData?.recommended_dates?.arrivalDate as string;
 
-                const hotelData = await getHotelsFromApi(mainLocation as string, weatherData?.recommended_dates?.departureDate as string, weatherData?.recommended_dates?.arrivalDate as string)
-                setHotel(hotelData);
+            const weatherMessage = ChatMessageMapper.mapWeather(weatherData as WeatherData)
+            addMessage(weatherMessage.message);
 
-                const hotelMessage = ChatMessageMapper.mapHotel(hotelData);
-                addMessage(hotelMessage.message);
+            flightData = await handleRequestFlights(
+                departureAirportData?.key as string,
+                arrivalAirportData?.key as string,
+                travelDateFrom,
+                travelDateTo
+            );
 
-                const activities = getActivitiesFromApi(mainLocation as string, weatherData?.recommended_dates?.departureDate as string, weatherData?.recommended_dates?.arrivalDate as string)
-                setActivities(activities);
+            const flightMessage = ChatMessageMapper.mapFlight(flightData as FlightData, departureAirportData, arrivalAirportData, classifierData.departureLocation?.[0] as string, classifierData?.location?.[0] as string);
+            addMessage(flightMessage.message);
 
-                const activitiesMessage = ChatMessageMapper.mapActivities(activities);
-                addMessage(activitiesMessage.message);
+            const hotelData = await getHotelsFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)
+            setHotel(hotelData);
 
-            }
+            const hotelMessage = ChatMessageMapper.mapHotel(hotelData);
+            addMessage(hotelMessage.message);
+
+            const activities = await getActivitiesFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)
+            setActivities(activities);
+
+            const activitiesMessage = ChatMessageMapper.mapActivities(activities);
+            addMessage(activitiesMessage.message);
+        }
 
         setIsProcessing(false);
     };
@@ -258,7 +259,7 @@ export default function Home() {
 
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white pb-30">
-            <Toaster position="top-center" />
+            <Toaster position="top-center"/>
             {/* Fondo con avión */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

@@ -4,6 +4,7 @@ import {conversationMessages} from "@/app/testData/conversationMessages";
 import React from 'react';
 import {ChatMessage} from './ChatMessage';
 import {ChatLoader} from './ChatLoader';
+import {Airport} from "@/app/api/travelApi";
 
 export interface WeatherData {
     provided_dates?: {
@@ -100,6 +101,10 @@ export interface Message {
         hotel?: HotelData;
         activities?: ActivityData[];
         weather?: WeatherData,
+        departureAirportData?: Airport;
+        arrivalAirportData?: Airport;
+        departureLocation?: string;
+        arrivalLocation?: string;
     };
 }
 
