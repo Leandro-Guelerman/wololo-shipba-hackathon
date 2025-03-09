@@ -228,6 +228,22 @@ def create_activities_assistant():
     return {'assistant_id': assistant_id}
 
 
+@app.route('/api/assistants/hotels-to-spanish')
+def create_hotels_assistant():
+    assistant_data = {
+        "instructions": """###TASK###
+ 
+You will receive a list of hotels, your job is to translate the name and amenities to Spanish while keeping the structure of the JSON intact.
+     """,
+        "name": "HotelsToSpanishAPI",
+        "model": "gpt-4o-mini"
+    }
+
+    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
+    assistant_id = assistant.json()['id']
+    return {'assistant_id': assistant_id}
+
+
 @app.route('/api/assistants/classifier')
 def create_classifier_assistant():
     assistant_data = {

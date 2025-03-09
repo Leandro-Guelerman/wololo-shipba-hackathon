@@ -31,6 +31,7 @@ GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
 CLASSIFIER_ASSISTANT_ID="asst_U9WCOr8dTGR8rRxgrWj5K9nc"
 ACTIVITIES_ASSISTANT_ID="asst_yiAiCjxWWKHuHsNln9GT2hUt"
+HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
 # test
 
@@ -113,9 +114,12 @@ def fetch_civitatis(city, date_from, date_to):
             a = "https://civitatis.com"+ fl.css('a')[1].attributes['href']
         except:
             a = "#"
-        price = fl.css_first('span[class="comfort-card__price__text"]').text(
-            strip=True
-        )
+
+        try:
+            price = float(fl.css_first('span[class="comfort-card__price__text"]')
+                          .text(strip=True).replace("US$", "").split(",")[0]) * 1086
+        except:
+            price = 0
         try:
             duration = fl.css_first('div[class="comfort-card__features"]').text().split("\n\t")[2].replace("\t ", "").replace("\t","")
         except:
@@ -171,7 +175,10 @@ def hotels(location, date_from, date_to):
     res = client.get(url)
 
     parser = LexborHTMLParser(res.text)
-    activities = []
+    hotels = []
+
+    # fetch dollar currency ## cached for efficiency
+    # dollar = requests.get("https://dolarapi.com/v1/dolares/oficial")
 
     for i, fl in enumerate(parser.css('div[class="pjDrrc"]')):
         # Activity name
@@ -183,6 +190,8 @@ def hotels(location, date_from, date_to):
 
         try:
             amenities = fl.css_first('div[class="RJM8Kc"]').text(strip=True).split(":")[1].split(",")
+            if len(amenities) > 0:
+                amenities.pop()
         except:
             amenities = []
 
@@ -196,7 +205,6 @@ def hotels(location, date_from, date_to):
 
         if price_div is not None:
             price_html = price_div.text(strip=True)
-            print(price_html)
             price = price_html.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
             for p in price:
                 try:
@@ -209,7 +217,9 @@ def hotels(location, date_from, date_to):
             if price is None:
                 price = price_html.split(" ")[0].split("$")[1]
                 try:
-                    price_parsed = float(price)
+                    # cached dollar for effiency
+                    price_parsed = float(price) * 1086
+
                 except:
                     pass
         else:
@@ -217,14 +227,37 @@ def hotels(location, date_from, date_to):
 
 
         # href = fl.css_first('a')
-        activities.append({'name': name, 'price': price_parsed,
+        hotels.append({'name': name, 'price': price_parsed,
                            'img': img,
                            'amenities': amenities,
                            'href': a})
 
     # print(activities)
 
-    response = make_response(jsonify(activities))
+    if len(hotels) <= 5:
+        N = len(hotels) - 1
+    else:
+        N = 5
+    hotels = hotels[:N]
+
+
+    hotels_ai = []
+    for h in hotels:
+        hotels_ai.append({
+            "name": h['name'],
+            "amenities": h['amenities'],
+        })
+
+    print(hotels_ai)
+    thread_id, run_id = post_message(HOTELS_SPANISH_ID, json.dumps(hotels_ai))
+    json_hotels = parse_msg(thread_id, run_id)
+
+    for i,h in enumerate(hotels):
+        h['name'] = json_hotels[i]['name']
+        h['amenities'] = json_hotels[i]['amenities']
+    print(hotels)
+
+    response = make_response(jsonify(hotels))
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
@@ -320,7 +353,7 @@ def post_message(assistant_id: str, message_input: str):
     return thread_id, run.json()['id']
 
 
-def parse_message(thread_id, run_id: str):
+def parse_msg(thread_id, run_id: str):
     messages = f"{BASE_URL}/threads/{thread_id}/messages{API_VERSION}"
 
     run_url = f"{BASE_URL}/threads/{thread_id}/runs/{run_id}{API_VERSION}"
@@ -343,6 +376,10 @@ def parse_message(thread_id, run_id: str):
     logging.info(output)
     print(output)
     json_output = json.loads(output)
+    return json_output
+
+def parse_message(thread_id, run_id: str):
+    json_output = parse_msg(thread_id, run_id)
 
     response = make_response(jsonify(json_output))
     response.headers['Access-Control-Allow-Origin'] = '*'
