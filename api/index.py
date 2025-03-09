@@ -1,24 +1,36 @@
 import json
 import logging
+import re
+from typing import TYPE_CHECKING, Any
 
-import flask
 import requests
-from fast_flights import get_flights, FlightData, Passengers
 from flask import Flask, request, make_response, jsonify
 from primp import Client
 from selectolax.lexbor import LexborHTMLParser
 
+from api.tool.flight_pb import get_tfs, custom_response_parser
+
+import api.tool.flights_trip_pb2 as PB
+
+if TYPE_CHECKING:
+    PB: Any
+
+
 app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
-LOCATION_TO_FLAGS_ASSISTANT_ID= "asst_NWA2VJMnoVqXaLYGnYg0DR4g"
+LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
+LOCATION_RESTRICTIONS_ID="asst_p796twbeakiJHYtx2DtCe8Be"
+BEST_FLIGHT_ID="asst_CMUL2VRQ9TE8p6rFRPfHKetG"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
+GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
-WEATHER_ASSISTANT_ID="asst_1XycN0ou1XDzlRhseZOhN6O4"
-CLASSIFIER_ASSISTANT_ID="asst_n3RDaIqAeEUJko7ZPiLpGhUv"
+WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
+CLASSIFIER_ASSISTANT_ID="asst_U9WCOr8dTGR8rRxgrWj5K9nc"
+ACTIVITIES_ASSISTANT_ID="asst_yiAiCjxWWKHuHsNln9GT2hUt"
 
 # test
 
@@ -33,6 +45,39 @@ data = {
     "model": "gpt-4o-mini"
 }
 
+def parse_proto(date_from, date_to, airport_from, airport_to, flight_selected) -> bytes:
+    round_trip_data = PB.RoundTripData()
+
+    departure_flights = round_trip_data.flights_data.add()
+    departure_flights.date = date_from
+    departure_flights.airport_from.path = airport_from
+    departure_flights.airport_to.path = airport_to
+
+    if flight_selected is not None:
+        departure_flight_1 = departure_flights.flights.add()
+        departure_flight_1.date = date_from
+        departure_flight_1.from_airport = airport_from
+        departure_flight_1.to_airport = airport_to
+        departure_flight_1.airline =flight_selected['flight_codes'][0][0]
+        departure_flight_1.flight_number = flight_selected['flight_codes'][0][1]
+
+        # departure_flight_2 = departure_flights.flights.add()
+        # departure_flight_2.date = date_from
+        # departure_flight_2.from_airport = "ATH"
+        # departure_flight_2.to_airport = "RHO"
+        # departure_flight_2.airline = "A3"
+        # departure_flight_2.flight_number = "206"
+
+        return_flight = round_trip_data.flights_data.add()
+        return_flight.date = date_to
+        return_flight.airport_from.path = airport_to
+        return_flight.airport_to.path = airport_from
+
+    round_trip_data.passengers.append(1)
+    round_trip_data.seat = 1
+    round_trip_data.trip = 1
+
+    return round_trip_data.SerializeToString()
 
 def fetch_civitatis(city, date_from, date_to):
     client = Client(impersonate="chrome_126", verify=False)
@@ -67,7 +112,7 @@ def fetch_civitatis(city, date_from, date_to):
         try:
             a = "https://civitatis.com"+ fl.css('a')[1].attributes['href']
         except:
-            a = "N/A"
+            a = "#"
         price = fl.css_first('span[class="comfort-card__price__text"]').text(
             strip=True
         )
@@ -89,7 +134,9 @@ def civitatis(location):
     from_date = request.args.get('fromDate')
     to_date = request.args.get('toDate')
 
-    return fetch_civitatis(location,from_date,to_date)
+    activities = fetch_civitatis(location, from_date, to_date)
+    thread_id, run_id = post_message(ACTIVITIES_ASSISTANT_ID, json.dumps(activities))
+    return parse_message(thread_id, run_id)
 
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
@@ -102,43 +149,129 @@ def classifier():
 @app.route('/api/locations/<location>/airports')
 def airports(location):
     logging.info("location to airports")
-    thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
+    thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, location)
     return parse_message(thread_id, run_id)
+
+@app.route('/api/locations/<location_from>/<location_to>/requirements')
+def requirements(location_from,location_to):
+    logging.info("location requirements")
+
+    thread_id, run_id = post_message(LOCATION_RESTRICTIONS_ID, json.dumps({
+        "departureLocation": location_from,
+        "arrivalLocation": location_to
+    }))
+    return parse_message(thread_id, run_id)
+
+@app.route('/api/hotels/<location>/<date_from>/<date_to>')
+def hotels(location, date_from, date_to):
+    logging.info("searching hotels")
+    url = f"https://www.google.com/travel/search?q={location}&currency=ARS"
+    ## TODO use dates in a new damn protobuf
+    client = Client(impersonate="chrome_126", verify=False)
+    res = client.get(url)
+
+    parser = LexborHTMLParser(res.text)
+    activities = []
+
+    for i, fl in enumerate(parser.css('div[class="pjDrrc"]')):
+        # Activity name
+        name = fl.css_first('h2').text(
+            strip=True
+        )
+
+        img = fl.css_first('img').attributes['data-src']
+
+        try:
+            amenities = fl.css_first('div[class="RJM8Kc"]').text(strip=True).split(":")[1].split(",")
+        except:
+            amenities = []
+
+        try:
+            a = "https://www.google.com" + fl.css('a')[1].attributes['href']
+        except:
+            a = "#"
+
+        price_parsed = float(0)
+        price_div = fl.css_first('div[class="A9rngd"]')
+
+        if price_div is not None:
+            price_html = price_div.text(strip=True)
+            print(price_html)
+            price = price_html.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
+            for p in price:
+                try:
+                    price_parsed = float(p)
+                    break
+                except:
+                    pass
+            # price = "$51$51 nightly$136 total1 night with taxes + fees$51Mar 10 – 11"
+            ## fallback for usd (prices are not converted even with the currency argument)
+            if price is None:
+                price = price_html.split(" ")[0].split("$")[1]
+                try:
+                    price_parsed = float(price)
+                except:
+                    pass
+        else:
+            price_parsed = float(0)
+
+
+        # href = fl.css_first('a')
+        activities.append({'name': name, 'price': price_parsed,
+                           'img': img,
+                           'amenities': amenities,
+                           'href': a})
+
+    # print(activities)
+
+    response = make_response(jsonify(activities))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
+
 
 @app.route('/api/flights/<from_airport>/<to_airport>/<date_from>/<date_to>/<passengers>')
 def flights(from_airport, to_airport,date_from,date_to,passengers):
     logging.info("searching flights")
 
-    flights = get_flights(
-        flight_data=[
-            FlightData(date=date_from, from_airport=from_airport, to_airport=to_airport)
-        ],
-        trip="round-trip",
-        seat="economy",
-        passengers=Passengers(adults=int(passengers), children=0, infants_in_seat=0, infants_on_lap=0),
-        fetch_mode="fallback",
-    )
+    client = Client(impersonate="chrome_126", verify=False)
+    proto = parse_proto(date_from, date_to, from_airport, to_airport, None)
+    tfs = get_tfs(proto)
+    res = client.get(
+        f"https://www.google.com/travel/flights?tfs={tfs}")
+    departure_response = custom_response_parser(res)
 
-    ##
-    # flight: [{
-    #     departure: {
-    #         cityName: 'Madrid',
-    #         airport: 'MAD',
-    #         date: '2024-07-15T08:00:00Z'
-    #     },
-    #     arrival: {
-    #         cityName: 'Barcelona',
-    #         airport: 'BCN',
-    #         date: '2024-07-15T09:30:00Z'
-    #     },
-    #     numberOfStops: 2
-    # }]
+    departure_flights = departure_response['flights']
 
-    response = make_response(jsonify(flights))
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-    return response
+    departure_flights = [d for d in departure_flights if d['stops'] == 0]
+
+    return_flights = []
+
+    if len(departure_flights) > 0:
+        client = Client(impersonate="chrome_126", verify=False)
+
+        for d in departure_flights:
+            proto = parse_proto(date_from, date_to, from_airport, to_airport, d)
+            tfs = get_tfs(proto)
+            res = client.get(f"https://www.google.com/travel/flights?tfs={tfs}")
+            return_flights = custom_response_parser(res)
+            if len(return_flights) > 0:
+                return_flights = return_flights['flights']
+            else:
+                return_flights = []
+            d['return'] = return_flights
+
+    output = {
+        'flights': departure_flights
+    }
+
+    ## TODO THE URL
+
+    print(output)
+    thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
+    return parse_message(thread_id, run_id)
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
@@ -161,7 +294,7 @@ def weather(location, duration):
     if arrival_date is not None:
         data['arrivalDate'] = arrival_date
 
-    logging.info(json.dumps(data))
+    print(json.dumps(data))
 
     thread_id, run_id = post_message(WEATHER_ASSISTANT_ID, json.dumps(data))
     return parse_message(thread_id, run_id)

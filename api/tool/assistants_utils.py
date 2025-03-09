@@ -23,29 +23,23 @@ headers = {
 def create_assistant():
     assistant_data = {
         "instructions": """### Role ###
-
-    Airport Finder
-
-    ### Task ###
-
-    You will receive a location your task is to find the airports near the provided location.
-
-    ### Constraints ###
-
-    - If you do not recognize the location output: {error: true}
-
-    ### Output ###
-
-    Output a json with a list of airports that follows the following template:
-
-    {
-
-    "main": {"key": "EZE", "name": "Ezeiza Ministro Pistarini", "international": true}
-
-    "others": [{"key": "AEP", "name": "Aeroparque Jorge Newbery", "international": false}]
-
-    }
-
+Airport Finder
+ 
+### Task ###
+You will receive a location your task is to find the airports near the provided location.
+ 
+### Constraints ###
+ 
+- If you do not recognize the location output: {error: true}
+ 
+### Output ###
+ 
+Output a json with a list of airports that follows the following template:
+ 
+{
+"main": {"key": "EZE", "name": "Ezeiza Ministro Pistarini", "international": true}
+"others": [{"key": "AEP", "name": "Aeroparque Jorge Newbery", "international": false}]
+}
      """,
         "name": "LocationToAirportsAPI",
         "model": "gpt-4o-mini"
@@ -55,6 +49,86 @@ def create_assistant():
     assistant_id = assistant.json()['id']
     return {'assistant_id': assistant_id}
 
+
+@app.route('/api/assistants/location-restrictions')
+def create_assistant_restrictions():
+    assistant_data = {
+        "instructions": """### Role ###
+ 
+Provide a list of required documentation for a given travel destination
+ 
+### Task ###
+ 
+Given a departure location and an arrival destination determine a list of all the required documentation
+ 
+### Constraints ###
+- Exclude Return/Onward Ticket recommendations
+ 
+- Assume nationality of the passenger is from the departure location
+ 
+- Differentiate mandatory documentation from recommended documentation
+ 
+- Translate the response to spanish
+ 
+### Output ###
+ 
+Output a JSON file with the results specifying a list with document type and description.
+     """,
+        "name": "LocationRestrictionsAPI",
+        "model": "gpt-4o-mini"
+    }
+
+    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
+    assistant_id = assistant.json()['id']
+    return {'assistant_id': assistant_id}
+
+
+@app.route('/api/assistants/best-flight')
+def create_assistant_best_flight():
+    assistant_data = {
+        "instructions": """### Role ###
+ 
+Determine the best round trip including arrival and return flights
+ 
+### Task ###
+ 
+- You will receive a json with a list of departure flights, each flight has multiple return options.
+ 
+- Your job is to find the best combination of arrival and return flight based on a balance between flight duration and prices.
+ 
+### Constraints ###
+ 
+- If flight durations are similar and the amount of stops is the same, prioritize price to make your decision
+ 
+- If no year is provided for departure time of flights assume the year is 2025
+ 
+- If no year is provided for arrival time of flights assume the year is 2025
+ 
+### Output ###
+ 
+- Output a json with just one round trip flight based on the analysis performed
+ 
+- Format the departure time to be YYYY-MM-DDTHH:mm:ss
+ 
+- Format the arrival time to be YYYY-MM-DDTHH:mm:ss
+ 
+- Exclude flight_codes
+ 
+- Format the price to only show a round number
+ 
+- Include each flight duration
+ 
+- Include number of stops in each flight
+ 
+- Include name of the flight company
+     """,
+        "name": "BestFlightFinderAPI",
+        "model": "gpt-4o-mini"
+    }
+
+    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
+    assistant_id = assistant.json()['id']
+    return {'assistant_id': assistant_id}
 
 @app.route('/api/assistants/weather')
 def create_weather_assistant():
@@ -78,35 +152,72 @@ Based on this input determine best date for a trip on the provided location:
  
 - Duration is provided in days
  
-- Calculate the best possible dates for the trip depending on the weather conditions at the location without taking into account departureDate and arrivalDate
+- Calculate the best possible dates for the trip depending on the weather conditions at the location. Remember to take into account if the weather would be optimal to perform the most popular activities at the desired location. Generate "recommended_dates" based on this period with the following format:
  
-### Output ###
+"recommended_dates": {
+"departureDate": "2025-11-02",
+"arrivalDate": "2025-11-09",
+"average_weather": 15,
+"weather_hazards": {
+"rain_chances": "high | low | medium",
+"temperatures": "high | low | medium",
+"high_winds": true
+}
  
-- If departureDate and arrivalDate are provided output a json with the following format:
+### Constraints  ###
+ 
+- If departureDate and arrivalDate are provided generate "provided_dates" with the following format:
+ 
 {
 "provided_dates": {
 "departureDate": "2025-11-02",
 "arrivalDate": "2025-11-09",
 "average_weather": 10,
 "weather_hazards": {
-"rain_chances": "high",
-"temperatures": "high",
+"rain_chances": "high | low | medium",
+"temperatures": "high | low | medium",
 "high_winds": true
-}
-},
-"recommended_dates": {
-"departureDate": "2025-11-02",
-"arrivalDate": "2025-11-09",
-"average_weather": 15,
-"weather_hazards": {
-"rain_chances": "high",
-"temperatures": "low",
-"high_winds": true
-}
-}
 }
  
-- If departureDate and arrivalDate are not provided just return recommended_dates
+### Output ###
+ 
+- Output "provided_dates" and "recommended_dates" as JSON
+ 
+- If the weather conditions in "provided_dates" and "recommended_dates" are similar only output "provided_dates" as JSON
+ 
+- If departureDate and arrivalDate are not provided just return recommended_dates as JSON
+     """,
+        "name": "LocationToAirportsAPI",
+        "model": "zala-dev-ai"
+    }
+
+    assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
+    assistant_id = assistant.json()['id']
+    return {'assistant_id': assistant_id}
+
+
+@app.route('/api/assistants/activities')
+def create_activities_assistant():
+    assistant_data = {
+        "instructions": """# Task ###
+ 
+- You will receive a list of activities, your task is to filter and improve it
+ 
+### Constraints ###
+ 
+- Adjust rating to only show a number from 1 to 10, decimals can be included
+ 
+- Only show the top ten activities based on rating
+ 
+- Exclude duplicated activities
+ 
+- Adjust the price to only show a round number
+ 
+- Adjust duration to be in the format hs, min. If the duration cannot be parsed return 'N/A'
+ 
+### Output ###
+ 
+- Output a list of activities in json format
      """,
         "name": "LocationToAirportsAPI",
         "model": "gpt-4o-mini"
@@ -133,31 +244,6 @@ Determine a destination
 - Separate the received dates into departure date and arrival date
  
 ### Constraints ###
- 
-- If no trip duration is received assume 10 days
- 
-- If no departure location is recieved assume Buenos Aires, Argentina
- 
-- If no departure date an arrival date are provided do not generate those keys in the response
- 
-- If only a departure date is provided calculate the arrival date based on the trip duration
- 
-### Output ###
- 
-Output a json with the following format:
-{
-"location", [Miami, United States"],
-"duration": '7"
-"departureLocation: [Buenos Aires, Argentina]"
-"departureDate": "2025-11-02"
-"arrivalDate": "2025-11-09"
-}
- 
-- For the location output cities and countries only
- 
-- If you receive more than one location return an array of locations
- 
-- If no trip duration is received assume 10 days
  
 - If no trip duration is received assume 10 days
  
