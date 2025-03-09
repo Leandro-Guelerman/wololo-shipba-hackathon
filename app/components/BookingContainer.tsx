@@ -13,10 +13,23 @@ export const BookingContainer: React.FC<BookingContainerProps> = ({
 		// Asumimos que siempre hay un vuelo
 		const totalBookings = 1 + messages.filter(l => l.message?.type === 'hotel').length + messages.filter(l => l.message?.type === 'activities').reduce((acc, l) => acc + (l.message?.activities?.length || 0), 0);
 
+		const totalPrice = messages.reduce((acc, message) => {
+				if (message.message?.type === 'flight') {
+						return acc + (message.message.flights?.departure.price || 0) + (message.message.flights?.return.price || 0);
+				}
+				if (message.message?.type === 'hotel') {
+						return acc + (message.message.hotel?.price || 0);
+				}
+				if (message.message?.type === 'activities') {
+						return acc + (message.message.activities?.reduce((activityAcc, activity) => activityAcc + (activity.price || 0), 0) || 0);
+				}
+				return acc;
+		}, 0);
+
 		return (
 			<>
 				<div className="flex flex-col w-full gap-2 p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
-						<h3 className="text-lg font-medium text-gray-900">💳 ¡Vamos a reservar!</h3>
+						<h3 className="text-lg font-medium text-gray-900">💳 ¡Vamos a reservar! Total: ${totalPrice}</h3>
 						{messages.filter(l => l.message?.type === 'flight').map((message, index) => (
 								<BookingItem
 										key={index}
