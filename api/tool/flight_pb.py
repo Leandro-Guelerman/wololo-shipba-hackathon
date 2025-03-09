@@ -1,52 +1,13 @@
 import base64
 import re
-from typing import Optional, List, Tuple, TYPE_CHECKING, Any
+from typing import Optional, List, Tuple
 
 from selectolax.lexbor import LexborHTMLParser, LexborNode
 
-from api.tool import flights_return_pb2 as PB
-
-if TYPE_CHECKING:
-    PB: Any
-
-def parse_proto(date_from, date_to, airport_from, airport_to, flight_selected) -> bytes:
-    round_trip_data = PB.RoundTripData()
-
-    departure_flights = round_trip_data.flights_data.add()
-    departure_flights.date = date_from
-    departure_flights.airport_from.path = airport_from
-    departure_flights.airport_to.path = airport_to
-
-    if flight_selected is not None:
-        departure_flight_1 = departure_flights.flights.add()
-        departure_flight_1.date = date_from
-        departure_flight_1.from_airport = airport_from
-        departure_flight_1.to_airport = airport_to
-        departure_flight_1.airline =flight_selected['flight_codes'][0][0]
-        departure_flight_1.flight_number = flight_selected['flight_codes'][0][1]
-
-        # departure_flight_2 = departure_flights.flights.add()
-        # departure_flight_2.date = date_from
-        # departure_flight_2.from_airport = "ATH"
-        # departure_flight_2.to_airport = "RHO"
-        # departure_flight_2.airline = "A3"
-        # departure_flight_2.flight_number = "206"
-
-        return_flight = round_trip_data.flights_data.add()
-        return_flight.date = date_to
-        return_flight.airport_from.path = airport_to
-        return_flight.airport_to.path = airport_from
-
-    round_trip_data.passengers.append(1)
-    round_trip_data.seat = 1
-    round_trip_data.trip = 1
-
-    return round_trip_data.SerializeToString()
 
 
-def get_tfs(date_from, date_to, airport_from, airport_to, flight_selected) -> str:
-    binary = parse_proto(date_from, date_to, airport_from, airport_to, flight_selected)
-    return base64.urlsafe_b64encode(binary).decode('utf-8').rstrip('=')
+def get_tfs(proto) -> str:
+    return base64.urlsafe_b64encode(proto).decode('utf-8').rstrip('=')
 
 def extract_airport_path(s: str) -> str:
     pattern = r";(.*?);"
