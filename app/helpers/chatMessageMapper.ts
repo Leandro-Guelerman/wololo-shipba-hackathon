@@ -36,12 +36,28 @@ export default class ChatMessageMapper {
         }
     }
 
-    static mapHotel(hotelData: HotelData): Message {
+    static mapHotel(hotelData: HotelData, travelDateFrom : string, travelDateTo : string): Message {
+
+        const dateFromLabel = new Intl.DateTimeFormat("es-ES", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }).format(new Date(travelDateFrom + "T00:00:00"));
+
+        const travelDateToLabel = new Intl.DateTimeFormat("es-ES", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }).format(new Date(travelDateTo + "T00:00:00"));
+
+
         return {
             id: Date.now().toString(),
             message: {
                 type: 'hotel',
-                hotel: hotelData
+                hotel: hotelData,
+                travelDateFrom: dateFromLabel,
+                travelDateTo: travelDateToLabel
             },
         }
     }

@@ -120,7 +120,7 @@ export const getHotelsFromApi = async (
         const result = await fetch(url);
         const data = await result.json();
 
-        return data;
+        return data[0];
     } catch (error) {
         console.error('Error en getHotelsFromApi:', error);
         throw error;

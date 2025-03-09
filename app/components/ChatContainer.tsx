@@ -88,9 +88,9 @@ export interface ActivityData {
 export interface HotelData {
     name: string;
     address: string;
-    checkInDate: string;
-    checkOutDate: string;
     price: number;
+    href: string;
+    img: string
 }
 
 export interface Message {
@@ -106,6 +106,8 @@ export interface Message {
         arrivalAirportData?: Airport;
         departureLocation?: string;
         arrivalLocation?: string;
+        travelDateFrom?: string;
+        travelDateTo?: string;
     };
 }
 

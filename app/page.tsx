@@ -189,10 +189,12 @@ export default function Home() {
             const flightMessage = ChatMessageMapper.mapFlight(flightData as FlightData, departureAirportData, arrivalAirportData, classifierData.departureLocation?.[0] as string, classifierData?.location?.[0] as string);
             addMessage(flightMessage.message);
 
+            console.log('travelDateTo', travelDateTo);
+
             const hotelData = await getHotelsFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)
             setHotel(hotelData);
 
-            const hotelMessage = ChatMessageMapper.mapHotel(hotelData);
+            const hotelMessage = ChatMessageMapper.mapHotel(hotelData, travelDateFrom as string, travelDateTo as string);
             addMessage(hotelMessage.message);
 
             const activities = await getActivitiesFromApi(mainLocation as string, travelDateFrom as string, travelDateTo as string)

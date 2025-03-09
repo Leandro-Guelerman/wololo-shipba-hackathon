@@ -254,13 +254,13 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                                 <div className="space-y-1">
                                     <div className="text-xs text-gray-500">Check-in</div>
                                     <div className="text-sm font-medium text-gray-900">
-                                        {new Date(message.message.hotel.checkInDate).toLocaleDateString()} 15:00
+                                        {message.message.travelDateFrom} | 15:00
                                     </div>
                                 </div>
                                 <div className="space-y-1 text-right">
                                     <div className="text-xs text-gray-500">Check-out</div>
                                     <div className="text-sm font-medium text-gray-900">
-                                        {new Date(message.message.hotel.checkOutDate).toLocaleDateString()} 10:00
+                                        {message.message.travelDateTo} | 10:00
                                     </div>
                                 </div>
                             </div>
@@ -271,7 +271,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                             </div>
                         </div>
                         <img
-                            src="https://pix10.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=414x232"
+                            src={message.message.hotel.img}
                             alt="Hotel pool view"
                             className="w-full md:w-48 h-32 md:h-auto object-cover rounded-lg"
                         />
