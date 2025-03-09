@@ -3,18 +3,23 @@ import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {BookingContainer} from "@/app/components/BookingContainer";
 import {LoadingPlane} from "@/app/components/Loading";
 // import {postAudio} from "@/app/api/audioApi";
+/*import {
+    getAirports,
+    getFlightsFromApi,
+    getWeatherRecommendation,
+    postClassifier,
+} from "@/app/api/mockedApi";*/
 import {
     getAirports,
     getFlightsFromApi,
     getWeatherRecommendation,
     postClassifier,
-} from "@/app/api/mockedApi";
-import {
     Airport,
     ClassifierData,
+    getHotelsFromApi, getActivitiesFromApi,
 } from "@/app/api/travelApi";
-import {ChatContainer} from "@/app/components/ChatContainer";
-import type {FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
+import {ActivityData, ChatContainer, HotelData} from "@/app/components/ChatContainer";
+import type {ActivityData, FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
 import {conversationMessages} from "@/app/testData/conversationMessages";
 import {useState, useCallback } from "react";
 import {initialMessages} from './testData/initialMessages';
@@ -42,6 +47,8 @@ export default function Home() {
     const [departureDate, setDepartureDate] = useState<string | undefined>();
     const [duration, setDuration] = useState<number | undefined>();
 
+    const [hotel, setHotel] = useState<HotelData | undefined>();
+    const [activities, setActivities] = useState<ActivityData[] | undefined>();
 
     const [weatherRecommendation, setWeatherRecommendation] = useState<WeatherData | undefined>();
 
@@ -151,6 +158,7 @@ export default function Home() {
             let arrivalAirportData: Airport | undefined;
             let weatherData: WeatherData | undefined;
             let flightData: FlightData | undefined;
+            let hotelData: HotelData | undefined;
 
             if (classifierData) {
                 departureAirportData = await getAirportFromApi(classifierData.departureLocation?.[0] as string);
@@ -161,7 +169,6 @@ export default function Home() {
 
                 if (arrivalAirportData) {
                     addMessage(`Tu destino: ${mainLocation} / Aeropuerto: ${arrivalAirportData.name}`);
-
                 }
 
                 weatherData = await getWeatherFromApi(mainLocation as string, classifierData?.duration as number, classifierData?.departureDate, classifierData?.arrivalDate);
@@ -169,6 +176,7 @@ export default function Home() {
                 addMessage(weatherMessage.message);
 
                 if (weatherData?.recommended_dates) {
+                    //TODO: aca hay que seleccionar si los dates vienen del recommended o de donde.
                     flightData = await handleRequestFlights(
                         departureAirportData?.key as string,
                         arrivalAirportData?.key as string,
@@ -178,6 +186,19 @@ export default function Home() {
                     const flightMessage = ChatMessageMapper.mapFlight(flightData);
                     addMessage(flightMessage.message);
                 }
+
+                const hotelData = await getHotelsFromApi(mainLocation as string, weatherData?.recommended_dates?.departureDate as string, weatherData?.recommended_dates?.arrivalDate as string)
+                setHotel(hotelData);
+
+                const hotelMessage = ChatMessageMapper.mapHotel(hotelData);
+                addMessage(hotelMessage.message);
+
+                const activities = getActivitiesFromApi(mainLocation as string, weatherData?.recommended_dates?.departureDate as string, weatherData?.recommended_dates?.arrivalDate as string)
+                setActivities(activities);
+
+                const activitiesMessage = ChatMessageMapper.mapActivities(activities);
+                addMessage(activitiesMessage.message);
+
             }
 
         setIsProcessing(false);
@@ -257,10 +278,10 @@ export default function Home() {
             <footer
                 className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-20">
                 <div className="max-w-3xl mx-auto">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    {/*<button className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                         onClick={() => handleTextSubmit('quiero ir a ver un volcan')}>
                         Mocked data 1
-                    </button>
+                    </button>*/}
                     <AudioRecorder
                         onAudioRecorded={handleAudioChange}
                         isProcessing={isProcessing}

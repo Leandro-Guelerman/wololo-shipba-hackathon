@@ -27,10 +27,7 @@ export default class ChatMessageMapper {
             id: Date.now().toString(),
             message: {
                 type: 'flight',
-                flights: {
-                    segments: flightData.segments,
-                    price: flightData.price
-                }
+                flights: flightData
             },
         }
     }

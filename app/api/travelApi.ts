@@ -1,4 +1,4 @@
-import {FlightData, WeatherData } from "../components/ChatContainer";
+import {ActivityData, FlightData, HotelData, WeatherData} from "../components/ChatContainer";
 
 export interface ClassifierData {
     departureLocation?: string[];
@@ -73,7 +73,9 @@ export const getWeatherRecommendation = async (
     arrivalDate?: string,
 ): Promise<WeatherData> => {
     try {
-        let url = `${API_URL}/locations/${location}/duration/${duration}/weather`;
+        const encodedLocation = encodeURIComponent(location);
+
+        let url = `${API_URL}/locations/${encodedLocation}/duration/${duration}/weather`;
         if (arrivalDate && departureDate) {
             url += `?departureDate=${departureDate}&arrivalDate=${arrivalDate}`;
         }
@@ -111,9 +113,10 @@ export const getHotelsFromApi = async (
     location: string,
     fromDate: string,
     toDate: string
-): Promise<FlightData> => {
+): Promise<HotelData> => {
     try {
-        const url = `${API_URL}/hotels/${location}/${fromDate}/${toDate}`;
+        const encodedLocation = encodeURIComponent(location);
+        const url = `${API_URL}/hotels/${encodedLocation}/${fromDate}/${toDate}`;
         const result = await fetch(url);
         const data = await result.json();
 
@@ -124,13 +127,14 @@ export const getHotelsFromApi = async (
     }
 };
 
-export const getActivities = async (
+export const getActivitiesFromApi = async (
     location: string,
     fromDate: string,
     toDate: string
-): Promise<WeatherData> => {
+): Promise<ActivityData[]> => {
     try {
-        let url = `${API_URL}/civitatis/${location}`;
+        const encodedLocation = encodeURIComponent(location);
+        let url = `${API_URL}/civitatis/${encodedLocation}`;
         if (fromDate && toDate) {
             url += `?fromDate=${fromDate}&toDate=${toDate}`;
         }

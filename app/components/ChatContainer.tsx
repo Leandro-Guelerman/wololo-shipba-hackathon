@@ -28,15 +28,6 @@ export interface WeatherData {
     };
 }
 
-export interface ActivityData {
-    price: number;
-    duration: string;
-    href: string;
-    name: string;
-    ratings: number;
-    thumbnail_url: string;
-}
-
 export interface HotelData {
     name: string;
     address: string;
@@ -46,24 +37,18 @@ export interface HotelData {
     href: string;
 }
 
-export interface FlightSegment {
-    departure: {
-        cityName: string;
-        airport: string;
-        date: string;
-    };
-    arrival: {
-        cityName: string;
-        airport: string;
-        date: string;
-    };
-    duration: string;
-    numberOfStops: number;
+interface FlightSegment {
+    "arrival_time": string;
+    "departure_time": string;
+    "duration": string;
+    "name": string;
+    "price": number;
+    "stops": number;
 }
 
 export interface FlightData {
-    segments: FlightSegment[];
-    price: number;
+    departure: FlightSegment;
+    return: FlightSegment;
 }
 
 export interface WeatherData {
@@ -106,26 +91,6 @@ export interface HotelData {
     price: number;
 }
 
-export interface FlightSegment {
-    departure: {
-        cityName: string;
-        airport: string;
-        date: string;
-    };
-    arrival: {
-        cityName: string;
-        airport: string;
-        date: string;
-    };
-    duration: string;
-    numberOfStops: number;
-}
-
-export interface FlightData {
-    segments: FlightSegment[];
-    price: number;
-}
-
 export interface Message {
     id: string;
     text?: string;
@@ -154,25 +119,25 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     }, [messages]);
 
     return (
-      <div className="h-full w-full overflow-y-auto">
-        <div className="h-full w-full max-w-3xl mx-auto px-4">
-            <div className="h-full pb-32 pt-4">
-                {messages.map((message) => (
-                    <ChatMessage
-                        key={message.id}
-                        message={message}
-                    />
-                ))}
-                {isLoading && (
-                    <div className="mt-2">
-                        <ChatLoader/>
-                    </div>
-                )}
-                <BookingContainer messages={conversationMessages} />
+        <div className="h-full w-full overflow-y-auto">
+            <div className="h-full w-full max-w-3xl mx-auto px-4">
+                <div className="h-full pb-32 pt-4">
+                    {messages.map((message) => (
+                        <ChatMessage
+                            key={message.id}
+                            message={message}
+                        />
+                    ))}
+                    {isLoading && (
+                        <div className="mt-2">
+                            <ChatLoader/>
+                        </div>
+                    )}
+                    <BookingContainer messages={conversationMessages} />
 
                 <div ref={chatEndRef}/>
+                </div>
             </div>
         </div>
-      </div>
     );
 };
