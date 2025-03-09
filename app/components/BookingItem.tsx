@@ -1,14 +1,11 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 
 interface BookingItemProps {
     title: string;
     hasButton?: boolean;
     buttonText?: string;
     bookingUrl?: string;
-    isBooked?: boolean;
-    type?: 'main' | 'activity';
-    showDivider?: boolean;
 }
 
 export const BookingItem: React.FC<BookingItemProps> = ({
@@ -16,22 +13,24 @@ export const BookingItem: React.FC<BookingItemProps> = ({
     hasButton = true,
     buttonText = 'Reservar',
     bookingUrl,
-    isBooked = false,
 }) => {
+    const [isBooked, setIsBooked] = useState(false);
+
     const handleClick = () => {
         if (bookingUrl) {
             window.open(bookingUrl, '_blank');
         }
+        setIsBooked(true);
     };
 
     return (
         <>
-            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 relative rounded-lg ${isBooked ? 'bg-green-50' : ''}`}>
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 relative rounded-lg p-2 ${isBooked ? 'bg-green-100' : ''}`}>
                 <div className="flex items-center flex-1">
-                    <span className={`flex items-center justify-center w-5 h-5 rounded-full transition-colors ml-3
+                    <span className={`flex items-center justify-center w-4 h-4 rounded-full transition-colors ml-3
                         ${isBooked 
-                            ? `bg-green-200 text-green-600` 
-                            : `border-2 border-gray-200`}`}
+                            ? `bg-green-200 text-green-700` 
+                            : `border-1 rounded-md border-gray-300`}`}
                     >
                         {isBooked && (
                             <svg

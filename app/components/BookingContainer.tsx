@@ -9,7 +9,7 @@ export const BookingContainer: React.FC<BookingContainerProps> = ({
 																																																																				messages
 																																																																		}) => {
 		return (
-				<div className="flex flex-col w-full gap-3 p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
+				<div className="flex flex-col w-full gap-2 p-4 bg-white shadow-sm rounded-2xl border border-gray-100">
 						{messages.filter(l => l.message?.type === 'hotel').map((message, index) => (
 								<BookingItem
 										key={index}
