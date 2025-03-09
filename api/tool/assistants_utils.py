@@ -23,29 +23,23 @@ headers = {
 def create_assistant():
     assistant_data = {
         "instructions": """### Role ###
-
-    Airport Finder
-
-    ### Task ###
-
-    You will receive a location your task is to find the airports near the provided location.
-
-    ### Constraints ###
-
-    - If you do not recognize the location output: {error: true}
-
-    ### Output ###
-
-    Output a json with a list of airports that follows the following template:
-
-    {
-
-    "main": {"key": "EZE", "name": "Ezeiza Ministro Pistarini", "international": true}
-
-    "others": [{"key": "AEP", "name": "Aeroparque Jorge Newbery", "international": false}]
-
-    }
-
+Airport Finder
+ 
+### Task ###
+You will receive a location your task is to find the airports near the provided location.
+ 
+### Constraints ###
+ 
+- If you do not recognize the location output: {error: true}
+ 
+### Output ###
+ 
+Output a json with a list of airports that follows the following template:
+ 
+{
+"main": {"key": "EZE", "name": "Ezeiza Ministro Pistarini", "international": true}
+"others": [{"key": "AEP", "name": "Aeroparque Jorge Newbery", "international": false}]
+}
      """,
         "name": "LocationToAirportsAPI",
         "model": "gpt-4o-mini"
@@ -250,31 +244,6 @@ Determine a destination
 - Separate the received dates into departure date and arrival date
  
 ### Constraints ###
- 
-- If no trip duration is received assume 10 days
- 
-- If no departure location is recieved assume Buenos Aires, Argentina
- 
-- If no departure date an arrival date are provided do not generate those keys in the response
- 
-- If only a departure date is provided calculate the arrival date based on the trip duration
- 
-### Output ###
- 
-Output a json with the following format:
-{
-"location", [Miami, United States"],
-"duration": '7"
-"departureLocation: [Buenos Aires, Argentina]"
-"departureDate": "2025-11-02"
-"arrivalDate": "2025-11-09"
-}
- 
-- For the location output cities and countries only
- 
-- If you receive more than one location return an array of locations
- 
-- If no trip duration is received assume 10 days
  
 - If no trip duration is received assume 10 days
  

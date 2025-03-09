@@ -19,15 +19,18 @@ if TYPE_CHECKING:
 app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
-LOCATION_TO_FLAGS_ASSISTANT_ID= "asst_NWA2VJMnoVqXaLYGnYg0DR4g"
+LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
+LOCATION_RESTRICTIONS_ID="asst_vY6HngUohuDpLLVkzI5G68ip"
+BEST_FLIGHT_ID="asst_CMUL2VRQ9TE8p6rFRPfHKetG"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
-WEATHER_ASSISTANT_ID="asst_1XycN0ou1XDzlRhseZOhN6O4"
-CLASSIFIER_ASSISTANT_ID="asst_n3RDaIqAeEUJko7ZPiLpGhUv"
+WEATHER_ASSISTANT_ID="asst_tdfSv8JH6cFwWKH8zi69qI53"
+CLASSIFIER_ASSISTANT_ID="asst_U9WCOr8dTGR8rRxgrWj5K9nc"
+ACTIVITIES_ASSISTANT_ID="asst_yiAiCjxWWKHuHsNln9GT2hUt"
 
 # test
 
@@ -144,7 +147,7 @@ def classifier():
 @app.route('/api/locations/<location>/airports')
 def airports(location):
     logging.info("location to airports")
-    thread_id, run_id = post_message(LOCATION_TO_FLAGS_ASSISTANT_ID, location)
+    thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, location)
     return parse_message(thread_id, run_id)
 
 @app.route('/api/hotels/<location>/<date_from>/<date_to>')
@@ -180,13 +183,21 @@ def hotels(location, date_from, date_to):
         price_div = fl.css_first('div[class="A9rngd"]')
 
         if price_div is not None:
-            price = price_div.text(strip=True)
-            print(price)
-            price = price.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
+            price_html = price_div.text(strip=True)
+            print(price_html)
+            price = price_html.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
             for p in price:
                 try:
                     price_parsed = float(p)
                     break
+                except:
+                    pass
+            # price = "$51$51 nightly$136 total1 night with taxes + fees$51Mar 10 – 11"
+            ## fallback for usd (prices are not converted even with the currency argument)
+            if price is None:
+                price = price_html.split(" ")[0].split("$")[1]
+                try:
+                    price_parsed = float(price)
                 except:
                     pass
         else:
