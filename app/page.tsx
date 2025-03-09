@@ -13,7 +13,7 @@ import {
 import {ActivityData, ChatContainer, FlightData, HotelData, Message, WeatherData} from "@/app/components/ChatContainer";
 import {useState, useCallback} from "react";
 import {initialMessages} from './testData/initialMessages';
-import {Toaster} from 'react-hot-toast';
+import toast, {Toaster} from 'react-hot-toast';
 import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 import { postAudio } from "./api/audioApi";
 
@@ -268,32 +268,20 @@ export default function Home() {
 
         setIsProcessing(true);
 
-        const MAX_RETRIES = 1;
-        let attempt = 0;
+        try {
+            const response = await postAudio(blob);
+            if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
 
-        while (attempt < MAX_RETRIES) {
-            try {
-                const response = await postAudio(blob);
-                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+            const responseData = await response.json();
 
-                const responseData = await response.json();
-
-                if (responseData) {
-                    await handleTextSubmit(responseData);
-                }
-
-                return;
-            } catch (error) {
-                console.error(`Intento ${attempt + 1} fallido:`, error);
-
-                if (attempt === MAX_RETRIES - 1) {
-                    //toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
-                } else {
-                    await new Promise(res => setTimeout(res, (2 ** attempt) * 2000));
-                }
-
-                attempt++;
+            if (responseData) {
+                await handleTextSubmit(responseData);
             }
+
+            return;
+        } catch (error) {
+            console.error(error);
+            toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
         }
 
         setIsProcessing(false);
