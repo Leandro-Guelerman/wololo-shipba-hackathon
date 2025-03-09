@@ -52,41 +52,53 @@ def parse_rf_proto(date_from, date_to, airport_from, airport_to, flight_selected
     pf_data.sampler1 = 28
     pf_data.sampler2 = 2
 
-    departure_flights = pf_data.flights_data.add()
+    departure_flights = PB.FlightDataV2()
     departure_flights.date = date_from
+
+    departure_flight_1 = PB.FlightV2()
+    departure_flight_1.date = date_from
+    departure_flight_1.from_airport = airport_from
+    departure_flight_1.to_airport = airport_to
+    departure_flight_1.airline = flight_selected['flight_codes'][0][0].strip()
+    departure_flight_1.flight_number = flight_selected['flight_codes'][0][1].strip()
+    departure_flights.flights.append(departure_flight_1)
+
     departure_flights.airport_from.sample = 1
     departure_flights.airport_from.path = airport_from
     departure_flights.airport_to.sample = 1
     departure_flights.airport_to.path = airport_to
 
-    if flight_selected is not None:
-        departure_flight_1 = departure_flights.flights.add()
-        departure_flight_1.date = date_from
-        departure_flight_1.from_airport = airport_from
-        departure_flight_1.to_airport = airport_to
-        departure_flight_1.airline =flight_selected['flight_codes'][0][0]
-        departure_flight_1.flight_number = flight_selected['flight_codes'][0][1]
 
-        # return_trip = pf_data.flights_data.add()
-        # return_trip.date = date_to
-        # return_trip.airport_from.sample = 1
-        # return_trip.airport_from.path = airport_from
-        # return_trip.airport_to.sample = 1
-        # return_trip.airport_to.path = airport_to
+
+
+    # pf_data.flights_data.append(departure_flights)
+
+    # return_trip = pf_data.flights_data.add()
+    # return_trip.date = date_to
+    # return_trip.airport_from.sample = 1
+    # return_trip.airport_from.path = airport_from
+    # return_trip.airport_to.sample = 1
+    # return_trip.airport_to.path = airport_to
+    #
+    return_trip = PB.FlightDataV2()
+    return_trip.date = date_to
+
+    return_flight_1 = PB.FlightV2()
+    return_flight_1.date = date_to
+    return_flight_1.from_airport = airport_to
+    return_flight_1.to_airport = airport_from
+    return_flight_1.airline = return_selected['flight_codes'][0][0].strip()
+    return_flight_1.flight_number = return_selected['flight_codes'][0][1].strip()
+    return_trip.flights.append(return_flight_1)
+
+    return_trip.airport_from.sample = 1
+    return_trip.airport_from.path = airport_to
+    return_trip.airport_to.sample = 1
+    return_trip.airport_to.path = airport_from
+
+    pf_data.flights_data.extend([departure_flights,return_trip])
         #
-        return_trip = pf_data.flights_data.add()
-        return_trip.date = date_to
-        return_trip.airport_from.sample = 1
-        return_trip.airport_from.path = airport_to
-        return_trip.airport_to.sample = 1
-        return_trip.airport_to.path = airport_from
-        #
-        return_flight_1 = return_trip.flights.add()
-        return_flight_1.date = date_to
-        return_flight_1.from_airport = airport_to
-        return_flight_1.to_airport = airport_from
-        return_flight_1.airline = return_selected['flight_codes'][0][0]
-        return_flight_1.flight_number = return_selected['flight_codes'][0][1]
+
 
     pf_data.passengers = 1
     pf_data.seat = 1
