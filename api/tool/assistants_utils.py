@@ -78,33 +78,38 @@ Based on this input determine best date for a trip on the provided location:
  
 - Duration is provided in days
  
-- Calculate the best possible dates for the trip depending on the weather conditions at the location without taking into account departureDate and arrivalDate
+- Calculate the best possible dates for the trip depending on the weather conditions at the location. Remember to take into account if the weather would be optimal to perform the most popular activities at the desired location. Generate "recommended_dates" based on this period with the following format:
  
-### Output ###
+"recommended_dates": {
+"departureDate": "2025-11-02",
+"arrivalDate": "2025-11-09",
+"average_weather": 15,
+"weather_hazards": {
+"rain_chances": "high | low | medium",
+"temperatures": "high | low | medium",
+"high_winds": true
+}
  
-- If departureDate and arrivalDate are provided output a json with the following format:
+### Constraints  ###
+ 
+- If departureDate and arrivalDate are provided generate "provided_dates" with the following format:
+ 
 {
 "provided_dates": {
 "departureDate": "2025-11-02",
 "arrivalDate": "2025-11-09",
 "average_weather": 10,
 "weather_hazards": {
-"rain_chances": "high",
-"temperatures": "high",
+"rain_chances": "high | low | medium",
+"temperatures": "high | low | medium",
 "high_winds": true
 }
-},
-"recommended_dates": {
-"departureDate": "2025-11-02",
-"arrivalDate": "2025-11-09",
-"average_weather": 15,
-"weather_hazards": {
-"rain_chances": "high",
-"temperatures": "low",
-"high_winds": true
-}
-}
-}
+ 
+### Output ###
+ 
+- Output "provided_dates" and "recommended_dates"
+ 
+- If the weather conditions in "provided_dates" and "recommended_dates" are similar only output "provided_dates"
  
 - If departureDate and arrivalDate are not provided just return recommended_dates
      """,

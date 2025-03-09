@@ -8,6 +8,8 @@ from flask import Flask, request, make_response, jsonify
 from primp import Client
 from selectolax.lexbor import LexborHTMLParser
 
+from api.tool.flight_pb import get_tfs, custom_response_parser
+
 app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
@@ -16,6 +18,7 @@ API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
+GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
 WEATHER_ASSISTANT_ID="asst_1XycN0ou1XDzlRhseZOhN6O4"
 CLASSIFIER_ASSISTANT_ID="asst_n3RDaIqAeEUJko7ZPiLpGhUv"
@@ -109,32 +112,36 @@ def airports(location):
 def flights(from_airport, to_airport,date_from,date_to,passengers):
     logging.info("searching flights")
 
-    flights = get_flights(
-        flight_data=[
-            FlightData(date=date_from, from_airport=from_airport, to_airport=to_airport)
-        ],
-        trip="round-trip",
-        seat="economy",
-        passengers=Passengers(adults=int(passengers), children=0, infants_in_seat=0, infants_on_lap=0),
-        fetch_mode="fallback",
-    )
+    client = Client(impersonate="chrome_126", verify=False)
+    tfs = get_tfs(date_from, date_to, from_airport, to_airport, None)
+    res = client.get(
+        f"https://www.google.com/travel/flights?tfs={tfs}")
+    departure_response = custom_response_parser(res)
 
-    ##
-    # flight: [{
-    #     departure: {
-    #         cityName: 'Madrid',
-    #         airport: 'MAD',
-    #         date: '2024-07-15T08:00:00Z'
-    #     },
-    #     arrival: {
-    #         cityName: 'Barcelona',
-    #         airport: 'BCN',
-    #         date: '2024-07-15T09:30:00Z'
-    #     },
-    #     numberOfStops: 2
-    # }]
+    departure_flights = departure_response['flights']
 
-    response = make_response(jsonify(flights))
+    departure_flights = [d for d in departure_flights if d['stops'] == 0]
+
+    return_flights = []
+
+    if len(departure_flights) > 0:
+        client = Client(impersonate="chrome_126", verify=False)
+
+        for d in departure_flights:
+            tfs = get_tfs(date_from, date_to, from_airport, to_airport, d)
+            res = client.get(f"https://www.google.com/travel/flights?tfs={tfs}")
+            return_flights = custom_response_parser(res)
+            if len(return_flights) > 0:
+                return_flights = return_flights['flights']
+            else:
+                return_flights = []
+            d['return'] = return_flights
+
+    output = {
+        'flights': departure_flights
+    }
+
+    response = make_response(jsonify(output))
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'

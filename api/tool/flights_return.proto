@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+message FlightV2 {
+  string from_airport = 1;
+  string date = 2;
+  string to_airport = 3;
+  string airline = 5;
+  string flight_number = 6;
+}
+
+message AirportCodeV2 {
+    string path = 2;
+}
+
+message FlightDataV2 {
+  string date = 2;
+  repeated FlightV2 flights = 4;
+  AirportCodeV2 airport_from = 13;
+  AirportCodeV2 airport_to = 14;
+}
+
+enum SeatV2 {
+  UNKNOWN_SEAT_V2 = 0;
+  ECONOMY_V2 = 1;
+  PREMIUM_ECONOMY_V2 = 2;
+  BUSINESS_V2 = 3;
+  FIRST_V2 = 4;
+}
+
+enum TripV2 {
+  UNKNOWN_TRIP_V2 = 0;
+  ROUND_TRIP_V2 = 1;
+  ONE_WAY_V2 = 2;
+  MULTI_CITY_V2 = 3; // not implemented
+}
+
+enum PassengerV2 {
+  UNKNOWN_PASSENGER_V2 = 0;
+  ADULT_V2 = 1;
+  CHILD_V2 = 2;
+  INFANT_IN_SEAT_V2 = 3;
+  INFANT_ON_LAP_V2  = 4;
+}
+
+message RoundTripData {
+  repeated FlightDataV2 flights_data = 3;
+  repeated PassengerV2 passengers = 8;
+  SeatV2 seat = 9;
+  TripV2 trip = 19;
+}
