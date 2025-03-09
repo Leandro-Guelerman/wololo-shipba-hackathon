@@ -76,7 +76,7 @@ export default function Home() {
 
     const getClassifierDataFromApi = async (text: string): Promise<ClassifierData | undefined> => {
         try {
-            addMessage(text);
+            addMessage(`🏖️ ${text}`);
 
             const response = await postClassifier(text);
 
@@ -150,7 +150,7 @@ export default function Home() {
     }
 
     const handleTextSubmit = async (text: string) => {
-        setPromptedText(`🏖️ ${text}`);
+        setPromptedText(text);
         const classifierData = await getClassifierDataFromApi(text);
         const mainLocation = classifierData?.location?.[0];
 
@@ -187,6 +187,12 @@ export default function Home() {
                 travelDateFrom,
                 travelDateTo
             );
+
+            if (!flightData?.return) {
+                addMessage('⚠️ No encontramos vuelos directos, volvé a intentar otro destino.');
+                setIsProcessing(false);
+                return;
+            }
 
             const flightMessage = ChatMessageMapper.mapFlight(flightData as FlightData, departureAirportData, arrivalAirportData, classifierData.departureLocation?.[0] as string, classifierData?.location?.[0] as string);
             addMessage(flightMessage.message);
