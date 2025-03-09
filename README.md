@@ -4,6 +4,14 @@
 
 This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed.
 
+## Limitations
+
+- It only supports direct flights from main airports
+
+## How it works
+
+Flights and Hotels are being scrapped from Google Flights, Activities are scrapped from Citavitis. We deployed 5 AI Agents in Azure AI Foundry to be able to make the suggestions, data analysis/convertion and output. 
+
 ## Tech Stack
 
 - Next.js
