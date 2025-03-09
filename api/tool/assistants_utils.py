@@ -131,7 +131,7 @@ Determine the best round trip including arrival and return flights
         }
      """,
         "name": "BestFlightFinderAPI",
-        "model": "gpt-4o-mini"
+        "model": "zala-dev-ai"
     }
 
     assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
@@ -285,7 +285,7 @@ Output a json with the following format:
 - Translate only location and departureLocation to Spanish
      """,
         "name": "ClassifierAPI",
-        "model": "gpt-4o-mini"
+        "model": "zala-dev-ai"
     }
 
     assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
