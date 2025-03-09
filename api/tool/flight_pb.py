@@ -105,9 +105,13 @@ def custom_response_parser(res):
                     : (None if i == 0 else -1)
                     ]:
             # Flight name
-            name = safe(item.css_first("div.sSHqwe.tPgKwe.ogfYpf span")).text(
-                strip=True
-            )
+            name_spans = item.css("div.sSHqwe.tPgKwe.ogfYpf span")
+            if len(name_spans) > 0:
+                name = name_spans[len(name_spans) - 1].text(
+                    strip=True
+                )
+            else:
+                name = "n/a"
 
             # Get departure & arrival time
             dp_ar_node = item.css("span.mv1WYe div")
@@ -160,6 +164,8 @@ def custom_response_parser(res):
                     "flight_codes": flight_codes
                 }
             )
+
+    flights = [d for d in flights if d['stops'] != 'Unknown']
 
     current_price = safe(parser.css_first("span.gOatQ")).text()
     return {"current_price": current_price, "flights": flights}
