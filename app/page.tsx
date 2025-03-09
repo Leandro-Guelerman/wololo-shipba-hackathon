@@ -49,7 +49,7 @@ export default function Home() {
     };
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-50 to-white">
+        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white">
             {/* Fondo con avión */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

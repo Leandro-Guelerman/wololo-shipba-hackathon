@@ -28,13 +28,13 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
     const startRecording = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ 
+            const stream = await navigator.mediaDevices.getUserMedia({
                 audio: {
                     channelCount: 1,
                     sampleRate: 16000,
                     echoCancellation: true,
                     noiseSuppression: true
-                } 
+                }
             });
 
             // Configurar MediaRecorder para usar codec Opus
@@ -110,26 +110,21 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                                 : 'Iniciar grabación'
                     }
                 >
-                    <div className={`absolute inset-2 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center transition-all duration-500 ${
-                        isRecording ? 'scale-90 rotate-45' : 'scale-100 hover:rotate-[-35deg]'
+                    <div className={`absolute inset-2 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center transition-all p-4 duration-500 ${
+                        isRecording ? 'scale-90 rotate-90' : 'scale-100 hover:rotate-[-90deg]'
                     }`}>
                         {isRecording ? (
                             <div className="w-6 h-6 rounded-lg bg-white shadow-inner-lg transition-transform duration-300 ease-in-out" />
                         ) : (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-10 w-10 text-white transform transition-transform duration-300 ease-in-out"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                                />
-                            </svg>
+                          <svg fill="#FFF" height="800px" width="800px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  enable-background="new 0 0 512 512">
+                              <g>
+                                  <g>
+                                      <path d="m439.5,236c0-11.3-9.1-20.4-20.4-20.4s-20.4,9.1-20.4,20.4c0,70-64,126.9-142.7,126.9-78.7,0-142.7-56.9-142.7-126.9 0-11.3-9.1-20.4-20.4-20.4s-20.4,9.1-20.4,20.4c0,86.2 71.5,157.4 163.1,166.7v57.5h-23.6c-11.3,0-20.4,9.1-20.4,20.4 0,11.3 9.1,20.4 20.4,20.4h88c11.3,0 20.4-9.1 20.4-20.4 0-11.3-9.1-20.4-20.4-20.4h-23.6v-57.5c91.6-9.3 163.1-80.5 163.1-166.7z"/>
+                                      <path d="m256,323.5c51,0 92.3-41.3 92.3-92.3v-127.9c0-51-41.3-92.3-92.3-92.3s-92.3,41.3-92.3,92.3v127.9c0,51 41.3,92.3 92.3,92.3zm-52.3-220.2c0-28.8 23.5-52.3 52.3-52.3s52.3,23.5 52.3,52.3v127.9c0,28.8-23.5,52.3-52.3,52.3s-52.3-23.5-52.3-52.3v-127.9z"/>
+                                  </g>
+                              </g>
+                          </svg>
+
                         )}
                     </div>
 
@@ -144,21 +139,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                 <p className="text-sm text-red-500 text-center font-medium">{error}</p>
             )}
 
-            <p className={`text-sm transition-all duration-300 ${
-                isDisabled
-                    ? 'text-gray-400'
-                    : isRecording
-                        ? 'text-red-500 font-medium'
-                        : 'text-gray-500'
-            }`}>
-                {isDisabled
-                    ? isProcessing
-                        ? '🔄 ...'
-                        : '⏸️ ...'
-                    : isRecording
-                        ? '🔴 Te escucho! :)'
-                        : '✈️ Contame tu viaje ideal'}
-            </p>
+
         </div>
     );
 };
