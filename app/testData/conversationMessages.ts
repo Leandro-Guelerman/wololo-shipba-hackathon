@@ -22,7 +22,7 @@ export const conversationMessages: Message[] = [
                         date: '2024-07-15T09:30:00Z'
                     },
                     duration: '12hs 30m',
-                    numberOfStops: 2
+                    numberOfStops: 1
                 }, {
                     departure: {
                         cityName: 'Barcelona',

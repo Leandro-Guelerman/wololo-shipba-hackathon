@@ -48,8 +48,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                 {segment.numberOfStops} {segment.numberOfStops === 1 ? 'escala' : 'escalas'}
             </span>
                                           )}
+                                          {segment.numberOfStops === 0 && <span className="text-xs text-gray-500 mb-2">Directo</span>}
                                           <div className="w-16 h-px bg-gray-300 relative">
-                                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300"></div>
+                                              {segment.numberOfStops > 0 && (<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300"></div>)}
                                           </div>
                                       </div>
                                       <div className="flex-1 min-w-0 text-right">
