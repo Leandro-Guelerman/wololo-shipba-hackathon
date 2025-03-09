@@ -314,20 +314,12 @@ def hotels(location, date_from, date_to):
 
         price_parsed = float(0)
         price_div = fl.css_first('div[class="A9rngd"]')
-        try:
-            print(price_div.text())
-        except:
-            pass
 
         if price_div is not None:
             price_html = price_div.text(strip=True)
             price = price_html.replace(u"\xa0", " ").replace("ARS","").replace(",","").split(" ")
             for p in price:
                 try:
-                    try:
-                        print(p)
-                    except:
-                        pass
                     price_parsed = float(p)
                     break
                 except:
@@ -338,7 +330,6 @@ def hotels(location, date_from, date_to):
                 for i, p in enumerate(price):
                     try:
                         # cached dollar for effiency
-                        print(f"price {i} {p}")
                         price = p.split("$")[1]
                         price_parsed = float(price) * 1086
                         break
@@ -354,13 +345,15 @@ def hotels(location, date_from, date_to):
                            'amenities': amenities,
                            'href': a})
 
-    # print(activities)
+
 
     if len(hotels) <= 5:
         N = len(hotels) - 1
     else:
         N = 5
     hotels = hotels[:N]
+
+    print("Hotels after trunc:" + str(len(hotels)))
 
 
     hotels_ai = []
@@ -452,14 +445,24 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
 
     print("output: ")
     print(output)
-    thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
-    response = parse_msg(thread_id, run_id)
-    if response['departure'] is not None:
-        response['departure']['price'] = response['departure']['price'] * 1086
-    if response['return'] is not None:
-        response['return']['price'] = response['return']['price'] * 1086
+    try:
+        thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
+        response = parse_msg(thread_id, run_id)
+        if response['departure'] is not None:
+            response['departure']['price'] = response['departure']['price'] * 1086
+        if response['return'] is not None:
+            response['return']['price'] = response['return']['price'] * 1086
 
-    return response
+        return response
+    except:
+        thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
+        response = parse_msg(thread_id, run_id)
+        if response['departure'] is not None:
+            response['departure']['price'] = response['departure']['price'] * 1086
+        if response['return'] is not None:
+            response['return']['price'] = response['return']['price'] * 1086
+
+        return response
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
