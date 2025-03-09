@@ -49,8 +49,7 @@ export const postClassifier = async (text: string): Promise<ClassifierData> => {
 
 export const getAirports = async (location: string): Promise<AirportsResponse> => {
     try {
-        const encodedLocation = encodeURIComponent(location);
-        const result = await fetch(`${API_URL}/locations/${encodedLocation}/airports`);
+        const result = await fetch(`${API_URL}/locations/${location.split(',')[0]}/airports`);
 
         const data = await result.json();
         console.log('Respuesta de aeropuertos:', data);
@@ -73,9 +72,7 @@ export const getWeatherRecommendation = async (
     arrivalDate?: string,
 ): Promise<WeatherData> => {
     try {
-        const encodedLocation = encodeURIComponent(location);
-
-        let url = `${API_URL}/locations/${encodedLocation}/duration/${duration}/weather`;
+        let url = `${API_URL}/locations/${location.split(',')[0]}/duration/${duration}/weather`;
         if (arrivalDate && departureDate) {
             url += `?departureDate=${departureDate}&arrivalDate=${arrivalDate}`;
         }
@@ -115,8 +112,7 @@ export const getHotelsFromApi = async (
     toDate: string
 ): Promise<HotelData> => {
     try {
-        const encodedLocation = encodeURIComponent(location);
-        const url = `${API_URL}/hotels/${encodedLocation}/${fromDate}/${toDate}`;
+        const url = `${API_URL}/hotels/${location.split(',')[0]}/${fromDate}/${toDate}`;
         const result = await fetch(url);
         const data = await result.json();
 
@@ -133,8 +129,7 @@ export const getActivitiesFromApi = async (
     toDate: string
 ): Promise<ActivityData[]> => {
     try {
-        const encodedLocation = encodeURIComponent(location);
-        let url = `${API_URL}/civitatis/${encodedLocation}`;
+        let url = `${API_URL}/civitatis/${location.split(',')[0]}`;
         if (fromDate && toDate) {
             url += `?fromDate=${fromDate}&toDate=${toDate}`;
         }
