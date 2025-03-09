@@ -30,7 +30,7 @@ GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
 WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
 CLASSIFIER_ASSISTANT_ID="asst_U9WCOr8dTGR8rRxgrWj5K9nc"
-ACTIVITIES_ASSISTANT_ID="asst_yiAiCjxWWKHuHsNln9GT2hUt"
+ACTIVITIES_ASSISTANT_ID="asst_CrrUWATJ9Z73vcTn1nDpZeS1"
 HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
 # test
@@ -129,7 +129,9 @@ def fetch_civitatis(city, date_from, date_to):
 
     print(activities)
 
-    return activities
+    sorted_list = sorted(activities, key=lambda x: x['ratings'], reverse=True)
+
+    return sorted_list
 
 @app.route('/api/civitatis/<location>')
 def civitatis(location):

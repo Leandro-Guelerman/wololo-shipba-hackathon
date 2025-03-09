@@ -207,7 +207,7 @@ def create_activities_assistant():
  
 - Adjust rating to only show a number from 1 to 10, decimals can be included
  
-- Only show the top ten activities based on rating
+- Only show the top ten activities based on rating arranged from best to worst
  
 - Exclude duplicated activities
  
