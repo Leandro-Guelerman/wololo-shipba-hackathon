@@ -381,11 +381,7 @@ def hotels(location, date_from, date_to):
     return response
 
 
-
-@app.route('/api/flights/<from_airport>/<to_airport>/<date_from>/<date_to>/<passengers>')
-def flights(from_airport, to_airport,date_from,date_to,passengers):
-    logging.info("searching flights")
-
+def get_flights_from_airports(from_airport, to_airport,date_from,date_to,passengers):
     client = Client(impersonate="chrome_126", verify=False)
     proto = parse_proto(date_from, date_to, from_airport, to_airport, None)
     tfs = get_tfs(proto)
@@ -397,8 +393,6 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
 
     departure_flights = [d for d in departure_flights if d['stops'] == 0]
 
-    return_flights = []
-
     if len(departure_flights) > 0:
 
         departure_flights = [d for d in departure_flights if d['stops'] == 0]
@@ -408,7 +402,6 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
         else:
             N = 5
         departure_flights = departure_flights[:N]
-
         client = Client(impersonate="chrome_126", verify=False)
 
         for d in departure_flights:
@@ -444,27 +437,36 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
     output = {
         'flights': departure_flights
     }
+    return output
+
+
+@app.route('/api/flights/<from_airport>/<to_airport>/<date_from>/<date_to>/<passengers>')
+def flights(from_airport, to_airport,date_from,date_to,passengers):
+    logging.info("searching flights")
+    output = get_flights_from_airports(from_airport, to_airport, date_from, date_to, passengers)
+
+    if len(output['flights']) == 0 and from_airport == 'EZE':
+        from_airport = "AEP"
+        print(f"using fallback airport {from_airport}" )
+        ## fallback to search another airports
+        output = get_flights_from_airports(from_airport, to_airport, date_from, date_to, passengers)
 
     print("output: ")
     print(output)
     try:
         thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
         response = parse_msg(thread_id, run_id)
-        if response['departure'] is not None:
+        if 'departure' in response and response['departure'] is not None:
             response['departure']['price'] = response['departure']['price'] * 1086
-        if response['return'] is not None:
+            response['departure']['airport'] = from_airport
+        if 'return' in response and response['return'] is not None:
             response['return']['price'] = response['return']['price'] * 1086
+            response['departure']['airport'] = to_airport
+
 
         return response
     except:
-        thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
-        response = parse_msg(thread_id, run_id)
-        if response['departure'] is not None:
-            response['departure']['price'] = response['departure']['price'] * 1086
-        if response['return'] is not None:
-            response['return']['price'] = response['return']['price'] * 1086
-
-        return response
+        return flights
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
