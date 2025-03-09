@@ -161,6 +161,7 @@ def fetch_civitatis(city, date_from, date_to):
 
 
     city = city.lower().split(",")[0]
+    city = city.replace(" ", "-")
 
     res = client.get(f"https://www.civitatis.com/ar/{city}{query}")
 
@@ -227,10 +228,18 @@ def classifier():
     thread_id, run_id = post_message(CLASSIFIER_ASSISTANT_ID, content['text'])
     return parse_message(thread_id, run_id)
 
+def safe_location(location):
+    location = location.replace("á", "a")
+    location = location.replace("é", "e")
+    location = location.replace("í", "i")
+    location = location.replace("ó", "o")
+    location = location.replace("ú", "u")
+    return location
+
 @app.route('/api/locations/<location>/airports')
 def airports(location):
     logging.info("location to airports")
-    thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, location)
+    thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, safe_location(location))
     return parse_message(thread_id, run_id)
 
 @app.route('/api/locations/<location_from>/<location_to>/requirements')
@@ -238,15 +247,15 @@ def requirements(location_from,location_to):
     logging.info("location requirements")
 
     thread_id, run_id = post_message(LOCATION_RESTRICTIONS_ID, json.dumps({
-        "departureLocation": location_from,
-        "arrivalLocation": location_to
+        "departureLocation": safe_location(location_from),
+        "arrivalLocation": safe_location(location_to)
     }))
     return parse_message(thread_id, run_id)
 
 @app.route('/api/hotels/<location>/<date_from>/<date_to>')
 def hotels(location, date_from, date_to):
     logging.info("searching hotels")
-    url = f"https://www.google.com/travel/search?q={location}&currency=ARS"
+    url = f"https://www.google.com/travel/search?q={safe_location(location)}&currency=ARS"
     ## TODO use dates in a new damn protobuf
     client = Client(impersonate="chrome_126", verify=False)
     res = client.get(url)
@@ -407,7 +416,7 @@ def weather(location, duration):
 
 
     data = {
-        'location': location,
+        'location': safe_location(location),
         'duration': duration
     }
 
