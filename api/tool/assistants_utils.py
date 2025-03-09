@@ -162,6 +162,7 @@ Based on this input determine best date for a trip on the provided location:
  
 - Calculate the best possible dates for the trip depending on the weather conditions at the location. Remember to take into account if the weather would be optimal to perform the most popular activities at the desired location. Generate "recommended_dates" based on this period with the following format:
  
+ {
 "recommended_dates": {
 "departureDate": "2025-11-02",
 "arrivalDate": "2025-11-09",
@@ -170,7 +171,7 @@ Based on this input determine best date for a trip on the provided location:
 "rain_chances": "high | low | medium",
 "temperatures": "high | low | medium",
 "high_winds": true
-}
+}}}
  
 ### Constraints  ###
  
@@ -185,7 +186,7 @@ Based on this input determine best date for a trip on the provided location:
 "rain_chances": "high | low | medium",
 "temperatures": "high | low | medium",
 "high_winds": true
-}
+}}}
  
 ### Output ###
  
