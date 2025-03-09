@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
 LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
-LOCATION_RESTRICTIONS_ID="asst_vY6HngUohuDpLLVkzI5G68ip"
+LOCATION_RESTRICTIONS_ID="asst_p796twbeakiJHYtx2DtCe8Be"
 BEST_FLIGHT_ID="asst_CMUL2VRQ9TE8p6rFRPfHKetG"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
@@ -28,7 +28,7 @@ ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
 
-WEATHER_ASSISTANT_ID="asst_tdfSv8JH6cFwWKH8zi69qI53"
+WEATHER_ASSISTANT_ID="asst_AzIKA51ejblUPhoUm2P4a5u9"
 CLASSIFIER_ASSISTANT_ID="asst_U9WCOr8dTGR8rRxgrWj5K9nc"
 ACTIVITIES_ASSISTANT_ID="asst_yiAiCjxWWKHuHsNln9GT2hUt"
 
@@ -134,7 +134,9 @@ def civitatis(location):
     from_date = request.args.get('fromDate')
     to_date = request.args.get('toDate')
 
-    return fetch_civitatis(location,from_date,to_date)
+    activities = fetch_civitatis(location, from_date, to_date)
+    thread_id, run_id = post_message(ACTIVITIES_ASSISTANT_ID, json.dumps(activities))
+    return parse_message(thread_id, run_id)
 
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
@@ -148,6 +150,16 @@ def classifier():
 def airports(location):
     logging.info("location to airports")
     thread_id, run_id = post_message(LOCATION_TO_AIRPORTS_ASSISTANT_ID, location)
+    return parse_message(thread_id, run_id)
+
+@app.route('/api/locations/<location_from>/<location_to>/requirements')
+def requirements(location_from,location_to):
+    logging.info("location requirements")
+
+    thread_id, run_id = post_message(LOCATION_RESTRICTIONS_ID, json.dumps({
+        "departureLocation": location_from,
+        "arrivalLocation": location_to
+    }))
     return parse_message(thread_id, run_id)
 
 @app.route('/api/hotels/<location>/<date_from>/<date_to>')
@@ -257,11 +269,9 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
 
     ## TODO THE URL
 
-    response = make_response(jsonify(output))
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-    return response
+    print(output)
+    thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
+    return parse_message(thread_id, run_id)
 
 
 @app.route('/api/locations/<location>/duration/<duration>/weather')
@@ -284,7 +294,7 @@ def weather(location, duration):
     if arrival_date is not None:
         data['arrivalDate'] = arrival_date
 
-    logging.info(json.dumps(data))
+    print(json.dumps(data))
 
     thread_id, run_id = post_message(WEATHER_ASSISTANT_ID, json.dumps(data))
     return parse_message(thread_id, run_id)

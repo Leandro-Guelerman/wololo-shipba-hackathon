@@ -68,7 +68,7 @@ Given a departure location and an arrival destination determine a list of all th
  
 - Differentiate mandatory documentation from recommended documentation
  
-- Translate the response to the language spoken by the passenger
+- Translate the response to spanish
  
 ### Output ###
  
@@ -181,14 +181,14 @@ Based on this input determine best date for a trip on the provided location:
  
 ### Output ###
  
-- Output "provided_dates" and "recommended_dates"
+- Output "provided_dates" and "recommended_dates" as JSON
  
-- If the weather conditions in "provided_dates" and "recommended_dates" are similar only output "provided_dates"
+- If the weather conditions in "provided_dates" and "recommended_dates" are similar only output "provided_dates" as JSON
  
-- If departureDate and arrivalDate are not provided just return recommended_dates
+- If departureDate and arrivalDate are not provided just return recommended_dates as JSON
      """,
         "name": "LocationToAirportsAPI",
-        "model": "gpt-4o-mini"
+        "model": "zala-dev-ai"
     }
 
     assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
