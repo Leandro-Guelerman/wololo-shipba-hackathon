@@ -150,7 +150,7 @@ export default function Home() {
     }
 
     const handleTextSubmit = async (text: string) => {
-        setPromptedText(text);
+        setPromptedText(`🏖️ ${text}`);
         const classifierData = await getClassifierDataFromApi(text);
         const mainLocation = classifierData?.location?.[0];
 
@@ -235,21 +235,40 @@ export default function Home() {
     const handleAudioChange = async (blob: Blob) => {
         resetState();
 
-        if (blob) {
-            try {
-                setIsProcessing(true);
-                const response = await postAudio(blob);
-                const responseData = await response.json();
-                // const responseData = {text: 'quiero ir a nueva york en diciembre'};
+        if (!blob) return;
 
-                if (responseData && typeof responseData.text === 'string') {
-                    await handleTextSubmit(`🏖️ ${responseData.text}`);
+        setIsProcessing(true);
+
+        const MAX_RETRIES = 1;
+        let attempt = 0;
+
+        while (attempt < MAX_RETRIES) {
+            try {
+                const response = await postAudio(blob);
+                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+
+                const responseData = await response.json();
+                console.log(responseData);
+
+                if (responseData) {
+                    await handleTextSubmit(responseData);
                 }
+
+                return;
             } catch (error) {
-                console.error('Error al procesar el audio:', error);
-                toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
+                console.error(`Intento ${attempt + 1} fallido:`, error);
+
+                if (attempt === MAX_RETRIES - 1) {
+                    toast.error('Error al procesar el audio. Por favor, inténtalo de nuevo.');
+                } else {
+                    await new Promise(res => setTimeout(res, (2 ** attempt) * 2000));
+                }
+
+                attempt++;
             }
         }
+
+        setIsProcessing(false);
     };
 
     return (
