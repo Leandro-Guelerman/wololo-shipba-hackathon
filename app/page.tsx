@@ -4,7 +4,7 @@ import {LoadingPlane} from "@/app/components/Loading";
 import {postAudio} from "@/app/api/audioApi";
 import {ChatContainer} from "@/app/components/ChatContainer";
 import type {Message} from "@/app/components/ChatContainer";
-import { useState, useCallback} from "react";
+import { useState, useCallback } from "react";
 import {initialMessages} from './testData/initialMessages';
 import {conversationMessages} from './testData/conversationMessages';
 import {bookingMessages} from './testData/bookingMessages';

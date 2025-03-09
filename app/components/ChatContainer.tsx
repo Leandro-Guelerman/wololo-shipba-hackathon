@@ -7,41 +7,46 @@ export interface Message {
     id: string;
     text?: string;
     message?: {
-        type: 'itemized' | 'weather';
-        mainItems?: {
-            title: string;
-            hasButton?: boolean;
-            buttonText?: string;
-            bookingUrl?: string;
-            isBooked?: boolean;
-        }[];
+        type: 'flight' | 'hotel' | 'activities' | 'recommended_dates';
+        flights?: {
+            segments: [{
+                departure: {
+                    cityName: string;
+                    airport: string;
+                    date: string;
+                };
+                arrival: {
+                    cityName: string;
+                    airport: string;
+                    date: string;
+                };
+                duration: string;
+                numberOfStops: number;
+            }]
+            price: number;
+        };
+        hotel?: {
+            name: string;
+            address: string;
+            checkInDate: string;
+            checkOutDate: string;
+            price: number;
+        };
         activities?: {
             title: string;
-            buttonText?: string;
+            description: string;
             bookingUrl?: string;
-            isBooked?: boolean;
+            price: number;
         }[];
-        weather?: {
-            provided_dates: {
-                departureDate: string;
-                arrivalDate: string;
-                average_weather: number;
-                weather_hazards: {
-                    rain_chances: 'high' | 'low' | 'normal';
-                    temperatures: 'high' | 'low' | 'normal';
-                    high_winds: boolean;
-                }
-            };
-            recommended_dates: {
-                departureDate: string;
-                arrivalDate: string;
-                average_weather: number;
-                weather_hazards: {
-                    rain_chances: 'high' | 'low' | 'normal';
-                    temperatures: 'high' | 'low' | 'normal';
-                    high_winds: boolean;
-                }
-            };
+        recommended_dates?: {
+            departureDate: string;
+            arrivalDate: string;
+            average_weather: number;
+            weather_hazards: {
+                rain_chances: 'high' | 'low' | 'normal';
+                temperatures: 'high' | 'low' | 'normal';
+                high_winds: boolean;
+            }
         };
     };
     isNew: boolean;
@@ -68,8 +73,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                 {messages.map((message) => (
                     <ChatMessage
                         key={message.id}
-                        message={message.message || message.text || ''}
-                        isNew={message.isNew}
+                        message={message}
                     />
                 ))}
                 {isLoading && (
@@ -81,4 +85,4 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
             </div>
         </div>
     );
-}; 
+};
