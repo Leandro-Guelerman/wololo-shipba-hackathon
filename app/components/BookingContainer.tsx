@@ -58,7 +58,7 @@ export const BookingContainer: React.FC<BookingContainerProps> = ({
 						))}
 
 				</div>
-					{bookedCount >= totalBookings && (
+					{bookedCount >= totalBookings && bookedCount > 0 && (
 							<div className="flex flex-col w-full gap-2 p-4 bg-white shadow-sm rounded-2xl border border-gray-100 mt-4">
 								<h3 className="text-lg text-center font-medium text-gray-900">💫 ¡Todo listo, no te olvidés el cepillo de dientes! 🪥</h3>
 							</div>
