@@ -98,28 +98,13 @@ export const LoadingPlane: React.FC = () => {
                         key={i} 
                         className={`cloud cloud-${i + 1} ${
                             i % 2 === 0 ? 'w-24 h-24' : 'w-16 h-16'
-                        } text-gray-100`} 
+                        } text-blue-300`}
                         fill="currentColor" 
                         viewBox="0 0 24 24"
                     >
                         <path d="M4.5 10.5C4.5 8.01472 6.51472 6 9 6C10.7501 6 12.2699 7.00854 13.0307 8.5C13.4369 8.34499 13.8788 8.25999 14.3409 8.25999C16.362 8.25999 18 9.89797 18 11.919C18 13.9399 16.362 15.5779 14.3409 15.5779L9 15.5779C6.51472 15.5779 4.5 13.5632 4.5 11.0779V10.5Z" />
                     </svg>
                 ))}
-
-                {/* Avión */}
-                <svg
-                    className="plane w-12 h-12 text-blue-300"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                    />
-                </svg>
             </div>
         </div>
     );
