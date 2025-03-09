@@ -114,11 +114,13 @@ export interface Message {
 interface ChatContainerProps {
     messages: Message[];
     isLoading?: boolean;
+    showBookingDetails?: boolean;
 }
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({
                                                                 messages,
-                                                                isLoading = false
+                                                                isLoading = false,
+                                                                showBookingDetails
                                                             }) => {
     const chatEndRef = React.useRef<HTMLDivElement>(null);
 
@@ -141,7 +143,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                             <ChatLoader/>
                         </div>
                     )}
-                    {messages && <BookingContainer messages={messages} />}
+                    {showBookingDetails && <BookingContainer messages={messages} />}
 
                 <div ref={chatEndRef}/>
                 </div>

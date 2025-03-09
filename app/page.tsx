@@ -1,13 +1,6 @@
 'use client'
 import {AudioRecorder} from "@/app/components/AudioRecorder2";
 import {LoadingPlane} from "@/app/components/Loading";
-// import {postAudio} from "@/app/api/audioApi";
-/*import {
-    getAirports,
-    getFlightsFromApi,
-    getWeatherRecommendation,
-    postClassifier,
-} from "@/app/api/mockedApi";*/
 import {
     getAirports,
     getFlightsFromApi,
@@ -48,6 +41,8 @@ export default function Home() {
 
     const [flight, setFlight] = useState<FlightData | undefined>();
 
+    const [showBookingDetails, setShowBookingDetails] = useState<boolean>(false);
+
     console.log(departureAirport, arrivalAirport, location, arrivalDate, departureDate, duration, weatherRecommendation, flight);
     const addMessage = useCallback((content: string | Message['message']) => {
         const newMessage = {
@@ -77,6 +72,8 @@ export default function Home() {
         setDuration(undefined)
         setWeatherRecommendation(undefined)
         setFlight(undefined)
+
+        setShowBookingDetails(false);
     }
 
     const getClassifierDataFromApi = async (text: string): Promise<ClassifierData | undefined> => {
@@ -202,6 +199,8 @@ export default function Home() {
 
             const activitiesMessage = ChatMessageMapper.mapActivities(activities);
             addMessage(activitiesMessage.message);
+
+            setShowBookingDetails(true)
         }
 
         setIsProcessing(false);
@@ -274,6 +273,7 @@ export default function Home() {
                 <ChatContainer
                     messages={messages}
                     isLoading={isProcessing}
+                    showBookingDetails={showBookingDetails}
                 />
             </main>
 
