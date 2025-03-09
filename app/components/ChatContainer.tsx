@@ -1,4 +1,6 @@
 'use client'
+import {BookingContainer} from "@/app/components/BookingContainer";
+import {conversationMessages} from "@/app/testData/conversationMessages";
 import React from 'react';
 import {ChatMessage} from './ChatMessage';
 import {ChatLoader} from './ChatLoader';
@@ -41,6 +43,7 @@ export interface HotelData {
     checkInDate: string;
     checkOutDate: string;
     price: number;
+    href: string;
 }
 
 export interface FlightSegment {
@@ -153,7 +156,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     return (
       <div className="h-full w-full overflow-y-auto">
         <div className="h-full w-full max-w-3xl mx-auto px-4">
-            <div className="h-full  pb-32 pt-4">
+            <div className="h-full pb-32 pt-4">
                 {messages.map((message) => (
                     <ChatMessage
                         key={message.id}
@@ -165,6 +168,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                         <ChatLoader/>
                     </div>
                 )}
+                <BookingContainer messages={conversationMessages} />
+
                 <div ref={chatEndRef}/>
             </div>
         </div>

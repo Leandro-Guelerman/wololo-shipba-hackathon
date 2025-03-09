@@ -1,5 +1,6 @@
 'use client'
 import {AudioRecorder} from "@/app/components/AudioRecorder2";
+import {BookingContainer} from "@/app/components/BookingContainer";
 import {LoadingPlane} from "@/app/components/Loading";
 // import {postAudio} from "@/app/api/audioApi";
 import {
@@ -14,6 +15,7 @@ import {
 } from "@/app/api/travelApi";
 import {ChatContainer} from "@/app/components/ChatContainer";
 import type {FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
+import {conversationMessages} from "@/app/testData/conversationMessages";
 import {useState, useCallback } from "react";
 import {initialMessages} from './testData/initialMessages';
 // import {conversationMessages} from './testData/conversationMessages';

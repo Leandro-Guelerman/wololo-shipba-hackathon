@@ -80,7 +80,8 @@ export const conversationMessages: Message[] = [
                 address: 'Carrer de la Marina, 19-21, 08005 Barcelona, España',
                 checkInDate: '2024-07-15',
                 checkOutDate: '2024-07-22',
-                price: 1200
+                price: 1200,
+                href: 'asd'
             }
         },
     },

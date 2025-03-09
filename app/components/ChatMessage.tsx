@@ -69,7 +69,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
                 {message.message && message.message.type === 'activities' && message.message.activities && (
                   <div className="p-4">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">🎯 Actividades recomendadas</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">🏔️ Actividades recomendadas</h3>
                     <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
                       {message.message.activities.map((activity, index) => (
                         <div key={index} className="flex-shrink-0 w-72 bg-white rounded-lg border border-gray-100">
