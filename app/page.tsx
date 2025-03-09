@@ -150,7 +150,7 @@ export default function Home() {
     }
 
     const handleTextSubmit = async (text: string) => {
-        setPromptedText(text);
+        setPromptedText(`🏖️ ${text}`);
         const classifierData = await getClassifierDataFromApi(text);
         const mainLocation = classifierData?.location?.[0];
 
@@ -240,10 +240,11 @@ export default function Home() {
                 setIsProcessing(true);
                 const response = await postAudio(blob);
                 const responseData = await response.json();
+                console.log(responseData);
                 // const responseData = {text: 'quiero ir a nueva york en diciembre'};
 
-                if (responseData && typeof responseData.text === 'string') {
-                    await handleTextSubmit(`🏖️ ${responseData.text}`);
+                if (responseData) {
+                    await handleTextSubmit(responseData);
                 }
             } catch (error) {
                 console.error('Error al procesar el audio:', error);
