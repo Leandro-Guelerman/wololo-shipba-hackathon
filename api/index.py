@@ -350,6 +350,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
         for d in departure_flights:
             proto = parse_proto(date_from, date_to, from_airport, to_airport, d)
             tfs = get_tfs(proto)
+            print("searching returns: ")
             res = client.get(f"https://www.google.com/travel/flights?tfs={tfs}")
             return_flights = custom_response_parser(res)
             if len(return_flights) > 0:
@@ -359,6 +360,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
                     tfs = get_tfs(proto)
                     tfu = "EgIIACIA"
                     rf['url'] = f"https://www.google.com/travel/flights/booking?tfs={tfs}&tfu={tfu}&hl=es-419"
+                    print("urls: ")
                     print(tfs)
                     print(rf['url'])
                     # exit()
@@ -371,6 +373,7 @@ def flights(from_airport, to_airport,date_from,date_to,passengers):
         'flights': departure_flights
     }
 
+    print("output: ")
     print(output)
     thread_id, run_id = post_message(BEST_FLIGHT_ID, json.dumps(output))
     return parse_message(thread_id, run_id)
