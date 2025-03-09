@@ -95,7 +95,7 @@ export const getFlightsFromApi = async (
 ): Promise<FlightData> => {
     const passengers = 1;
     try {
-        let url = `${API_URL}/flights/${fromAirport}/${toAirport}/${fromDate}/${toDate}/${passengers}`;
+        const url = `${API_URL}/flights/${fromAirport}/${toAirport}/${fromDate}/${toDate}/${passengers}`;
         const result = await fetch(url);
         const data = await result.json();
 
@@ -111,9 +111,8 @@ export const getHotelsFromApi = async (
     fromDate: string,
     toDate: string
 ): Promise<FlightData> => {
-    const passengers = 1;
     try {
-        let url = `${API_URL}/hotels/${location}/${fromDate}/${toDate}`;
+        const url = `${API_URL}/hotels/${location}/${fromDate}/${toDate}`;
         const result = await fetch(url);
         const data = await result.json();
 

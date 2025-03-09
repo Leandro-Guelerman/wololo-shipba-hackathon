@@ -13,13 +13,13 @@ import {ChatContainer} from "@/app/components/ChatContainer";
 import type {FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
 import {useState, useCallback } from "react";
 // import {initialMessages} from './testData/initialMessages';
-import {conversationMessages} from './testData/conversationMessages';
-import {bookingMessages} from './testData/bookingMessages';
+// import {conversationMessages} from './testData/conversationMessages';
+// import {bookingMessages} from './testData/bookingMessages';
 import {Toaster, toast} from 'react-hot-toast';
 import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 
 // Combinamos todos los mensajes de prueba
-const additionalTestMessages = [...conversationMessages, ...bookingMessages];
+// const additionalTestMessages = [...conversationMessages, ...bookingMessages];
 
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -161,9 +161,6 @@ export default function Home() {
         setIsProcessing(false);
     };
 
-    const handleRequestHotels = async () => {
-
-    }
 
     const handleRequestFlights = async (
         fromAirport: string,
@@ -211,10 +208,10 @@ export default function Home() {
         }
     };
 
-    const handleTestClick = useCallback(async () => {
+    /*const handleTestClick = useCallback(async () => {
         const testText = "Me gustaría viajar a Roma en primavera";
         await handleTextSubmit(testText);
-    }, [handleTextSubmit]);
+    }, [handleTextSubmit]);*/
 
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white">

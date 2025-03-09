@@ -101,16 +101,17 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                     <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
                       <div>
                         <p className="text-sm text-gray-600 mb-1">
-                          {new Date(message.message.weather.provided_dates.departureDate).toLocaleDateString()} - {new Date(message.message.weather.provided_dates.arrivalDate).toLocaleDateString()}
+                            {/*TODO: REVISAR ESTO*/}
+                          {new Date(message?.message?.weather?.provided_dates?.departureDate as string).toLocaleDateString()} - {new Date(message?.message?.weather?.provided_dates?.arrivalDate as string).toLocaleDateString()}
                         </p>
                         <div className="flex items-center gap-4 text-gray-900">
                           <span className="text-2xl">
-                            {message.message.weather.provided_dates.average_weather}°C
+                            {message?.message?.weather?.provided_dates?.average_weather}°C
                           </span>
                           <div className="flex gap-2">
-                            {message.message.weather.provided_dates.weather_hazards.rain_chances === 'high' && <span className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">🌧️ Alta prob. lluvia</span>}
-                            {message.message.weather.provided_dates.weather_hazards.temperatures === 'high' && <span className="text-sm px-2 py-1 bg-red-100 text-red-800 rounded">🌡️ Altas temp.</span>}
-                            {message.message.weather.provided_dates.weather_hazards.high_winds && <span className="text-sm px-2 py-1 bg-yellow-100 text-yellow-800 rounded">💨 Vientos fuertes</span>}
+                            {message?.message?.weather?.provided_dates?.weather_hazards.rain_chances === 'high' && <span className="text-sm px-2 py-1 bg-blue-100 text-blue-800 rounded">🌧️ Alta prob. lluvia</span>}
+                            {message?.message?.weather?.provided_dates?.weather_hazards.temperatures === 'high' && <span className="text-sm px-2 py-1 bg-red-100 text-red-800 rounded">🌡️ Altas temp.</span>}
+                            {message?.message?.weather?.provided_dates?.weather_hazards.high_winds && <span className="text-sm px-2 py-1 bg-yellow-100 text-yellow-800 rounded">💨 Vientos fuertes</span>}
                           </div>
                         </div>
                       </div>
