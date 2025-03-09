@@ -13,7 +13,7 @@ import {
 import {ActivityData, ChatContainer, FlightData, HotelData, Message, WeatherData} from "@/app/components/ChatContainer";
 import {useState, useCallback} from "react";
 import {initialMessages} from './testData/initialMessages';
-import {Toaster, toast} from 'react-hot-toast';
+import {Toaster} from 'react-hot-toast';
 import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 import { postAudio } from "./api/audioApi";
 
@@ -252,6 +252,7 @@ export default function Home() {
 
             return response;
         } catch (error) {
+            console.error(error);
             //toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
         }
     }
