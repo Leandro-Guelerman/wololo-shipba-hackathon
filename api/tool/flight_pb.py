@@ -4,7 +4,7 @@ from typing import Optional, List, Tuple, TYPE_CHECKING, Any
 
 from selectolax.lexbor import LexborHTMLParser, LexborNode
 
-from . import flights_return_pb2 as PB
+from api.tool import flights_return_pb2 as PB
 
 if TYPE_CHECKING:
     PB: Any
