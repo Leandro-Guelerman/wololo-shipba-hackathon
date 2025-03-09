@@ -334,12 +334,12 @@ def hotels(location, date_from, date_to):
                     pass
             # price = "$51$51 nightly$136 total1 night with taxes + fees$51Mar 10 – 11"
             ## fallback for usd (prices are not converted even with the currency argument)
-            if price_parsed is None:
-                for i,p in enumerate(price):
-                    print(f"price {i} {p}")
-                    price = p.split("$")[1]
+            if price_parsed is None or price_parsed == 0.0:
+                for i, p in enumerate(price):
                     try:
                         # cached dollar for effiency
+                        print(f"price {i} {p}")
+                        price = p.split("$")[1]
                         price_parsed = float(price) * 1086
                         break
                     except:
