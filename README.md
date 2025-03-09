@@ -4,6 +4,12 @@
 
 This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed.
 
+## Tech Stack
+
+- Next.js
+- Python
+- Azure AI Foundry (using GPT-4o and GPT-4o-mini models)
+
 ## Team
 - [Gabriel Villoldo](https://github.com/gvillo)
 - [Tomás de Priede](https://github.com/tomiito)
