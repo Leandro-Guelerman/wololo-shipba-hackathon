@@ -40,6 +40,7 @@ export default function Home() {
     const [departureDate, setDepartureDate] = useState<string | undefined>();
     const [duration, setDuration] = useState<number | undefined>();
 
+
     const [weatherRecommendation, setWeatherRecommendation] = useState<WeatherData | undefined>();
 
     const [flight, setFlight] = useState<FlightData | undefined>();
@@ -150,7 +151,7 @@ export default function Home() {
             let flightData: FlightData | undefined;
 
             if (classifierData) {
-                departureAirportData = await getAirportFromApi(classifierData.departureLocation?.[0] as string);
+                departureAirportData = await getAirportFromApi('ezeiza');
                 setDepartureAirport(departureAirportData);
 
                 arrivalAirportData = await getAirportFromApi(classifierData?.location?.[0] as string);
@@ -158,6 +159,7 @@ export default function Home() {
 
                 if (arrivalAirportData) {
                     addMessage(`Tu destino: ${mainLocation} / Aeropuerto: ${arrivalAirportData.name}`);
+
                 }
 
                 weatherData = await getWeatherFromApi(mainLocation as string, classifierData?.duration as number, classifierData?.departureDate, classifierData?.arrivalDate);
@@ -232,7 +234,7 @@ export default function Home() {
     }, [handleTextSubmit]);*/
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-br from-black to-violet-800">
+        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white pb-30">
             <Toaster position="top-center" />
             {/* Fondo con avión */}
             <div className="fixed inset-0 pointer-events-none">
@@ -251,9 +253,9 @@ export default function Home() {
 
             {/* Footer fijo */}
             <footer
-                className="fixed bottom-0 left-0 right-0 bg-gray-100/15 backdrop-blur-sm border-t border-violet-300 p-4 z-20">
+                className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-20">
                 <div className="max-w-3xl mx-auto">
-                    <button className="bg-teal-700 text-white px-4 py-2 rounded-lg"
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                         onClick={() => handleTextSubmit('quiero ir a ver un volcan')}>
                         Mocked data 1
                     </button>
