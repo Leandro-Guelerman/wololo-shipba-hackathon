@@ -16,13 +16,10 @@ import {initialMessages} from './testData/initialMessages';
 import {Toaster, toast} from 'react-hot-toast';
 import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 
-// Combinamos todos los mensajes de prueba
-// const additionalTestMessages = [...conversationMessages, ...bookingMessages];
-
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [messages, setMessages] = useState<Message[]>(initialMessages);
-    const [, setMainLocation] = useState<string | undefined>();
+    const [mainLocation, setMainLocation] = useState<string | undefined>();
 
     const [, setPromptedText] = useState<string | undefined>();
 
@@ -42,6 +39,7 @@ export default function Home() {
     const [flight, setFlight] = useState<FlightData | undefined>();
 
     const [showBookingDetails, setShowBookingDetails] = useState<boolean>(false);
+    const [isRecommended, setIsRecommended] = useState<boolean>(false);
 
     console.log(departureAirport, arrivalAirport, location, arrivalDate, departureDate, duration, weatherRecommendation, flight);
     const addMessage = useCallback((content: string | Message['message']) => {
@@ -131,11 +129,12 @@ export default function Home() {
         }
     }
 
-    /*const handleResubmit = async () => {
+    const handleResubmit = async () => {
         const newQuery = `${mainLocation} ${weatherRecommendation?.recommended_dates?.departureDate} ${weatherRecommendation?.recommended_dates?.arrivalDate}`;
         resetState();
+        setIsRecommended(true)
         handleTextSubmit(newQuery);
-    }*/
+    }
 
     const handleTextSubmit = async (text: string) => {
         setPromptedText(text);
@@ -230,7 +229,7 @@ export default function Home() {
                 setIsProcessing(true);
                 // const response = await postAudio(blob);
                 // const responseData = await response.json();
-                const responseData = {text: 'quiero ir a roma' + Math.random()};
+                const responseData = {text: 'quiero ir machu pichu el 10 de enero del 2026'};
 
                 if (responseData && typeof responseData.text === 'string') {
                     await handleTextSubmit(responseData.text);
@@ -242,10 +241,10 @@ export default function Home() {
         }
     };
 
-    /*const handleTestClick = useCallback(async () => {
+    const handleTestClick = useCallback(async () => {
         const testText = "Me gustaría viajar a Roma en primavera";
         await handleTextSubmit(testText);
-    }, [handleTextSubmit]);*/
+    }, [handleTextSubmit]);
 
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-sky-100 to-white pb-30">
@@ -263,6 +262,8 @@ export default function Home() {
                     messages={messages}
                     isLoading={isProcessing}
                     showBookingDetails={showBookingDetails}
+                    onRetryWithRecommendedDates={handleResubmit}
+                    isRecommended={isRecommended}
                 />
             </main>
 
@@ -270,10 +271,6 @@ export default function Home() {
             <footer
                 className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-20">
                 <div className="max-w-3xl mx-auto">
-                    {/*<button className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                        onClick={() => handleTextSubmit('quiero ir a ver un volcan')}>
-                        Mocked data 1
-                    </button>*/}
                     <AudioRecorder
                         onAudioRecorded={handleAudioChange}
                         isProcessing={isProcessing}

@@ -114,12 +114,16 @@ interface ChatContainerProps {
     messages: Message[];
     isLoading?: boolean;
     showBookingDetails?: boolean;
+    onRetryWithRecommendedDates: () => void;
+    isRecommended: boolean;
 }
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({
                                                                 messages,
                                                                 isLoading = false,
-                                                                showBookingDetails
+                                                                showBookingDetails,
+                                                                onRetryWithRecommendedDates,
+                                                                isRecommended
                                                             }) => {
     const chatEndRef = React.useRef<HTMLDivElement>(null);
 
@@ -135,6 +139,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                         <ChatMessage
                             key={message.id}
                             message={message}
+                            onRetryWithRecommendedDates={onRetryWithRecommendedDates}
+                            isRecommended={isRecommended}
                         />
                     ))}
                     {isLoading && (

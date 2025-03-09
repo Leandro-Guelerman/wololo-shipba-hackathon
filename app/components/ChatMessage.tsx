@@ -3,11 +3,15 @@ import type {Message} from "@/app/components/ChatContainer";
 import React from 'react';
 
 interface ChatMessageProps {
-    message: Message
+    message: Message;
+    onRetryWithRecommendedDates: () => void;
+    isRecommended: boolean;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
                                                             message,
+                                                            onRetryWithRecommendedDates,
+                                                            isRecommended
                                                         }) => {
     if (message.text) {
         return (
@@ -112,7 +116,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                 )}
 
                 {message.message && message.message.type === 'weather' && message.message.weather && (
-                    message.message.weather.provided_dates && message.message.weather.recommended_dates &&
+                    (!isRecommended && message.message.weather.provided_dates && message.message.weather.recommended_dates) &&
                     <div className="p-4 bg-amber-100">
                         <h3 className="text-md font-medium  text-gray-900 mb-1">
                             ⛈️ No es el mejor momento para viajar</h3>
@@ -139,6 +143,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                             <p className='text-md font-medium text-gray-900 flex justify-between items-center'>Es mas conveniente viajar
                                 en {new Date(message.message.weather.recommended_dates.departureDate).toLocaleString('es-ES', {month: 'long'})}
                                 <button
+                                    onClick={onRetryWithRecommendedDates}
                                     className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">✨
                                     ¡Dale, cambiar!</button>
                             </p>
