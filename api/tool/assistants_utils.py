@@ -135,7 +135,7 @@ Determine the best round trip including arrival and return flights
         
      """,
         "name": "BestFlightFinderAPI",
-        "model": "zala-dev-ai"
+        "model": "gpt-4o-mini"
     }
 
     assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)

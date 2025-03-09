@@ -22,7 +22,7 @@ app = Flask(__name__)
 API_VERSION="?api-version=2024-12-01-preview"
 LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
 LOCATION_RESTRICTIONS_ID="asst_p796twbeakiJHYtx2DtCe8Be"
-BEST_FLIGHT_ID="asst_3U5QX0rCnEfgaEqUUAnLLVHb"
+BEST_FLIGHT_ID="asst_6fIlZzGqPl3QU9aWpaQVLEZj"
 API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
 BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
