@@ -266,7 +266,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                             </div>
                             <div className="pt-2">
                             <span className="text-lg font-semibold text-gray-900">
-                                ${message.message.hotel.price}
+                                {message.message.hotel.price > 0 ?`${message.message.hotel.price}` : 'Precio a confirmar'}
                             </span>
                             </div>
                         </div>
