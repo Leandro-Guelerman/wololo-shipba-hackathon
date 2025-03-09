@@ -1,3 +1,5 @@
+import {FlightData, WeatherData } from "../components/ChatContainer";
+
 export interface ClassifierData {
     location?: string[];
     "arrivalDate"?: string;
@@ -15,23 +17,6 @@ export interface Airport {
 interface AirportsResponse {
     main: Airport;
     others: Airport[];
-}
-
-export interface WeatherData {
-    "recommended_dates": {
-        "arrivalDate": string;
-        "average_weather": number;
-        "departureDate": string;
-        "weather_hazards": {
-            "high_winds": boolean;
-            "rain_chances": string;
-            "temperatures": string;
-        }
-    }
-}
-
-export interface FlightData {
-    price: string;
 }
 
 if (!process.env.NEXT_PUBLIC_WOLOLO_API_URL) {
@@ -116,27 +101,46 @@ export const getFlightsFromApi = async (
 
         return data;
     } catch (error) {
-        console.error('Error en getWeatherRecommendation:', error);
+        console.error('Error en getFlightsFromApi:', error);
         throw error;
     }
 };
 
-//
-// export const getActivities = async (
-//     location: string,
-// ): Promise<WeatherData> => {
-//     try {
-//         let url = `${API_URL}/civitatis/${location}`;
-//         if (arrivalDate && departureDate) {
-//             url += `?departureDate=${departureDate}&arrivalDate=${arrivalDate}`;
-//         }
-//
-//         const result = await fetch(url);
-//         const data = await result.json();
-//
-//         return data;
-//     } catch (error) {
-//         console.error('Error en getWeatherRecommendation:', error);
-//         throw error;
-//     }
-// };
+export const getHotelsFromApi = async (
+    location: string,
+    fromDate: string,
+    toDate: string
+): Promise<FlightData> => {
+    const passengers = 1;
+    try {
+        let url = `${API_URL}/hotels/${location}/${fromDate}/${toDate}`;
+        const result = await fetch(url);
+        const data = await result.json();
+
+        return data;
+    } catch (error) {
+        console.error('Error en getHotelsFromApi:', error);
+        throw error;
+    }
+};
+
+export const getActivities = async (
+    location: string,
+    fromDate: string,
+    toDate: string
+): Promise<WeatherData> => {
+    try {
+        let url = `${API_URL}/civitatis/${location}`;
+        if (fromDate && toDate) {
+            url += `?fromDate=${fromDate}&toDate=${toDate}`;
+        }
+
+        const result = await fetch(url);
+        const data = await result.json();
+
+        return data;
+    } catch (error) {
+        console.error('Error en getWeatherRecommendation:', error);
+        throw error;
+    }
+};

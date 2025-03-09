@@ -5,26 +5,25 @@ import {postAudio} from "@/app/api/audioApi";
 import {
     Airport,
     ClassifierData,
-    FlightData,
     getAirports, getFlightsFromApi,
     getWeatherRecommendation,
     postClassifier,
-    WeatherData
 } from "@/app/api/travelApi";
 import {ChatContainer} from "@/app/components/ChatContainer";
-import type {Message} from "@/app/components/ChatContainer";
+import type {FlightData, Message, WeatherData} from "@/app/components/ChatContainer";
 import {useState, useCallback } from "react";
-import {initialMessages} from './testData/initialMessages';
+// import {initialMessages} from './testData/initialMessages';
 import {conversationMessages} from './testData/conversationMessages';
 import {bookingMessages} from './testData/bookingMessages';
 import {Toaster, toast} from 'react-hot-toast';
+import ChatMessageMapper from "@/app/helpers/chatMessageMapper";
 
 // Combinamos todos los mensajes de prueba
 const additionalTestMessages = [...conversationMessages, ...bookingMessages];
 
 export default function Home() {
     const [isProcessing, setIsProcessing] = useState(false);
-    const [messages, setMessages] = useState<Message[]>(initialMessages);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     const [departureAirport, setDepartureAirport] = useState<Airport | undefined>();
     const [arrivalAirport, setArrivalArrivalAirport] = useState<Airport | undefined>();
@@ -39,6 +38,7 @@ export default function Home() {
 
     const [flight, setFlight] = useState<FlightData | undefined>();
 
+    console.log(departureAirport, arrivalAirport, location, arrivalDate, departureDate, duration, weatherRecommendation, flight);
     const addMessage = useCallback((content: string | Message['message']) => {
         const newMessage = {
             id: Date.now().toString(),
@@ -56,8 +56,7 @@ export default function Home() {
         }, 500);
     }, []);
 
-
-    const getClassifierData = async (text: string): Promise<ClassifierData | undefined> => {
+    const getClassifierDataFromApi = async (text: string): Promise<ClassifierData | undefined> => {
         try {
             addMessage(text);
 
@@ -77,12 +76,11 @@ export default function Home() {
         }
     }
 
-    const getAirport = async (location: string): Promise<Airport | undefined> => {
+    const getAirportFromApi = async (location: string): Promise<Airport | undefined> => {
         try {
             const response = await getAirports(location);
 
             const mainAirport = response.main;
-            setArrivalArrivalAirport(mainAirport);
 
             return mainAirport;
         } catch (error) {
@@ -93,7 +91,7 @@ export default function Home() {
         }
     }
 
-    const getWeather = async (
+    const getWeatherFromApi = async (
         location: string,
         duration: number,
         departureDate?: string,
@@ -112,7 +110,9 @@ export default function Home() {
             return response;
         } catch (error) {
             console.error('Error al procesar el texto:', error);
-            toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
+            // toast.error(error instanceof Error ? error.message : 'Error al procesar tu mensaje');
+            // addMessage('No te entendí. Podrías repetirlo? - Intenta contandome tu destino deseado.');
+
         } finally {
             setIsProcessing(false);
         }
@@ -120,46 +120,50 @@ export default function Home() {
     }
 
     const handleTextSubmit = async (text: string) => {
-        const classifierData = await getClassifierData(text);
-        const mainLocation = classifierData?.location?.[0];
+            const classifierData = await getClassifierDataFromApi(text);
+            const mainLocation = classifierData?.location?.[0];
 
-        setIsProcessing(true);
+            setIsProcessing(true);
 
-        let departureAirportData: Airport | undefined;
-        let arrivalAirportData: Airport | undefined;
-        let weatherData: WeatherData | undefined;
-        let flightData: FlightData | undefined;
-        if (classifierData) {
-            departureAirportData = await getAirport('ezeiza');
-            arrivalAirportData = await getAirport(classifierData?.location?.[0] as string);
-            console.log('departureAirportData', departureAirportData)
-        }
-        if (arrivalAirportData) {
-            addMessage(`Tu destino: ${mainLocation} / Aeropuerto: ${arrivalAirportData.name}`);
+            let departureAirportData: Airport | undefined;
+            let arrivalAirportData: Airport | undefined;
+            let weatherData: WeatherData | undefined;
+            let flightData: FlightData | undefined;
 
-        } else {
-            addMessage('No te entendí. Podrías repetirlo? - Intenta contandome tu destino deseado.');
-        }
+            if (classifierData) {
+                departureAirportData = await getAirportFromApi('ezeiza');
+                setDepartureAirport(departureAirportData);
 
-        weatherData = await getWeather(mainLocation as string, classifierData?.duration, classifierData?.departureDate, classifierData?.arrivalDate);
-        addMessage(`Recomendación de clima obtenida ${weatherData?.recommended_dates.average_weather}`);
+                arrivalAirportData = await getAirportFromApi(classifierData?.location?.[0] as string);
+                setArrivalArrivalAirport(arrivalAirportData);
 
-        if (weatherData?.recommended_dates)  {
-            flightData = await handleRequestFlights(
-                departureAirportData?.key as string,
-                arrivalAirportData?.key as string,
-                weatherData.recommended_dates.departureDate,
-                weatherData.recommended_dates.arrivalDate
-            );
-        }
+                if (arrivalAirportData) {
+                    addMessage(`Tu destino: ${mainLocation} / Aeropuerto: ${arrivalAirportData.name}`);
 
-        if (flightData) {
-            addMessage(`Vuelo encontrado con precio: ${flightData.price}`);
-        }
-        // else (weatherData.requested_dates)
+                }
+
+                weatherData = await getWeatherFromApi(mainLocation as string, classifierData?.duration as number, classifierData?.departureDate, classifierData?.arrivalDate);
+                const weatherMessage = ChatMessageMapper.mapWeather(weatherData)
+                addMessage(weatherMessage.message);
+
+                if (weatherData?.recommended_dates) {
+                    flightData = await handleRequestFlights(
+                        departureAirportData?.key as string,
+                        arrivalAirportData?.key as string,
+                        weatherData.recommended_dates.departureDate,
+                        weatherData.recommended_dates.arrivalDate
+                    );
+                    const flightMessage = ChatMessageMapper.mapFlight(flightData);
+                    addMessage(flightMessage.message);
+                }
+            }
 
         setIsProcessing(false);
     };
+
+    const handleRequestHotels = async () => {
+
+    }
 
     const handleRequestFlights = async (
         fromAirport: string,
@@ -207,7 +211,6 @@ export default function Home() {
         }
     };
 
-
     const handleTestClick = useCallback(async () => {
         const testText = "Me gustaría viajar a Roma en primavera";
         await handleTextSubmit(testText);
@@ -226,7 +229,7 @@ export default function Home() {
             {/* Chat Container */}
             <main className="flex-1 overflow-hidden relative z-10">
                 <ChatContainer
-                    messages={additionalTestMessages}
+                    messages={messages}
                     isLoading={isProcessing}
                 />
             </main>
@@ -235,6 +238,8 @@ export default function Home() {
             <footer
                 className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-20">
                 <div className="max-w-3xl mx-auto">
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                        onClick={() => handleTextSubmit('quiero ir a ver un volcan')}>test</button>
                     <AudioRecorder
                         onAudioRecorded={handleAudioChange}
                         isProcessing={isProcessing}
