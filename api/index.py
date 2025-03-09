@@ -204,10 +204,7 @@ def fetch_civitatis(city, date_from, date_to):
         activities.append({'name': name, 'href': a, 'thumbnail_url': thumbnail_url, 'price': price, 'ratings': ratings, 'duration': duration})
 
     print(activities)
-
-    sorted_list = sorted(activities, key=lambda x: x['ratings'], reverse=True)
-
-    return sorted_list
+    return activities
 
 @app.route('/api/civitatis/<location>')
 def civitatis(location):
@@ -218,7 +215,11 @@ def civitatis(location):
 
     activities = fetch_civitatis(location, from_date, to_date)
     thread_id, run_id = post_message(ACTIVITIES_ASSISTANT_ID, json.dumps(activities))
-    return parse_message(thread_id, run_id)
+    activities = parse_msg(thread_id, run_id)
+
+
+    sorted_list = sorted(activities, key=lambda x: x['ratings'], reverse=True)
+    return sorted_list
 
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
