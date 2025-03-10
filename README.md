@@ -1,14 +1,16 @@
 # Wololo SHIP BA Hackathon
 
+24hs Hackathon [SHIP BA](https://www.shipba.dev/)
+
 Live demo: [wololo-shipba-hackathon.vercel.app](http://wololo-shipba-hackathon.vercel.app/)
 
 ## Project
 
-This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed.
+This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed. We wanted to take into account availability, but we couldn't make it on time (this was a 24hs challenge).
 
 ## Limitations
 
-- It only supports direct flights from main airports
+- It only supports direct flights from main airports. Limited to 1 passenger.
 
 ## How it works
 
