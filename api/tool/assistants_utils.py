@@ -205,7 +205,7 @@ Based on this input determine best date for a trip on the provided location:
 - If departureDate and arrivalDate are not provided just return recommended_dates as JSON
      """,
         "name": "LocationToAirportsAPI",
-        "model": "zala-dev-ai"
+        "model": "gpt-4o"
     }
 
     assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
@@ -293,7 +293,7 @@ Output a json with the following format:
 - Translate only location and departureLocation to Spanish
      """,
         "name": "ClassifierAPI",
-        "model": "zala-dev-ai"
+        "model": "gpt-4o"
     }
 
     assistant = requests.post(ASSISTANTS_ENDPOINT, headers=headers, json=assistant_data)
