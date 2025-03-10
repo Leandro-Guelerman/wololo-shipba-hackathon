@@ -38,6 +38,12 @@ CLASSIFIER_ASSISTANT_ID="asst_zcxk7RIUD6vb5kluuwRxFtcy"
 ACTIVITIES_ASSISTANT_ID="asst_CrrUWATJ9Z73vcTn1nDpZeS1"
 HOTELS_SPANISH_ID="asst_c5TSNZJAWHX4caWrUSvPAGqD"
 
+
+
+WHISPER_OPENAI_ENDPOINT=os.environ.get("AZURE_OPENAI_ENDPOINT")
+WHISPER_OPENAI_API_KEY=os.environ.get("AZURE_OPENAI_API_KEY")
+
+
 # test
 
 headers = {
@@ -214,6 +220,28 @@ def fetch_civitatis(city, date_from, date_to):
 
     print(activities)
     return activities
+
+@app.route('/api/audio', methods=['POST'])
+def whisper():
+    logging.info("location to airports")
+
+    audio = request.files['audio']
+
+    data = {
+        'definition': json.dumps({
+            "locales": ["es-MX"],
+            "profanityFilterMode": "None",
+            "channels": [0]
+        })
+    }
+
+    message = requests.post(WHISPER_OPENAI_ENDPOINT, headers={
+        "Ocp-Apim-Subscription-Key": WHISPER_OPENAI_API_KEY,
+    }, data=data, files={'audio': ('audio.webm', audio, 'audio/webm')} )
+
+    return {
+        'text': message.json()['combinedPhrases'][0]['text']
+    }
 
 @app.route('/api/civitatis/<location>')
 def civitatis(location):
