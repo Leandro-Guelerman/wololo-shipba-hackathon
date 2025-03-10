@@ -22,7 +22,7 @@ export async function postAudio(audioBlob: Blob) {
         }
 
         const jsonResponse = await response.json();
-        const data = jsonResponse.combinedPhrases[0].text;
+        const data = jsonResponse.text;
         return NextResponse.json(data);
     } catch (error) {
         console.error('Error en la transcripción:', error);
