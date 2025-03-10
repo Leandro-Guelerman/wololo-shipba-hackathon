@@ -4,7 +4,7 @@
 
 Live demo: [wololo-shipba-hackathon.vercel.app](http://wololo-shipba-hackathon.vercel.app/)
 
-![image](https://github.com/user-attachments/assets/81fadd58-fb72-4ce4-a856-4280fe15925b)
+![image](https://github.com/user-attachments/assets/b9e7299b-6006-4b95-9e2e-e940d4ff788d)
 
 ## Project
 
