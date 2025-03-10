@@ -5,8 +5,11 @@ import os
 
 import requests
 from flask import Flask
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+load_dotenv()
 
 API_VERSION="?api-version=2024-12-01-preview"
 ASSISTANT_ID="asst_NWA2VJMnoVqXaLYGnYg0DR4g"
