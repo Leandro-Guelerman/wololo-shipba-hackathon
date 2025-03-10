@@ -261,7 +261,6 @@ def civitatis(location):
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
     logging.info("classifier running")
-    print(API_KEY)
     content = request.json
 
     thread_id, run_id = post_message(CLASSIFIER_ASSISTANT_ID, content['text'])
