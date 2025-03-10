@@ -1,6 +1,7 @@
 
 import json
 import logging
+import os
 
 import requests
 from flask import Flask
@@ -9,8 +10,8 @@ app = Flask(__name__)
 
 API_VERSION="?api-version=2024-12-01-preview"
 ASSISTANT_ID="asst_NWA2VJMnoVqXaLYGnYg0DR4g"
-API_KEY = "b0cdc8c2c60c43aea9bdd06503293064"
-BASE_URL = "https://zala-dev-open-ai.openai.azure.com/openai"
+API_KEY = os.getenv("API_OPENAI_API_KEY")
+BASE_URL = os.getenv("API_OPENAI_ENDPOINT")
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 
 
