@@ -8,7 +8,7 @@ Live demo: [wololo-shipba-hackathon.vercel.app](http://wololo-shipba-hackathon.v
 
 ## Project
 
-This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed. We wanted to take into account availability, but we couldn't make it on time (this was a 24hs challenge).
+This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed. We wanted to take in consideration the availability for the trip, but we couldn't make it on time (this was a 24hs challenge).
 
 ## Limitations
 
