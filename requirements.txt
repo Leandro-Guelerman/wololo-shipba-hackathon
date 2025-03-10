@@ -3,6 +3,7 @@ Flask==3.0.3
 typing-extensions==4.12.2
 requests==2.32.3
 protobuf==5.29.3
+python-dotenv==1.0.1
 
 ## Scrappers
 fast-flights==2.1
