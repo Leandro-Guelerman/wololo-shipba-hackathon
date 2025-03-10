@@ -1,5 +1,7 @@
 # Wololo SHIP BA Hackathon
 
+Live demo: [wololo-shipba-hackathon.vercel.app](http://wololo-shipba-hackathon.vercel.app/)
+
 ## Project
 
 This is a AI Travel Planner that gets real data for Flights, Hotels, Activities and takes into account the weather forecast to suggest the best options for the trip. Also it provides the booking links for everything that is listed.
