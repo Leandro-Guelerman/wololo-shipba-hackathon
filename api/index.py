@@ -233,6 +233,7 @@ def civitatis(location):
 @app.route('/api/classifier', methods=["POST"])
 def classifier():
     logging.info("classifier running")
+    print(API_KEYx[:5])
     content = request.json
 
     thread_id, run_id = post_message(CLASSIFIER_ASSISTANT_ID, content['text'])
@@ -576,9 +577,6 @@ def parse_message(thread_id, run_id: str):
     json_output = parse_msg(thread_id, run_id)
 
     response = make_response(jsonify(json_output))
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
 
 if __name__ == "__main__":
