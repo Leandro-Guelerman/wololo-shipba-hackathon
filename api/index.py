@@ -3,6 +3,7 @@ import json
 import logging
 import re
 from typing import TYPE_CHECKING, Any
+import os
 
 import requests
 from flask import Flask, request, make_response, jsonify
@@ -26,8 +27,8 @@ API_VERSION="?api-version=2024-12-01-preview"
 LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
 LOCATION_RESTRICTIONS_ID="asst_p796twbeakiJHYtx2DtCe8Be"
 BEST_FLIGHT_ID="asst_6fIlZzGqPl3QU9aWpaQVLEZj"
-API_KEY = environ.get("API_OPENAI_API_KEY")
-BASE_URL = environ.get("API_OPENAI_ENDPOINT")
+API_KEY = os.environ.get("API_OPENAI_API_KEY")
+BASE_URL = os.environ.get("API_OPENAI_ENDPOINT")
 ASSISTANTS_ENDPOINT = f"{BASE_URL}/assistants{API_VERSION}"
 THREADS_ENDPOINT = f"{BASE_URL}/threads{API_VERSION}"
 GEMINI_API_KEY="AIzaSyBpMsHl1hdAf8CRATuHEF_G36rg2TZRVv8"
