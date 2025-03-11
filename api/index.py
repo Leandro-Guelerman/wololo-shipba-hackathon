@@ -23,7 +23,7 @@ app = Flask(__name__)
 
 load_dotenv()
 
-API_VERSION="?api-version=2024-12-01-preview"
+API_VERSION="?api-version=2025-01-01-preview"
 LOCATION_TO_AIRPORTS_ASSISTANT_ID= "asst_iiBi1RdmT53DBWajaWfanSU4"
 LOCATION_RESTRICTIONS_ID="asst_p796twbeakiJHYtx2DtCe8Be"
 BEST_FLIGHT_ID="asst_6fIlZzGqPl3QU9aWpaQVLEZj"

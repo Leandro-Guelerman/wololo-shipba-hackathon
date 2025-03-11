@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 load_dotenv()
 
-API_VERSION="?api-version=2024-12-01-preview"
+API_VERSION="?api-version=2025-01-01-preview"
 ASSISTANT_ID="asst_NWA2VJMnoVqXaLYGnYg0DR4g"
 API_KEY = os.getenv("API_OPENAI_API_KEY")
 BASE_URL = os.getenv("API_OPENAI_ENDPOINT")
